@@ -5,5 +5,5 @@ trait Constants {
   private val token = sys.env("GITHUB_TOKEN")
 
   protected val TIMEOUT = 5 seconds
-  protected val API = GitHubAPI(token)
+  protected val api = GitHubAPI(token)
 }

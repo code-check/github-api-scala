@@ -7,9 +7,12 @@ import scala.concurrent.Promise
 import scala.concurrent.Future
 import org.json4s.JValue
 import org.json4s.JNothing
-    import org.json4s.jackson.JsonMethods
+import org.json4s.jackson.JsonMethods
 
-class GitHubAPI(token: String) {
+import codecheck.github.operations._
+
+class GitHubAPI(token: String) extends OrganizationOp {
+
   private val endpoint = "https://api.github.com"
   private val client = new AsyncHttpClient()
 
@@ -38,9 +41,6 @@ class GitHubAPI(token: String) {
         deferred.success(result)
         res
       }
-      override def onStatusReceived(status: com.ning.http.client.HttpResponseStatus) = {
-        super.onStatusReceived(status)
-      }
       override def onThrowable(t: Throwable) {
         deferred.failure(t)
         super.onThrowable(t)
@@ -48,9 +48,7 @@ class GitHubAPI(token: String) {
     })
     deferred.future
   }
-  def repository(owner: String, repo: String) = new GitHubRepository(this, owner, repo)
-
-  def org(user: String) = exec("GET", s"/users/${user}/orgs") 
+  def repository(owner: String, repo: String) = RepositoryAPI(this, owner, repo)
 }
 
 object GitHubAPI {
