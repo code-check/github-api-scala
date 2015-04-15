@@ -5,9 +5,10 @@ version := "0.1.0"
 scalaVersion := "2.11.5"
 
 // Change this to another test framework if you prefer
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+libraryDependencies ++= Seq(
+  "com.ning" % "async-http-client" % "1.8.15",
+  "org.json4s" %% "json4s-jackson" % "3.2.11",
+  "ch.qos.logback" % "logback-classic" % "1.0.7" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+)
 
-// Uncomment to use Akka
-//libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.9"
-
-scalacOptions += "-deprecation"
