@@ -1,0 +1,3 @@
+package codecheck.github.exceptions
+
+class GitHubAPIException extends Exception

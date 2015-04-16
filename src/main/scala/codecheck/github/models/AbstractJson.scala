@@ -8,13 +8,13 @@ import org.json4s.jackson.JsonMethods
 class AbstractJson(value: JValue) {
   private implicit val format: Formats = DefaultFormats
 
-  protected def get(path: String) = {
-    path.split("\\.").foldLeft(value) { (v, s) =>
+  def opt(path: String) = {
+    Option(path.split("\\.").foldLeft(value) { (v, s) =>
       v \ s
-    }.extract[String]
+    }.extract[String])
   }
 
-  protected def opt(path: String) = Option(get(path))
+  def get(path: String) = opt(path).get
 
   override def toString = JsonMethods.pretty(value)
 }

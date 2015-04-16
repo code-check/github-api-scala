@@ -1,7 +1,7 @@
 import org.scalatest.FunSpec
 import scala.concurrent.Await
 
-class GitHubAPISpec extends FunSpec with Constants {
+class OrganizationOpSpec extends FunSpec with Constants {
 
   describe("getOrganizationList(user) method") {
     it("should return multiple organizations.") {

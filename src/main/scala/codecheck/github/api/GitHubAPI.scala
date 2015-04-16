@@ -9,9 +9,12 @@ import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
 
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.operations._
 
-class GitHubAPI(token: String) extends OrganizationOp {
+class GitHubAPI(token: String) extends OrganizationOp 
+  with LabelOp
+{
 
   private val endpoint = "https://api.github.com"
   private val client = new AsyncHttpClient()
@@ -30,15 +33,21 @@ class GitHubAPI(token: String) extends OrganizationOp {
       case "DELETE" => client.prepareDelete(url)
     }
     if (body != JNothing) {
-      request.setBody(body.toString)
+println("body: " + JsonMethods.pretty(body) + ", " + body.toString)
+      request.setBody(JsonMethods.compact(body))
     }
     request
       .setHeader("Authorization", s"token ${token}")
       .setHeader("Content-Type", "application/json")
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
-        val result = APIResult(res.getStatusCode, parseJson(res.getResponseBody))
-        deferred.success(result)
+        if (res.getStatusCode == 404) {
+          deferred.failure(new NotFoundException())
+        } else {
+          val result = APIResult(res.getStatusCode, parseJson(res.getResponseBody))
+println("result: " + result)
+          deferred.success(result)
+        }
         res
       }
       override def onThrowable(t: Throwable) {
