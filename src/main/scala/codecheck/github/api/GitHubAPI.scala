@@ -60,6 +60,8 @@ println("result: " + result)
     deferred.future
   }
   def repository(owner: String, repo: String) = RepositoryAPI(this, owner, repo)
+
+  def close = client.close
 }
 
 object GitHubAPI {
