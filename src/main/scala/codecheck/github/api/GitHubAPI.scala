@@ -14,6 +14,7 @@ import codecheck.github.operations._
 
 class GitHubAPI(token: String) extends OrganizationOp 
   with LabelOp
+  with IssueOp
 {
 
   private val endpoint = "https://api.github.com"
@@ -28,6 +29,7 @@ class GitHubAPI(token: String) extends OrganizationOp
     val url = endpoint + path
     val request = method match {
       case "GET" => client.prepareGet(url)
+      case "PATCH" => client.preparePost(url)
       case "POST" => client.preparePost(url)
       case "PUT" => client.preparePut(url)
       case "DELETE" => client.prepareDelete(url)
