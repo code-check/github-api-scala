@@ -40,5 +40,10 @@ case class IssueEditParams(
 }
 
 class Issue(value: JValue) extends AbstractJson(value) {
-  //ToDo
+  def number = get("number").toLong
+  lazy val user = new User(value \ "user")
+  lazy val labels = (value \ "labels") match {
+    case JArray(arr) => arr.map(new Label(_))
+    case _ => Nil
+  }
 }
