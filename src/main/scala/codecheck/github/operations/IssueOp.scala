@@ -27,7 +27,7 @@ trait IssueOp {
   }
 
   def unassign(owner: String, repo: String, number: Long): Future[Issue] = {
-    editIssue(owner, repo, number, IssueEditParams(assignee=Some("none")))
+    editIssue(owner, repo, number, IssueEditParams(assignee=Some("")))
   }
 
 }

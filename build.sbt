@@ -1,3 +1,5 @@
+organization := "io.code-check"
+
 name := """github-api"""
 
 version := "0.1.0"
@@ -12,3 +14,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
+val localRepo = "../sbt-repo"
+
+publishTo := Some(Resolver.file("givery repo",file(localRepo))(Patterns(true, Resolver.mavenStyleBasePattern)))

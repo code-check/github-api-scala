@@ -25,15 +25,16 @@ case class IssueEditParams(
   state: Option[IssueState] = None
 ) {
   def toJson: JValue = {
-    val a = assignee.filter(_ == "none")
-      .map(_ => JNull)
-      .getOrElse(assignee.map(JString(_)).getOrElse(JNothing))
+    val a = assignee.map { s =>
+      if (s.length == 0) JNull else JString(s)
+    }.getOrElse(JNothing)
+    val l = if (labels.length == 0) JNothing else JArray(labels.map(JString(_)))
 
     ("title" -> title) ~
     ("body" -> body) ~
     ("assignee" -> a) ~
     ("milestone" -> milestone) ~
-    ("labels" -> (if (labels.length == 0) JNothing else JArray(labels.map(JString(_))))) ~
+    ("labels" -> l) ~
     ("state" -> state.map(_.name))
   }
 }
