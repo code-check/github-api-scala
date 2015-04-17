@@ -12,13 +12,12 @@ import org.json4s.jackson.JsonMethods
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.operations._
 
-class GitHubAPI(token: String) extends OrganizationOp 
+class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp 
   with LabelOp
   with IssueOp
 {
 
   private val endpoint = "https://api.github.com"
-  private val client = new AsyncHttpClient()
 
   private def parseJson(json: String) = {
     JsonMethods.parse(json)
@@ -65,5 +64,5 @@ println("result: " + result)
 }
 
 object GitHubAPI {
-  def apply(token: String) = new GitHubAPI(token)
+  def apply(token: String)(implicit client: AsyncHttpClient) = new GitHubAPI(token, client)
 }
