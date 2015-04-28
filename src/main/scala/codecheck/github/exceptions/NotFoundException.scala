@@ -1,3 +1,5 @@
 package codecheck.github.exceptions
 
-class NotFoundException extends GitHubAPIException
+import org.json4s.JValue
+
+class NotFoundException(body: JValue) extends GitHubAPIException(body)

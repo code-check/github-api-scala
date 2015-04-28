@@ -8,6 +8,7 @@ import org.json4s.JString
 import org.json4s.JNothing
 
 import codecheck.github.api.GitHubAPI
+import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.models.Label
 
 trait LabelOp {
@@ -55,22 +56,44 @@ trait LabelOp {
   }
 
   def listLabelDefs(owner: String, repo: String): Future[List[Label]] = {
-    throw new UnsupportedOperationException()
+    val path = s"/repos/$owner/$repo/labels"
+    exec("GET", path).map {
+      _.body match {
+        case JArray(arr) => arr.map(new Label(_))
+        case _ => throw new IllegalStateException()
+      }
+    }
   }
 
   def getLabelDef(owner: String, repo: String, label: String): Future[Label] = {
-    throw new UnsupportedOperationException()
+    val path = s"/repos/$owner/$repo/labels/$label"
+    exec("GET", path).map { res =>
+      new Label(res.body)
+    }
   }
 
   def createLabelDef(owner: String, repo: String, label: Label): Future[Label] = {
-    throw new UnsupportedOperationException()
+    val path = s"/repos/$owner/$repo/labels"
+    exec("POST", path, label.value).map { res =>
+      res.statusCode match {
+        case 201 => new Label(res.body)
+        case 422 => throw new GitHubAPIException(res.body)
+        case _ => throw new IllegalStateException(res.toString)
+      }
+    }
   }
 
   def updateLabelDef(owner: String, repo: String, name: String, label: Label): Future[Label] = {
-    throw new UnsupportedOperationException()
+    val path = s"/repos/$owner/$repo/labels/$name"
+    exec("PATCH", path, label.value).map { res =>
+      new Label(res.body)
+    }
   }
 
-  def removeLabelDef(owner: String, repo: String, label: String): Future[Boolean] = {
-    throw new UnsupportedOperationException()
+  def removeLabelDef(owner: String, repo: String, name: String): Future[Boolean] = {
+    val path = s"/repos/$owner/$repo/labels/$name"
+    exec("DELETE", path).map {
+      _.statusCode == 204
+    }
   }
 }

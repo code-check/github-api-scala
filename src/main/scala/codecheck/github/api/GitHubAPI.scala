@@ -34,7 +34,6 @@ class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp
       case "DELETE" => client.prepareDelete(url)
     }
     if (body != JNothing) {
-println("body: " + JsonMethods.pretty(body) + ", " + body.toString)
       request.setBody(JsonMethods.compact(body))
     }
     request
@@ -42,11 +41,11 @@ println("body: " + JsonMethods.pretty(body) + ", " + body.toString)
       .setHeader("Content-Type", "application/json")
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
+        val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
         if (res.getStatusCode == 404) {
-          deferred.failure(new NotFoundException())
+          deferred.failure(new NotFoundException(json))
         } else {
-          val result = APIResult(res.getStatusCode, parseJson(res.getResponseBody))
-println("result: " + result)
+          val result = APIResult(res.getStatusCode, json)
           deferred.success(result)
         }
         res

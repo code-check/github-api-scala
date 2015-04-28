@@ -1,5 +1,8 @@
 import org.scalatest.FunSpec
 import scala.concurrent.Await
+import codecheck.github.models.Label
+import codecheck.github.exceptions.GitHubAPIException
+import codecheck.github.exceptions.NotFoundException
 
 class LabelOpSpec extends FunSpec with Constants {
 
@@ -41,6 +44,61 @@ class LabelOpSpec extends FunSpec with Constants {
       assert(label.name == "invalid")
       assert(label.url.isDefined)
       assert(label.color.length == 6)
+    }
+  }
+
+  describe("LabelDef operations") {
+    it("listLabelDefs should succeed") {
+      val result = Await.result(api.listLabelDefs(owner, repo), TIMEOUT)
+      assert(result.length > 0)
+      val label = result.head
+      assert(label.name.length > 0)
+      assert(label.url.isDefined)
+      assert(label.color.length == 6)
+    }
+    it("getLabelDef should succeed") {
+      val label = Await.result(api.getLabelDef(owner, repo, "question"), TIMEOUT)
+      assert(label.name == "question")
+      assert(label.url.isDefined)
+      assert(label.color == "cc317c")
+    }
+    it("createLabelDef should succeed") {
+      val input = Label("test", "cc317c")
+      val label = Await.result(api.createLabelDef(owner, repo, input), TIMEOUT)
+      assert(label.name == "test")
+      assert(label.url.isDefined)
+      assert(label.color == "cc317c")
+    }
+    it("createLabelDef again should fail") {
+      val input = Label("test", "cc317c")
+      try {
+        val label = Await.result(api.createLabelDef(owner, repo, input), TIMEOUT)
+        fail
+      } catch {
+        case e: GitHubAPIException =>
+          assert(e.error.errors.length == 1)
+          assert(e.error.errors.head.code == "already_exists")
+      }
+    }
+    it("updateLabelDef should succeed") {
+      val input = Label("test", "84b6eb")
+      val label = Await.result(api.updateLabelDef(owner, repo, "test", input), TIMEOUT)
+      assert(label.name == "test")
+      assert(label.url.isDefined)
+      assert(label.color == "84b6eb")
+    }
+    it("removeLabelDef should succeed") {
+      val result = Await.result(api.removeLabelDef(owner, repo, "test"), TIMEOUT)
+      assert(result)
+    }
+    it("removeLabelDef again should fail") {
+      try {
+        val result = Await.result(api.removeLabelDef(owner, repo, "test"), TIMEOUT)
+        fail
+      } catch {
+        case e: NotFoundException =>
+          assert(e.error.errors.length == 0)
+      }
     }
   }
 }
