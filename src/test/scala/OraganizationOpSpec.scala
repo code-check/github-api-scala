@@ -5,13 +5,13 @@ class OrganizationOpSpec extends FunSpec with Constants {
 
   describe("getOrganizationList(user) method") {
     it("should return multiple organizations.") {
-      val result = Await.result(api.getOrganizationList("shunjikonishi"), TIMEOUT)
+      val result = Await.result(api.listOrganizations("shunjikonishi"), TIMEOUT)
       assert(result.length > 1)
     }
   }
   describe("getOrganizationList method") {
     it("should return multiple organizations.") {
-      val result = Await.result(api.getOrganizationList, TIMEOUT)
+      val result = Await.result(api.listOrganizations, TIMEOUT)
       assert(result.length > 1)
     }
   }

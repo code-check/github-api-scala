@@ -16,15 +16,15 @@ object IssueState {
   case object Closed extends IssueState("closed")
 }
 
-case class IssueEditParams(
+case class IssueInput(
   title: Option[String] = None,
   body: Option[String] = None,
   assignee: Option[String] = None,
   milestone: Option[Int] = None,
   labels: List[String] = Nil,
   state: Option[IssueState] = None
-) {
-  def toJson: JValue = {
+) extends AbstractInput {
+  override val value: JValue = {
     val a = assignee.map { s =>
       if (s.length == 0) JNull else JString(s)
     }.getOrElse(JNothing)

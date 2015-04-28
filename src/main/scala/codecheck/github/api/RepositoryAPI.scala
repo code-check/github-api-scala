@@ -2,11 +2,12 @@ package codecheck.github.api
 
 import scala.concurrent.Future
 import codecheck.github.models.Label
+import codecheck.github.models.LabelInput
 import codecheck.github.models.Issue
-import codecheck.github.models.IssueEditParams
+import codecheck.github.models.IssueInput
 
 case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
-  def editIssue(number: Long, params: IssueEditParams): Future[Issue] = 
+  def editIssue(number: Long, params: IssueInput): Future[Issue] = 
     api.editIssue(owner, repo, number, params)
 
   def assign(number: Long, assignee: String): Future[Issue] = 
@@ -25,8 +26,8 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   def removeAllLabels(number: Long): Future[List[Label]] = 
     api.removeAllLabels(owner, repo, number)
 
-  def removeLabels(number: Long, label: String): Future[List[Label]] = 
-    api.removeLabels(owner, repo, number, label)
+  def removeLabel(number: Long, label: String): Future[List[Label]] = 
+    api.removeLabel(owner, repo, number, label)
 
   def listLabels(number: Long): Future[List[Label]] = 
     api.listLabels(owner, repo, number)
@@ -37,10 +38,10 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   def getLabelDef(label: String): Future[Label] = 
     api.getLabelDef(owner, repo, label)
 
-  def createLabelDef(label: Label): Future[Label] = 
+  def createLabelDef(label: LabelInput): Future[Label] = 
     api.createLabelDef(owner, repo, label)
 
-  def updateLabelDef(name: String, label: Label): Future[Label] = 
+  def updateLabelDef(name: String, label: LabelInput): Future[Label] = 
     api.updateLabelDef(owner, repo, name, label)
 
   def removeLabelDef(label: String): Future[Boolean] = 

@@ -1,6 +1,7 @@
 import org.scalatest.FunSpec
 import scala.concurrent.Await
 import codecheck.github.models.Label
+import codecheck.github.models.LabelInput
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.exceptions.NotFoundException
 
@@ -20,20 +21,20 @@ class LabelOpSpec extends FunSpec with Constants {
       assert(result.length == 1)
       val label = result.head
       assert(label.name == "bug")
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color.length == 6)
     }
-    it("replaceLabel should succeed") {
+    it("replaceLabels should succeed") {
       val result = Await.result(api.replaceLabels(owner, repo, number, "duplicate", "invalid"), TIMEOUT)
       assert(result.length == 2)
       assert(result.filter(_.name == "duplicate").length == 1)
       assert(result.filter(_.name == "invalid").length == 1)      
     }
     it("removeLabel should succeed") {
-      val result = Await.result(api.removeLabels(owner, repo, number, "duplicate"), TIMEOUT)
+      val result = Await.result(api.removeLabel(owner, repo, number, "duplicate"), TIMEOUT)
       assert(result.length == 1)
 
-      val result2 = Await.result(api.removeLabels(owner, repo, number, "invalid"), TIMEOUT)
+      val result2 = Await.result(api.removeLabel(owner, repo, number, "invalid"), TIMEOUT)
       assert(result2.length == 0)
     }
     it("listLabels should succeed") {
@@ -42,7 +43,7 @@ class LabelOpSpec extends FunSpec with Constants {
       assert(result.length == 1)
       val label = result.head
       assert(label.name == "invalid")
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color.length == 6)
     }
   }
@@ -53,24 +54,24 @@ class LabelOpSpec extends FunSpec with Constants {
       assert(result.length > 0)
       val label = result.head
       assert(label.name.length > 0)
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color.length == 6)
     }
     it("getLabelDef should succeed") {
       val label = Await.result(api.getLabelDef(owner, repo, "question"), TIMEOUT)
       assert(label.name == "question")
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color == "cc317c")
     }
     it("createLabelDef should succeed") {
-      val input = Label("test", "cc317c")
+      val input = LabelInput("test", "cc317c")
       val label = Await.result(api.createLabelDef(owner, repo, input), TIMEOUT)
       assert(label.name == "test")
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color == "cc317c")
     }
     it("createLabelDef again should fail") {
-      val input = Label("test", "cc317c")
+      val input = LabelInput("test", "cc317c")
       try {
         val label = Await.result(api.createLabelDef(owner, repo, input), TIMEOUT)
         fail
@@ -81,10 +82,10 @@ class LabelOpSpec extends FunSpec with Constants {
       }
     }
     it("updateLabelDef should succeed") {
-      val input = Label("test", "84b6eb")
+      val input = LabelInput("test", "84b6eb")
       val label = Await.result(api.updateLabelDef(owner, repo, "test", input), TIMEOUT)
       assert(label.name == "test")
-      assert(label.url.isDefined)
+      assert(label.url.length > 0)
       assert(label.color == "84b6eb")
     }
     it("removeLabelDef should succeed") {

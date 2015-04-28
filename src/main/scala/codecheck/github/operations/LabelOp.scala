@@ -10,6 +10,7 @@ import org.json4s.JNothing
 import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.models.Label
+import codecheck.github.models.LabelInput
 
 trait LabelOp {
   self: GitHubAPI =>
@@ -41,7 +42,7 @@ trait LabelOp {
     doLabels("PUT", owner, repo, number, Nil)
   }
 
-  def removeLabels(owner: String, repo: String, number: Long, label: String): Future[List[Label]] = {
+  def removeLabel(owner: String, repo: String, number: Long, label: String): Future[List[Label]] = {
     val path = s"/repos/$owner/$repo/issues/$number/labels/" + URLEncoder.encode(label, "utf-8").replaceAll("\\+", "%20")
     exec("DELETE", path).map {
       _.body match {
@@ -72,7 +73,7 @@ trait LabelOp {
     }
   }
 
-  def createLabelDef(owner: String, repo: String, label: Label): Future[Label] = {
+  def createLabelDef(owner: String, repo: String, label: LabelInput): Future[Label] = {
     val path = s"/repos/$owner/$repo/labels"
     exec("POST", path, label.value).map { res =>
       res.statusCode match {
@@ -83,7 +84,7 @@ trait LabelOp {
     }
   }
 
-  def updateLabelDef(owner: String, repo: String, name: String, label: Label): Future[Label] = {
+  def updateLabelDef(owner: String, repo: String, name: String, label: LabelInput): Future[Label] = {
     val path = s"/repos/$owner/$repo/labels/$name"
     exec("PATCH", path, label.value).map { res =>
       new Label(res.body)
