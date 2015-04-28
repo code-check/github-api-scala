@@ -8,22 +8,21 @@ import codecheck.github.models.LabelInput
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.io.File
+import scala.concurrent.Future
 
 trait CreateLabels extends Command {
 
   def createLabels(owner: String, repo: String, file: File) = {
     val rapi = api.repositoryAPI(owner, repo)
 
-    def doCreateLabel(label: Option[Label], input: LabelInput): Unit = {
+    def doCreateLabel(label: Option[Label], input: LabelInput): Future[String] = {
       label match {
         case Some(l) if (l.color == input.color) =>
-          println(s"Skip create label ${input.name}")
+          Future(s"Skip create label ${input.name}")
         case Some(l) =>
-          rapi.updateLabelDef(input.name, input)
-          println(s"Update label ${input.name}")
+          rapi.updateLabelDef(input.name, input).map(_ => s"Update label ${input.name}")
         case None =>
-          rapi.createLabelDef(input)
-          println(s"Create label ${input.name}")
+          rapi.createLabelDef(input).map(_ => s"Create label ${input.name}")
       }
     }
     val json = JsonMethods.parse(file)
@@ -36,10 +35,13 @@ trait CreateLabels extends Command {
       (v \ "color").extract[String]
     ))
     rapi.listLabelDefs.map { labels =>
-      items.foreach { input =>
-        doCreateLabel(labels.find(_.name == input.name), input)
+      val ret = items.map { input =>
+        doCreateLabel(labels.find(_.name == input.name), input).map { s =>
+          println(s)
+          s
+        }
       }
-      done
+      done(ret)
     }
   }
 }
