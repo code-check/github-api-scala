@@ -5,6 +5,7 @@ import com.ning.http.client.AsyncCompletionHandler
 import com.ning.http.client.Response
 import scala.concurrent.Promise
 import scala.concurrent.Future
+import java.net.URLEncoder
 import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
@@ -22,6 +23,8 @@ class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp
   private def parseJson(json: String) = {
     JsonMethods.parse(json)
   }
+
+  protected def encode(s: String) = URLEncoder.encode(s, "utf-8").replaceAll("\\+", "%20")
 
   def exec(method: String, path: String, body: JValue = JNothing): Future[APIResult] = {
     val deferred = Promise[APIResult]()

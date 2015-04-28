@@ -1,6 +1,5 @@
 package codecheck.github.operations
 
-import java.net.URLEncoder
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.JArray
@@ -43,7 +42,7 @@ trait LabelOp {
   }
 
   def removeLabel(owner: String, repo: String, number: Long, label: String): Future[List[Label]] = {
-    val path = s"/repos/$owner/$repo/issues/$number/labels/" + URLEncoder.encode(label, "utf-8").replaceAll("\\+", "%20")
+    val path = s"/repos/$owner/$repo/issues/$number/labels/" + encode(label)
     exec("DELETE", path).map {
       _.body match {
         case JArray(arr) => arr.map(new Label(_))
@@ -67,7 +66,7 @@ trait LabelOp {
   }
 
   def getLabelDef(owner: String, repo: String, label: String): Future[Label] = {
-    val path = s"/repos/$owner/$repo/labels/$label"
+    val path = s"/repos/$owner/$repo/labels/" + encode(label)
     exec("GET", path).map { res =>
       new Label(res.body)
     }
@@ -85,14 +84,14 @@ trait LabelOp {
   }
 
   def updateLabelDef(owner: String, repo: String, name: String, label: LabelInput): Future[Label] = {
-    val path = s"/repos/$owner/$repo/labels/$name"
+    val path = s"/repos/$owner/$repo/labels/" + encode(name)
     exec("PATCH", path, label.value).map { res =>
       new Label(res.body)
     }
   }
 
   def removeLabelDef(owner: String, repo: String, name: String): Future[Boolean] = {
-    val path = s"/repos/$owner/$repo/labels/$name"
+    val path = s"/repos/$owner/$repo/labels/" + encode(name)
     exec("DELETE", path).map {
       _.statusCode == 204
     }
