@@ -6,6 +6,7 @@ import com.ning.http.client.Response
 import scala.concurrent.Promise
 import scala.concurrent.Future
 import java.net.URLEncoder
+import java.util.Base64
 import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
@@ -14,7 +15,7 @@ import codecheck.github.exceptions.NotFoundException
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
 
-class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp 
+class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends OrganizationOp 
   with LabelOp
   with IssueOp
   with MilestoneOp
@@ -42,7 +43,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp
       request.setBody(JsonMethods.compact(body))
     }
     request
-      .setHeader("Authorization", s"token ${token}")
+      .setHeader("Authorization", s"$tokenType $token")
       .setHeader("Content-Type", "application/json")
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
@@ -71,5 +72,10 @@ class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp
 }
 
 object GitHubAPI {
-  def apply(token: String)(implicit client: AsyncHttpClient) = new GitHubAPI(token, client)
+  def apply(token: String)(implicit client: AsyncHttpClient): GitHubAPI = new GitHubAPI(token, client)
+
+  def apply(username: String, password: String)(implicit client: AsyncHttpClient): GitHubAPI = {
+    val token = Base64.getEncoder.encodeToString((username + ":" + password).getBytes("utf-8"))
+    new GitHubAPI(token, client, "Basic")
+  }
 }
