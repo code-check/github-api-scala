@@ -10,7 +10,7 @@ class Organization(value: JValue) extends AbstractJson(value) {
   def description = get("description")
 }
 
-class OrganizationDetail(value: JValue) extends Organization(value) {
+case class OrganizationDetail(value: JValue) extends Organization(value) {
   def name = get("name")
   def company = opt("company")
   def email = get("email")

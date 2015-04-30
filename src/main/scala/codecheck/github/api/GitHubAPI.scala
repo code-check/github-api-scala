@@ -11,11 +11,13 @@ import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
 
 import codecheck.github.exceptions.NotFoundException
+import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
 
 class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp 
   with LabelOp
   with IssueOp
+  with MilestoneOp
 {
 
   private val endpoint = "https://api.github.com"
@@ -45,11 +47,14 @@ class GitHubAPI(token: String, client: AsyncHttpClient) extends OrganizationOp
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
         val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
-        if (res.getStatusCode == 404) {
-          deferred.failure(new NotFoundException(json))
-        } else {
-          val result = APIResult(res.getStatusCode, json)
-          deferred.success(result)
+        res.getStatusCode match {
+          case 404 => 
+            deferred.failure(new NotFoundException(json))
+          case 422 =>
+            deferred.failure(new GitHubAPIException(json))
+          case _ =>
+            val result = APIResult(res.getStatusCode, json)
+            deferred.success(result)
         }
         res
       }

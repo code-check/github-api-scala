@@ -12,8 +12,8 @@ sealed abstract class IssueState(val name: String) {
 }
 
 object IssueState {
-  case object Open extends IssueState("open")
-  case object Closed extends IssueState("closed")
+  case object open extends IssueState("open")
+  case object closed extends IssueState("closed")
 }
 
 case class IssueInput(
@@ -39,7 +39,7 @@ case class IssueInput(
   }
 }
 
-class Issue(value: JValue) extends AbstractJson(value) {
+case class Issue(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   lazy val user = new User(value \ "user")
   lazy val labels = (value \ "labels") match {

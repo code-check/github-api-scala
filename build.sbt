@@ -10,7 +10,9 @@ scalaVersion := "2.11.5"
 libraryDependencies ++= Seq(
   "com.ning" % "async-http-client" % "1.8.15",
   "org.json4s" %% "json4s-jackson" % "3.2.11",
-  "ch.qos.logback" % "logback-classic" % "1.0.7" % "test",
+  "org.json4s" %% "json4s-ext" % "3.2.11",
+  "joda-time" % "joda-time" % "2.7",
+  "ch.qos.logback" % "logback-classic" % "1.0.7",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 

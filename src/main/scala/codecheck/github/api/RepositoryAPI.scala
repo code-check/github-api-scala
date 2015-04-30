@@ -5,8 +5,12 @@ import codecheck.github.models.Label
 import codecheck.github.models.LabelInput
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueInput
+import codecheck.github.models.Milestone
+import codecheck.github.models.MilestoneInput
+import codecheck.github.models.MilestoneListOption
 
 case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
+  //IssueOp
   def editIssue(number: Long, params: IssueInput): Future[Issue] = 
     api.editIssue(owner, repo, number, params)
 
@@ -16,10 +20,10 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   def unassign(number: Long): Future[Issue] = 
     api.unassign(owner, repo, number)
 
+  //LabelOp
   def addLabels(number: Long, labels: String*): Future[List[Label]] = 
     api.addLabels(owner, repo, number, labels:_*)
   
-
   def replaceLabels(number: Long, labels: String*): Future[List[Label]] = 
     api.replaceLabels(owner, repo, number, labels:_*)
 
@@ -46,4 +50,21 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
 
   def removeLabelDef(label: String): Future[Boolean] = 
     api.removeLabelDef(owner, repo, label)
+
+  //MilestoneOp
+  def listMilestones(option: MilestoneListOption = MilestoneListOption()): Future[List[Milestone]] = 
+    api.listMilestones(owner, repo, option)
+
+  def getMilestone(number: Int): Future[Milestone] = 
+    api.getMilestone(owner, repo, number)
+
+  def createMilestone(input: MilestoneInput): Future[Milestone] = 
+    api.createMilestone(owner, repo, input)
+
+  def updateMilestone(number: Int, input: MilestoneInput): Future[Milestone] = 
+    api.updateMilestone(owner, repo, number, input)
+
+  def removeMilestone(number: Int): Future[Boolean] = 
+    api.removeMilestone(owner, repo, number)
+
 }

@@ -6,6 +6,6 @@ import codecheck.github.models.Comment
 import codecheck.github.models.AbstractJson
 
 case class IssueCommentEvent(name: String, value: JValue) extends AbstractJson(value) with GitHubEvent {
-  lazy val issue = new Issue(value \ "issue")
-  lazy val comment = new Comment(value \ "comment")
+  lazy val issue = Issue(value \ "issue")
+  lazy val comment = Comment(value \ "comment")
 }

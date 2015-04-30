@@ -48,7 +48,7 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
     client.prepareRequest(builder.build).execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
         val json = JsonMethods.parse(res.getResponseBody("utf-8"))
-        deferred.success(new AccessToken(json))
+        deferred.success(AccessToken(json))
         res
       }
       override def onThrowable(t: Throwable) {

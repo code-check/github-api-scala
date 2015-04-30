@@ -23,7 +23,7 @@ trait LabelOp {
     }
     exec(method, path, body).map {
       _.body match {
-        case JArray(arr) => arr.map(new Label(_))
+        case JArray(arr) => arr.map(v => Label(v))
         case _ => throw new IllegalStateException()
       }
     }
@@ -45,7 +45,7 @@ trait LabelOp {
     val path = s"/repos/$owner/$repo/issues/$number/labels/" + encode(label)
     exec("DELETE", path).map {
       _.body match {
-        case JArray(arr) => arr.map(new Label(_))
+        case JArray(arr) => arr.map(v => Label(v))
         case _ => throw new IllegalStateException()
       }
     }
@@ -59,7 +59,7 @@ trait LabelOp {
     val path = s"/repos/$owner/$repo/labels"
     exec("GET", path).map {
       _.body match {
-        case JArray(arr) => arr.map(new Label(_))
+        case JArray(arr) => arr.map(v => Label(v))
         case _ => throw new IllegalStateException()
       }
     }
@@ -67,27 +67,17 @@ trait LabelOp {
 
   def getLabelDef(owner: String, repo: String, label: String): Future[Label] = {
     val path = s"/repos/$owner/$repo/labels/" + encode(label)
-    exec("GET", path).map { res =>
-      new Label(res.body)
-    }
+    exec("GET", path).map(res => Label(res.body))
   }
 
   def createLabelDef(owner: String, repo: String, label: LabelInput): Future[Label] = {
     val path = s"/repos/$owner/$repo/labels"
-    exec("POST", path, label.value).map { res =>
-      res.statusCode match {
-        case 201 => new Label(res.body)
-        case 422 => throw new GitHubAPIException(res.body)
-        case _ => throw new IllegalStateException(res.toString)
-      }
-    }
+    exec("POST", path, label.value).map(res => Label(res.body))
   }
 
   def updateLabelDef(owner: String, repo: String, name: String, label: LabelInput): Future[Label] = {
     val path = s"/repos/$owner/$repo/labels/" + encode(name)
-    exec("PATCH", path, label.value).map { res =>
-      new Label(res.body)
-    }
+    exec("PATCH", path, label.value).map(res => Label(res.body))
   }
 
   def removeLabelDef(owner: String, repo: String, name: String): Future[Boolean] = {

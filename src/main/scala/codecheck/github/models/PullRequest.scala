@@ -30,7 +30,7 @@ object PullRequestAction {
   def fromString(str: String) = values.filter(_.name == str).head
 }
 
-class PullRequest(value: JValue) extends AbstractJson(value) {
+case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
 }

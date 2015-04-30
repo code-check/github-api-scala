@@ -9,5 +9,5 @@ case class PullRequestEvent(name: String, value: JValue) extends AbstractJson(va
   def number = get("number").toLong
 
   lazy val action = PullRequestAction.fromString(get("action"))
-  lazy val pull_request = new PullRequest(value \ "pull_request")
+  lazy val pull_request = PullRequest(value \ "pull_request")
 }
