@@ -1,18 +1,15 @@
-package codecheck.github.app
-
-import org.json4s._
-import org.json4s.jackson.JsonMethods
-
-import codecheck.github.models.Label
-import codecheck.github.models.LabelInput
+package codecheck.github.app.commands
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.io.File
-import scala.concurrent.Future
+import codecheck.github.api.GitHubAPI
+import codecheck.github.app.Repo
 
-trait CreateLabels extends Command {
+class LabelCommand(api: GitHubAPI, repo: Option[Repo]) {
+  def process(commands: List[String]) = {
+  }
 
-  def createLabels(owner: String, repo: String, file: File) = {
+  /*
+  def add(owner: String, repo: String, file: File) = {
     val rapi = api.repositoryAPI(owner, repo)
 
     def doCreateLabel(label: Option[Label], input: LabelInput): Future[String] = {
@@ -44,4 +41,17 @@ trait CreateLabels extends Command {
       done(ret)
     }
   }
+
+  def list(owner: String, repo: String) = {
+    api.repositoryAPI(owner, repo).listLabelDefs.map(_.map{ l =>
+      println(s"${l.name} ${l.color}")
+      done
+    })
+  }
+  */
+}
+
+object LabelCommand {
+  def apply(api: GitHubAPI, repo: Option[Repo]) = new LabelCommand(api, repo)
+
 }

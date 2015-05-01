@@ -13,9 +13,12 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-ext" % "3.2.11",
   "joda-time" % "joda-time" % "2.7",
   "ch.qos.logback" % "logback-classic" % "1.0.7",
+  "com.github.scopt" %% "scopt" % "3.3.0",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
 val localRepo = "../sbt-repo"
 
 publishTo := Some(Resolver.file("givery repo",file(localRepo))(Patterns(true, Resolver.mavenStyleBasePattern)))
+
+scalacOptions ++= Seq("-unchecked", "-deprecation")

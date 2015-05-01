@@ -5,6 +5,8 @@ import com.ning.http.client.AsyncCompletionHandler
 import com.ning.http.client.Response
 import scala.concurrent.Promise
 import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import java.net.URLEncoder
 import java.util.Base64
 import org.json4s.JValue
@@ -14,8 +16,10 @@ import org.json4s.jackson.JsonMethods
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
+import codecheck.github.models.User
 
-class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends OrganizationOp 
+class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends UserOp
+  with OrganizationOp 
   with LabelOp
   with IssueOp
   with MilestoneOp
@@ -66,6 +70,9 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
     })
     deferred.future
   }
+
+  lazy val user = Await.result(getAuthenticatedUser, Duration.Inf)
+
   def repositoryAPI(owner: String, repo: String) = RepositoryAPI(this, owner, repo)
 
   def close = client.close

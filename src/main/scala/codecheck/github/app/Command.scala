@@ -8,12 +8,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait Command {
+  implicit val formats = codecheck.github.utils.Json4s.formats
+
   val api: GitHubAPI
-  implicit val formats: Formats = DefaultFormats
-  implicit val client = new AsyncHttpClient
-  def done: Unit = client.close
-  def done[T](ret: Seq[Future[T]]): Unit = {
-    Await.result(Future.sequence(ret), Duration.Inf)
-    done
-  }
 }
