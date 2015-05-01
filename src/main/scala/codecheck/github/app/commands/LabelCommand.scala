@@ -135,7 +135,7 @@ class LabelCommand(val api: GitHubAPI) extends Command {
 
   def remove(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
     rapi.removeLabelDef(config.name).map { b =>
-      println(s"RemovedCreated ${config.name}")
+      println(s"Removed ${config.name}")
       true
     }
   }
