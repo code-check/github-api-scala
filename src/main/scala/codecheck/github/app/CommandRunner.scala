@@ -25,27 +25,33 @@ class CommandRunner(api: GitHubAPI) {
     }
   }
   def prompt = {
-    val repo = setting.repo.map(v => "@" + v.owner + "/" + v.repo).getOrElse("")
+    val repo = setting.repo.map(v => "@" + v.owner + "/" + v.name).getOrElse("")
     print(api.user.login + repo + ">")
   }
 
   def process(line: String) = {
-    val args = split(line)
-    val ret = args match {
-      case Nil =>
-        Future(setting)
-      case str :: tail =>
-        commands.get(str).map(_.run(setting, tail)).getOrElse {
-          println("Unknown command: " + str)
+    try {
+      val args = split(line)
+      val ret = args match {
+        case Nil =>
           Future(setting)
-        }
-    }
-    ret.map { s =>
-      setting = s
-      prompt
-    }.failed.map { e =>
-      println(e.getMessage)
-      prompt
+        case str :: tail =>
+          commands.get(str).map(_.run(setting, tail)).getOrElse {
+            println("Unknown command: " + str)
+            Future(setting)
+          }
+      }
+      ret.map { s =>
+        setting = s
+        prompt
+      }.failed.map { e =>
+        println(e.getMessage)
+        prompt
+      }
+    } catch {
+      case e: Exception =>
+        println(e.toString)
+        prompt      
     }
   }
 

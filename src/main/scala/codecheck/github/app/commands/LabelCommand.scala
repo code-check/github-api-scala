@@ -7,14 +7,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import codecheck.github.app.Command
 import codecheck.github.app.CommandSetting
 import codecheck.github.app.Repo
+import codecheck.github.models.Label
 import codecheck.github.models.LabelInput
 import scopt.OptionParser
+import org.json4s._
+import org.json4s.jackson.JsonMethods
 
 
 class LabelCommand(val api: GitHubAPI) extends Command {
   case class Config(
     repo: Option[Repo],
-    cmd: String = "help",
+    cmd: String = "list",
     name: String = "",
     color: String = "",
     file: File = null,
@@ -92,51 +95,52 @@ class LabelCommand(val api: GitHubAPI) extends Command {
       case "add" =>
         add(config)
       case "merge" =>
-        Future(true)
+        merge(config)
       case "update" =>
-        Future(true)
+        update(config)
       case "rm" =>
-        Future(true)
+        remove(config)
       case _ =>
         parser.showUsage
         Future(true)
     }
   }
 
-  def repositoryNotSpecified = {
-    println("Repository not specified")
-    Future(true)
+  def list(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
+    rapi.listLabelDefs.map { list =>
+      val nameLen = list.map(_.name.length).max + 4
+      list.foreach{ l =>
+        val name = l.name + (" " * (nameLen - l.name.length))
+        println(s"$name ${l.color}")
+      } 
+      true
+    }
   }
 
-  def list(config: Config): Future[Any] = {
-    config.repo.map { repo =>
-      api.listLabelDefs(repo.owner, repo.repo).map { list =>
-        val nameLen = list.map(_.name.length).max + 4
-        list.foreach{ l =>
-          val name = l.name + (" " * (nameLen - l.name.length))
-          println(s"$name ${l.color}")
-        } 
-        true
-      }
-    }.getOrElse(repositoryNotSpecified)
+  def add(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
+    val input = LabelInput(config.name, config.color)
+    rapi.createLabelDef(input).map { l =>
+      println(s"Created ${l.name} - ${l.color}")
+      true
+    }
   }
 
-  def add(config: Config): Future[Any] = {
-    config.repo.map { repo =>
-      val input = LabelInput(config.name, config.color)
-      api.createLabelDef(repo.owner, repo.repo, input).map { l =>
-        println(s"Created ${l.name} - ${l.color}")
-        true
-      }
-    }.getOrElse(repositoryNotSpecified)
+  def update(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
+    val input = LabelInput(config.newName.getOrElse(config.name), config.color)
+    rapi.updateLabelDef(config.name, input).map { l =>
+      println(s"Updated ${l.name} - ${l.color}")
+      true
+    }
   }
 
+  def remove(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
+    rapi.removeLabelDef(config.name).map { b =>
+      println(s"RemovedCreated ${config.name}")
+      true
+    }
+  }
 
-
-  /*
-  def add(owner: String, repo: String, file: File) = {
-    val rapi = api.repositoryAPI(owner, repo)
-
+  def merge(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
     def doCreateLabel(label: Option[Label], input: LabelInput): Future[String] = {
       label match {
         case Some(l) if (l.color == input.color) =>
@@ -147,32 +151,25 @@ class LabelCommand(val api: GitHubAPI) extends Command {
           rapi.createLabelDef(input).map(_ => s"Create label ${input.name}")
       }
     }
-    val json = JsonMethods.parse(file)
+    val json = JsonMethods.parse(config.file)
     val items = (json match {
       case JArray(list) => list
       case JObject => List(json)
-      case _ => throw new IllegalArgumentException(JsonMethods.pretty(json))
+      case _ => throw new IllegalArgumentException("Invalid json file\n" + JsonMethods.pretty(json))
     }).map(v => LabelInput(
       (v \ "name").extract[String],
       (v \ "color").extract[String]
     ))
-    rapi.listLabelDefs.map { labels =>
+    rapi.listLabelDefs.flatMap { labels =>
       val ret = items.map { input =>
         doCreateLabel(labels.find(_.name == input.name), input).map { s =>
           println(s)
           s
         }
       }
-      done(ret)
+      Future.sequence(ret)
     }
   }
 
-  def list(owner: String, repo: String) = {
-    api.repositoryAPI(owner, repo).listLabelDefs.map(_.map{ l =>
-      println(s"${l.name} ${l.color}")
-      done
-    })
-  }
-  */
 }
 
