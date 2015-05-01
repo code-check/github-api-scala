@@ -4,5 +4,8 @@ import org.json4s.JValue
 import codecheck.github.models.ErrorResponse
 
 class GitHubAPIException(body: JValue) extends Exception {
-  val error = ErrorResponse(body)
+  lazy val error = ErrorResponse(body)
+
+  override def getMessage = error.toString
+
 }

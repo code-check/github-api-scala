@@ -14,6 +14,7 @@ import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
 
 import codecheck.github.exceptions.NotFoundException
+import codecheck.github.exceptions.UnauthorizedException
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
 import codecheck.github.models.User
@@ -53,6 +54,8 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
       def onCompleted(res: Response) = {
         val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
         res.getStatusCode match {
+          case 401 => 
+            deferred.failure(new UnauthorizedException(json))
           case 404 => 
             deferred.failure(new NotFoundException(json))
           case 422 =>

@@ -6,11 +6,10 @@ import org.scalatest.time.Span._
 import org.scalatest.concurrent.ScalaFutures
 
 trait Constants {
+  import scala.language.postfixOps
 
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
-
-  protected implicit def duration2timeout(d: Duration) = ScalaFutures.timeout(d)
 }
 
 object Constants {

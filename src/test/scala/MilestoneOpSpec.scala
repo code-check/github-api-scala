@@ -86,7 +86,7 @@ class MilestoneOpSpec extends FunSpec
       assert(m.state == MilestoneState.open)
       assert(m.title == "test")
       assert(m.description.get == "test")
-      assert(m.creator.name == m1.creator.name)
+      assert(m.creator.login == m1.creator.login)
       assert(m.open_issues == 0)
       assert(m.closed_issues == 0)
       assert(m.created_at != null)
