@@ -9,6 +9,7 @@ import codecheck.github.app.CommandSetting
 import codecheck.github.app.Repo
 import codecheck.github.models.Label
 import codecheck.github.models.LabelInput
+import codecheck.github.utils.PrintList
 import scopt.OptionParser
 import org.json4s._
 import org.json4s.jackson.JsonMethods
@@ -108,11 +109,10 @@ class LabelCommand(val api: GitHubAPI) extends Command {
 
   def list(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
     rapi.listLabelDefs.map { list =>
-      val nameLen = list.map(_.name.length).max + 4
-      list.foreach{ l =>
-        val name = l.name + (" " * (nameLen - l.name.length))
-        println(s"$name ${l.color}")
-      } 
+      val rows = list.map { label =>
+        List(label.name, label.color)
+      }
+      PrintList("label", "color").build(rows)
       true
     }
   }

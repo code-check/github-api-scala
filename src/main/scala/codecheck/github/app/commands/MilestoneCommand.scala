@@ -16,6 +16,7 @@ import codecheck.github.models.MilestoneListOption
 import codecheck.github.models.MilestoneState
 import codecheck.github.models.MilestoneSort
 import codecheck.github.models.SortDirection
+import codecheck.github.utils.PrintList
 import scopt.OptionParser
 import org.json4s._
 import org.json4s.jackson.JsonMethods
@@ -175,17 +176,19 @@ class MilestoneCommand(val api: GitHubAPI) extends Command {
   def list(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
     rapi.listMilestones(config.listOption).map { list =>
       val nameLen = list.map(_.title.length).max + 4
-      list.foreach{ m =>
-        if (config.verbose) {
-          printDetail(m)
-        } else {
-          val number = m.number
-          val name = m.title + (" " * (nameLen - m.title.length))
-          val count = m.open_issues + "/" + (m.open_issues + m.closed_issues)
-          val due_on = m.due_on.map(_.toString("yyyy-MM-dd")).getOrElse("")
-          println(f"$number%-3s $name $count%-8s $due_on")
+      if (config.verbose) {
+        list.foreach(printDetail)
+      } else {
+        val rows = list.map { m =>
+          List(
+            m.number,
+            m.title,
+            m.open_issues + "/" + (m.open_issues + m.closed_issues),
+            m.due_on.map(_.toString("yyyy-MM-dd")).getOrElse("")
+          )
         }
-      } 
+        PrintList("No.", "title", "count", "due_on").build(rows)
+      }
       true
     }
   }
