@@ -21,6 +21,7 @@ import codecheck.github.models.User
 
 class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends UserOp
   with OrganizationOp 
+  with RepositoryOp
   with LabelOp
   with IssueOp
   with MilestoneOp
