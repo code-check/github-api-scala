@@ -10,7 +10,8 @@ class CommandRunner(api: GitHubAPI) {
     "cr" -> new ChangeRepositoryCommand(api),
     "label" -> new LabelCommand(api),
     "milestone" -> new MilestoneCommand(api),
-    "repo" -> new RepositoryCommand(api)
+    "repo" -> new RepositoryCommand(api),
+    "issue" -> new IssueCommand(api)
   )
 
   var setting = CommandSetting()

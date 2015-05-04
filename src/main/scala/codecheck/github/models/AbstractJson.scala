@@ -3,6 +3,7 @@ package codecheck.github.models
 import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.JNull
+import org.json4s.JObject
 import org.json4s.Formats
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
@@ -47,6 +48,15 @@ class AbstractJson(value: JValue) {
   }
 
   def boolean(path: String): Boolean = booleanOpt(path).get
+
+  def objectOpt[T](path: String)(f: JValue => T): Option[T] = {
+    path.split("\\.").foldLeft(value) { (v, s) =>
+      v \ s
+    } match {
+      case x: JObject => Some(f(x))
+      case _ => None
+    }
+  }
 
   override def toString = JsonMethods.pretty(value)
 }

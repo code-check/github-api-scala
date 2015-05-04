@@ -175,7 +175,6 @@ class MilestoneCommand(val api: GitHubAPI) extends Command {
 
   def list(config: Config): Future[Any] = withRepo(config.repo) { rapi =>
     rapi.listMilestones(config.listOption).map { list =>
-      val nameLen = list.map(_.title.length).max + 4
       if (config.verbose) {
         list.foreach(printDetail)
       } else {
