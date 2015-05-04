@@ -36,5 +36,17 @@ class AbstractJson(value: JValue) {
 
   def date(path: String): DateTime = dateOpt(path).get
 
+  def booleanOpt(path: String): Option[Boolean] = {
+    path.split("\\.").foldLeft(value) { (v, s) =>
+      v \ s
+    } match {
+      case JNothing => None
+      case JNull => None
+      case v: JValue => Some(v.extract[Boolean])
+    }
+  }
+
+  def boolean(path: String): Boolean = booleanOpt(path).get
+
   override def toString = JsonMethods.pretty(value)
 }

@@ -42,7 +42,7 @@ trait RepositoryOp {
 
 
   def getRepository(owner: String, repo: String): Future[Repository] = {
-    exec("GET", "/repos/$owner/$repo").map(res => Repository(res.body))
+    exec("GET", s"/repos/$owner/$repo").map(res => Repository(res.body))
   }
   def createRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
   def updateRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]

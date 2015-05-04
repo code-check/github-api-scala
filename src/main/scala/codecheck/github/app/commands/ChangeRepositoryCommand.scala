@@ -8,6 +8,20 @@ import codecheck.github.app.Command
 import codecheck.github.app.CommandSetting
 
 class ChangeRepositoryCommand(val api: GitHubAPI) extends Command {
+  def exists(repo: Repo): Future[Some[Repo]] = {
+    api.getRepository(repo.owner, repo.name).map{v =>
+      val p = v.permissions
+      print("Your permissions: ")
+      if (p.admin) print("admin ")
+      if (p.push) print("push ")
+      if (p.pull) print("pull ")
+      println
+    }.transform(
+      (_ => Some(repo)),
+      (_ => new Exception(s"Repository ${repo.owner}/${repo.name} is not found."))
+    )
+  }
+
   def run(setting: CommandSetting, args: List[String]): Future[CommandSetting] = {
     val repo = args match {
       case str :: Nil =>
@@ -22,8 +36,8 @@ class ChangeRepositoryCommand(val api: GitHubAPI) extends Command {
         Some(Repo(owner, repo))
       case _ =>
         println("cr [OWNER] [REPO]")
-        setting.repo
+        None
     }
-    Future(setting.copy(repo=repo))
+    repo.map(exists(_)).getOrElse(Future(setting.repo)).map(v => setting.copy(repo=v))
   }
 }

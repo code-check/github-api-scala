@@ -35,4 +35,12 @@ class RepositoryOpSpec extends FunSpec
       println(list)
     }
   }
+  describe("getRepository") {
+    it("should succeed") {
+      val repo = Await.result(api.getRepository("code-check", "github-api-scala"), TIMEOUT)
+      assert(repo.name == "github-api-scala")
+      assert(repo.owner.login == "code-check")
+      //ToDo other field
+    }
+  }
 }

@@ -9,7 +9,8 @@ class CommandRunner(api: GitHubAPI) {
   var commands: Map[String, Command] = Map(
     "cr" -> new ChangeRepositoryCommand(api),
     "label" -> new LabelCommand(api),
-    "milestone" -> new MilestoneCommand(api)
+    "milestone" -> new MilestoneCommand(api),
+    "repo" -> new RepositoryCommand(api)
   )
 
   var setting = CommandSetting()
