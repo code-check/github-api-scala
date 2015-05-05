@@ -11,7 +11,7 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.models.IssueInput
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueListOption
-import codecheck.github.models.IssueListOption4Repo
+import codecheck.github.models.IssueListOption4Repository
 
 import codecheck.github.utils.ToDo
 
@@ -36,7 +36,7 @@ trait IssueOp {
   def listOrgIssues(org: String, option: IssueListOption = IssueListOption()): Future[List[Issue]] =
     doList(s"/orgs/$org/issues" + option.q)
 
-  def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repo): Future[List[Issue]] = ToDo[Future[List[Issue]]]
+  def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repository): Future[List[Issue]] = ToDo[Future[List[Issue]]]
 
   def getIssue(owner: String, repo: String, number: Long): Future[Issue] = 
     exec("GET", s"/repos/$owner/$repo/issues/$number").map(res => Issue(res.body))

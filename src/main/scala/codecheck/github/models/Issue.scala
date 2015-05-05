@@ -67,7 +67,7 @@ case class IssueListOption(
     since.map("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ssZ"))
 }
 
-/*case*/ class IssueListOption4Repo extends ToDo
+/*case*/ class IssueListOption4Repository extends ToDo
 
 case class IssueInput(
   title: Option[String] = None,

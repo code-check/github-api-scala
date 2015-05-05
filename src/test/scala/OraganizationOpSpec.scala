@@ -3,15 +3,15 @@ import scala.concurrent.Await
 
 class OrganizationOpSpec extends FunSpec with Constants {
 
-  describe("listOrganizations(user)") {
+  describe("listOwnOrganizations(user)") {
     it("should return multiple organizations.") {
-      val result = Await.result(api.listOrganizations("shunjikonishi"), TIMEOUT)
+      val result = Await.result(api.listOwnOrganizations, TIMEOUT)
       assert(result.length > 1)
     }
   }
-  describe("listOrganizations") {
+  describe("listUserOrganizations") {
     it("should return multiple organizations.") {
-      val result = Await.result(api.listOrganizations, TIMEOUT)
+      val result = Await.result(api.listUserOrganizations("shunjikonishi"), TIMEOUT)
       assert(result.length > 1)
     }
   }

@@ -11,7 +11,7 @@ import codecheck.github.models.OrganizationDetail
 trait OrganizationOp {
   self: GitHubAPI =>
 
-  def listOrganizations: Future[List[Organization]] = {
+  def listOwnOrganizations: Future[List[Organization]] = {
     self.exec("GET", s"/user/orgs").map { 
       _.body match {
         case JArray(arr) => arr.map(new Organization(_))
@@ -20,7 +20,7 @@ trait OrganizationOp {
     }
   }
 
-  def listOrganizations(user: String): Future[List[Organization]] = {
+  def listUserOrganizations(user: String): Future[List[Organization]] = {
     self.exec("GET", s"/users/${user}/orgs").map {
       _.body match {
         case JArray(arr) => arr.map(new Organization(_))
