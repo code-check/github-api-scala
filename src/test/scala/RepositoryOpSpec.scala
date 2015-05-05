@@ -10,9 +10,6 @@ class RepositoryOpSpec extends FunSpec
   with Constants 
 {
 
-  val owner = "code-check"
-  val repo = "test-repo"
-
   describe("listOwnRepositories") {
     it("should succeed") {
       val list = Await.result(api.listOwnRepositories(), TIMEOUT)

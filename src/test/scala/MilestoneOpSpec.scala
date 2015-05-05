@@ -15,9 +15,6 @@ class MilestoneOpSpec extends FunSpec
   with Constants 
 {
 
-  val owner = "code-check"
-  val repo = "test-repo"
-
   private def removeAll = {
     val list = Await.result(api.listMilestones(owner, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     list.foreach { m =>

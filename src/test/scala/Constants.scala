@@ -10,6 +10,9 @@ trait Constants {
 
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
+
+  protected val owner = "code-check"
+  protected val repo = "test-repo"
 }
 
 object Constants {

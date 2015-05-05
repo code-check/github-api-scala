@@ -37,13 +37,20 @@ trait IssueOp {
     doList(s"/orgs/$org/issues" + option.q)
 
   def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repo): Future[List[Issue]] = ToDo[Future[List[Issue]]]
-  def getIssue(owner: String, repo: String, number: Long): Future[Issue] = ToDo[Future[Issue]]
-  def createIssue(owner: String, repo: String, input: IssueInput): Future[Issue] = ToDo[Future[Issue]]
+
+  def getIssue(owner: String, repo: String, number: Long): Future[Issue] = 
+    exec("GET", s"/repos/$owner/$repo/issues/$number").map(res => Issue(res.body))
+
+  def createIssue(owner: String, repo: String, input: IssueInput): Future[Issue] = {
+    val path = s"/repos/$owner/$repo/issues"
+    exec("POST", path, input.value).map { result =>
+      new Issue(result.body)
+    }
+  }
 
   def editIssue(owner: String, repo: String, number: Long, input: IssueInput): Future[Issue] = {
     val path = s"/repos/$owner/$repo/issues/$number"
-    val body = input.value
-    exec("PATCH", path, body).map { result =>
+    exec("PATCH", path, input.value).map { result =>
       new Issue(result.body)
     }
   }

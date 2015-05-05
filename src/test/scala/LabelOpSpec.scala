@@ -7,8 +7,6 @@ import codecheck.github.exceptions.NotFoundException
 
 class LabelOpSpec extends FunSpec with Constants {
 
-  val owner = "code-check"
-  val repo = "github-api-scala"
   val number = 1
 
   describe("removeAllLabels") {

@@ -3,8 +3,6 @@ import scala.concurrent.Await
 
 class IssueOpSpec extends FunSpec with Constants {
 
-  val owner = "code-check"
-  val repo = "github-api-scala"
   val number = 1
   val assignee = "shunjikonishi"
 

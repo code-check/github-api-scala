@@ -74,14 +74,14 @@ case class IssueInput(
   body: Option[String] = None,
   assignee: Option[String] = None,
   milestone: Option[Int] = None,
-  labels: List[String] = Nil,
+  labels: Seq[String] = Nil,
   state: Option[IssueState] = None
 ) extends AbstractInput {
   override val value: JValue = {
     val a = assignee.map { s =>
       if (s.length == 0) JNull else JString(s)
     }.getOrElse(JNothing)
-    val l = if (labels.length == 0) JNothing else JArray(labels.map(JString(_)))
+    val l = if (labels.length == 0) JNothing else JArray(labels.map(JString(_)).toList)
 
     ("title" -> title) ~
     ("body" -> body) ~
@@ -92,6 +92,10 @@ case class IssueInput(
   }
 }
 
+object IssueInput {
+  def apply(title: String, body: Option[String], assignee: Option[String], milestone: Option[Int], labels: Seq[String]): IssueInput =
+    IssueInput(Some(title), body, assignee, milestone, labels, None)
+}
 case class Issue(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def title = get("title")

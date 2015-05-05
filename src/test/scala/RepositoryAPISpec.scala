@@ -1,6 +1,6 @@
 import org.scalatest.FunSpec
 
-class GitHubRepositorySpec extends FunSpec with Constants {
+class RepositoryAPISpec extends FunSpec with Constants {
 
   describe("with dummy repo") {
     val repo = api.repositoryAPI("dummy", "repo")
