@@ -29,5 +29,6 @@ trait Command {
       Future(false)
     }
   }
+
   def run(setting: CommandSetting, args: List[String]): Future[CommandSetting]
 }

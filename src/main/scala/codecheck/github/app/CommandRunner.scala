@@ -32,15 +32,28 @@ class CommandRunner(api: GitHubAPI) {
     print(api.user.login + repo + ">")
   }
 
+  def help = {
+    println("Avaiable commands:")
+    commands.keys.toList.sorted.foreach(key => println(s"  - $key"))
+  }
+
   def process(line: String) = {
     try {
       val args = split(line)
       val ret = args match {
         case Nil =>
           Future(setting)
-        case str :: tail =>
-          commands.get(str).map(_.run(setting, tail)).getOrElse {
-            println("Unknown command: " + str)
+        case "help" :: Nil =>
+          help
+          Future(setting)
+        case "help" :: cmd :: Nil =>
+          commands.get(cmd).map(_.run(setting, "help" :: Nil)).getOrElse {
+            println("Unknown command: " + cmd)
+            Future(setting)
+          }
+        case cmd :: tail =>
+          commands.get(cmd).map(_.run(setting, tail)).getOrElse {
+            println("Unknown command: " + cmd)
             Future(setting)
           }
       }
