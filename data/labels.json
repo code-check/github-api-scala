@@ -10,5 +10,9 @@
   {
     "name": "Ship it!",
     "color": "207de5"
+  },
+  {
+    "name": "Done!",
+    "color": "bfd4f2"
   }
 ]
