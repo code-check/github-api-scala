@@ -76,20 +76,24 @@ class MilestoneOpSpec extends FunSpec
     val m1 = create(MilestoneInput("test", "test", d1))
 
     it("should succeed") {
-      val m = Await.result(api.getMilestone(owner, repo, m1.number), TIMEOUT)
-      assert(m.url == m1.url)
-      assert(m.id == m1.id)
-      assert(m.number == m1.number)
-      assert(m.state == MilestoneState.open)
-      assert(m.title == "test")
-      assert(m.description.get == "test")
-      assert(m.creator.login == m1.creator.login)
-      assert(m.open_issues == 0)
-      assert(m.closed_issues == 0)
-      assert(m.created_at != null)
-      assert(m.updated_at != null)
-      assert(m.closed_at.isEmpty)
-      assert(m.due_on.get == d1)
+      Await.result(api.getMilestone(owner, repo, m1.number), TIMEOUT).map { m =>
+        assert(m.url == m1.url)
+        assert(m.id == m1.id)
+        assert(m.number == m1.number)
+        assert(m.state == MilestoneState.open)
+        assert(m.title == "test")
+        assert(m.description.get == "test")
+        assert(m.creator.login == m1.creator.login)
+        assert(m.open_issues == 0)
+        assert(m.closed_issues == 0)
+        assert(m.created_at != null)
+        assert(m.updated_at != null)
+        assert(m.closed_at.isEmpty)
+        assert(m.due_on.get == d1)
+      }
+    }
+    it("should be None") {
+      assert(Await.result(api.getMilestone(owner, repo, 999), TIMEOUT).isEmpty)
     }
   }
   describe("updateMilestone") {
@@ -115,14 +119,15 @@ class MilestoneOpSpec extends FunSpec
       assert(m.closed_at.isDefined)
       assert(m.due_on.get == d2)
 
-      val m2 = Await.result(api.getMilestone(owner, repo, m.number), TIMEOUT)
-      assert(m2.id == m1.id)
-      assert(m2.number == m1.number)
-      assert(m2.state == MilestoneState.closed)
-      assert(m2.title == "test2")
-      assert(m2.description.get == "description")
-      assert(m2.closed_at.isDefined)
-      assert(m2.due_on.get == d2)
+      Await.result(api.getMilestone(owner, repo, m.number), TIMEOUT).map { m2=>
+        assert(m2.id == m1.id)
+        assert(m2.number == m1.number)
+        assert(m2.state == MilestoneState.closed)
+        assert(m2.title == "test2")
+        assert(m2.description.get == "description")
+        assert(m2.closed_at.isDefined)
+        assert(m2.due_on.get == d2)
+      }
     }
   }
   describe("listMilestones") {
@@ -166,7 +171,9 @@ class MilestoneOpSpec extends FunSpec
       val b = Await.result(api.removeMilestone(owner, repo, m1.number), TIMEOUT)
       assert(b)
 
-      val ex = Await.result(api.getMilestone(owner, repo, m1.number).failed, TIMEOUT)
+      assert(Await.result(api.getMilestone(owner, repo, m1.number), TIMEOUT).isEmpty)
+
+      val ex = Await.result(api.removeMilestone(owner, repo, m1.number).failed, TIMEOUT)
       ex match {
         case e: NotFoundException => 
         case _ => fail

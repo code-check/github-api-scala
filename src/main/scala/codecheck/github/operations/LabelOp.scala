@@ -7,7 +7,7 @@ import org.json4s.JString
 import org.json4s.JNothing
 
 import codecheck.github.api.GitHubAPI
-import codecheck.github.exceptions.GitHubAPIException
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Label
 import codecheck.github.models.LabelInput
 
@@ -65,9 +65,14 @@ trait LabelOp {
     }
   }
 
-  def getLabelDef(owner: String, repo: String, label: String): Future[Label] = {
+  def getLabelDef(owner: String, repo: String, label: String): Future[Option[Label]] = {
     val path = s"/repos/$owner/$repo/labels/" + encode(label)
-    exec("GET", path).map(res => Label(res.body))
+    exec("GET", path, fail404=false).map(res => 
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(Label(res.body))
+      }
+    )
   }
 
   def createLabelDef(owner: String, repo: String, label: LabelInput): Future[Label] = {

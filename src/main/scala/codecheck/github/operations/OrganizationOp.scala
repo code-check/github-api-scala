@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.JArray
 
 import codecheck.github.api.GitHubAPI
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Organization
 import codecheck.github.models.OrganizationDetail
 
@@ -29,7 +30,12 @@ trait OrganizationOp {
     }
   }
 
-  def getOrganization(org: String): Future[OrganizationDetail] = {
-    self.exec("GET", s"/orgs/${org}").map(result => new OrganizationDetail(result.body))
+  def getOrganization(org: String): Future[Option[OrganizationDetail]] = {
+    self.exec("GET", s"/orgs/${org}", fail404=false).map { res =>
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(new OrganizationDetail(res.body))
+      }
+    }
   }
 }

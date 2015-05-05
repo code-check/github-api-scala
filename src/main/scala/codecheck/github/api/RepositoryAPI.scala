@@ -39,7 +39,7 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   def listLabelDefs: Future[List[Label]] = 
     api.listLabelDefs(owner, repo)
 
-  def getLabelDef(label: String): Future[Label] = 
+  def getLabelDef(label: String): Future[Option[Label]] = 
     api.getLabelDef(owner, repo, label)
 
   def createLabelDef(label: LabelInput): Future[Label] = 
@@ -55,7 +55,7 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   def listMilestones(option: MilestoneListOption = MilestoneListOption()): Future[List[Milestone]] = 
     api.listMilestones(owner, repo, option)
 
-  def getMilestone(number: Int): Future[Milestone] = 
+  def getMilestone(number: Int): Future[Option[Milestone]] = 
     api.getMilestone(owner, repo, number)
 
   def createMilestone(input: MilestoneInput): Future[Milestone] = 

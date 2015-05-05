@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.JArray
 
 import codecheck.github.api.GitHubAPI
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.utils.ToDo
 import codecheck.github.models.Repository
 import codecheck.github.models.RepositoryInput
@@ -41,9 +42,15 @@ trait RepositoryOp {
   }
 
 
-  def getRepository(owner: String, repo: String): Future[Repository] = {
-    exec("GET", s"/repos/$owner/$repo").map(res => Repository(res.body))
+  def getRepository(owner: String, repo: String): Future[Option[Repository]] = {
+    exec("GET", s"/repos/$owner/$repo", fail404=false).map { res =>
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(Repository(res.body))
+      }
+    }
   }
+
   def createRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
   def updateRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
 

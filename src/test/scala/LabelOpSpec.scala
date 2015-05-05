@@ -71,10 +71,14 @@ class LabelOpSpec extends FunSpec with Constants {
   
   describe("getLabelDef") {
     it("should succeed") {
-      val label = Await.result(api.getLabelDef(owner, repo, "question"), TIMEOUT)
-      assert(label.name == "question")
-      assert(label.url.length > 0)
-      assert(label.color == "cc317c")
+      Await.result(api.getLabelDef(owner, repo, "question"), TIMEOUT).map { label =>
+        assert(label.name == "question")
+        assert(label.url.length > 0)
+        assert(label.color == "cc317c")
+      }
+    }
+    it("should be None") {
+      assert(Await.result(api.getLabelDef(owner, repo, "hoge"), TIMEOUT).isEmpty)
     }
   }
   

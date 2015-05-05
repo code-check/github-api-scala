@@ -15,7 +15,7 @@ trait UserOp {
     User(res.body)
   }
 
-  def getUser(username: String): Future[User] = ToDo[Future[User]]
+  def getUser(username: String): Future[Option[User]] = ToDo[Future[Option[User]]]
   def updateAuthenticatedUser(input: UserInput): Future[User] = ToDo[Future[User]]
   def getAllUsers(sinse: Long = 0): Future[List[User]] = ToDo[Future[List[User]]]
 }

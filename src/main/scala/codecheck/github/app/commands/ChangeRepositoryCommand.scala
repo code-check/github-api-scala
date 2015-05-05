@@ -8,14 +8,21 @@ import codecheck.github.app.Command
 import codecheck.github.app.CommandSetting
 
 class ChangeRepositoryCommand(val api: GitHubAPI) extends Command {
-  def exists(repo: Repo): Future[Some[Repo]] = {
-    api.getRepository(repo.owner, repo.name).map{v =>
-      val p = v.permissions
-      print("Your permissions: ")
-      if (p.admin) print("admin ")
-      if (p.push) print("push ")
-      if (p.pull) print("pull ")
-      println
+
+  def check(repo: Repo): Future[Some[Repo]] = {
+    api.getRepository(repo.owner, repo.name).map{ret =>
+      ret.map { v =>
+        val p = v.permissions
+        print("Your permissions: ")
+        if (p.admin) print("admin ")
+        if (p.push) print("push ")
+        if (p.pull) print("pull ")
+        println
+        v
+      }.orElse {
+        println(s"Repository ${repo.owner}/${repo.name} is not found.")
+        None
+      }
     }.transform(
       (_ => Some(repo)),
       (_ => new Exception(s"Repository ${repo.owner}/${repo.name} is not found."))
@@ -38,6 +45,6 @@ class ChangeRepositoryCommand(val api: GitHubAPI) extends Command {
         println("cr [OWNER] [REPO]")
         None
     }
-    repo.map(exists(_)).getOrElse(Future(setting.repo)).map(v => setting.copy(repo=v))
+    repo.map(check(_).map(v => setting.copy(repo=v))).getOrElse(Future(setting))
   }
 }

@@ -7,7 +7,7 @@ import org.json4s.JString
 import org.json4s.JNothing
 
 import codecheck.github.api.GitHubAPI
-import codecheck.github.exceptions.GitHubAPIException
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Milestone
 import codecheck.github.models.MilestoneInput
 import codecheck.github.models.MilestoneListOption
@@ -29,9 +29,14 @@ trait MilestoneOp {
     )
   }
 
-  def getMilestone(owner: String, repo: String, number: Int): Future[Milestone] = {
+  def getMilestone(owner: String, repo: String, number: Int): Future[Option[Milestone]] = {
     val path = s"/repos/$owner/$repo/milestones/$number"
-    exec("GET", path).map(res => Milestone(res.body))
+    exec("GET", path, fail404=false).map { res =>
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(Milestone(res.body))
+      }
+    }
   }
 
   def createMilestone(owner: String, repo: String, input: MilestoneInput): Future[Milestone] = {

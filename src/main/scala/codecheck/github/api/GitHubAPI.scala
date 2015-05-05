@@ -35,7 +35,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
 
   protected def encode(s: String) = URLEncoder.encode(s, "utf-8").replaceAll("\\+", "%20")
 
-  def exec(method: String, path: String, body: JValue = JNothing): Future[APIResult] = {
+  def exec(method: String, path: String, body: JValue = JNothing, fail404: Boolean = true): Future[APIResult] = {
     val deferred = Promise[APIResult]()
     val url = endpoint + path
     val request = method match {
@@ -57,10 +57,10 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
         res.getStatusCode match {
           case 401 => 
             deferred.failure(new UnauthorizedException(json))
-          case 404 => 
-            deferred.failure(new NotFoundException(json))
           case 422 =>
             deferred.failure(new GitHubAPIException(json))
+          case 404 if fail404 => 
+            deferred.failure(new NotFoundException(json))
           case _ =>
             val result = APIResult(res.getStatusCode, json)
             deferred.success(result)

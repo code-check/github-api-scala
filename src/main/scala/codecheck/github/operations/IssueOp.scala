@@ -8,6 +8,7 @@ import org.json4s.JString
 import org.json4s.JNothing
 
 import codecheck.github.api.GitHubAPI
+import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.IssueInput
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueListOption
@@ -38,8 +39,13 @@ trait IssueOp {
 
   def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repository): Future[List[Issue]] = ToDo[Future[List[Issue]]]
 
-  def getIssue(owner: String, repo: String, number: Long): Future[Issue] = 
-    exec("GET", s"/repos/$owner/$repo/issues/$number").map(res => Issue(res.body))
+  def getIssue(owner: String, repo: String, number: Long): Future[Option[Issue]] = 
+    exec("GET", s"/repos/$owner/$repo/issues/$number", fail404=false).map(res => 
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(Issue(res.body))
+      }
+    )
 
   def createIssue(owner: String, repo: String, input: IssueInput): Future[Issue] = {
     val path = s"/repos/$owner/$repo/issues"
