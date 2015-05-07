@@ -5,7 +5,7 @@ import codecheck.github.utils.ToDo
 
 case class User(value: JValue) extends AbstractJson(value) {
   def login = get("login")
-  def id = get("id")
+  def id = get("id").toLong
   def email = get("email")
 }
 
