@@ -4,9 +4,9 @@ import org.json4s.JValue
 import codecheck.github.utils.ToDo
 
 case class User(value: JValue) extends AbstractJson(value) {
-  def login = get("login")
-  def id = get("id").toLong
-  def email = get("email")
+  def login: String = get("login")
+  def id: Long = get("id").toLong
+  def email: String = get("email")
 }
 
 /*case*/ class UserInput extends ToDo
