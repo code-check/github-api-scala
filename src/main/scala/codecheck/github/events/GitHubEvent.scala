@@ -2,13 +2,17 @@ package codecheck.github.events
 
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods
-import codecheck.github.models.Repository
+import codecheck.github.models.AbstractJson
 
 trait GitHubEvent {
   val name: String
   val value: JValue
 
-  lazy val repository = new Repository(value \ "repository")
+  lazy val repositoryName = new AbstractJson(value \ "repository").get("name")
+  lazy val ownerName = {
+    val user = new AbstractJson(value \ "repository" \ "owner")
+    user.opt("login").getOrElse(user.get("name"))
+  }
   override def toString = name + "\n" + JsonMethods.pretty(value)
 }
 
