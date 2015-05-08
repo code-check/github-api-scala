@@ -102,20 +102,23 @@ class IssueCommand(val api: GitHubAPI) extends Command {
         api.listAllIssues(option)
       }
     }
-    future.map { list =>
-      val rows = list.map { i =>
-        List(
-          i.repository.owner.login,
-          i.repository.name,
-          i.number,
-          i.title,
-          i.assignee.map(_.login).getOrElse(""),
-          i.milestone.map(_.title).getOrElse(""),
-          i.comments,
-          i.labels.map(_.name).mkString(", ")
-        )
-      }
-      PrintList("owner", "repo", "No.", "title", "assignee", "milestone", "comments", "labels").build(rows)
+    future.map { 
+      _.groupBy(i => i.repository.owner.login + "/" + i.repository.name)
+        .map { case (name, list) =>
+          println
+          println(s"*** $name")
+          val rows = list.map { i =>
+            List(
+              i.number,
+              i.title,
+              i.assignee.map(_.login).getOrElse(""),
+              i.milestone.map(_.title).getOrElse(""),
+              i.comments,
+              i.labels.map(_.name).mkString(", ")
+            )
+          }
+          PrintList("No.", "title", "assignee", "milestone", "comments", "labels").build(rows)
+        }
     }
   }
 
