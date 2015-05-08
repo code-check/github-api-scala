@@ -16,5 +16,11 @@ cd github-api
 sbt test
 ```
 
+## About models
+We don't aim to define all fields of JSON.
+Because it might be changed by GitHub.
+
+We just define the fields we need.
+
 ## License
 MIT

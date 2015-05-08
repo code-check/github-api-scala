@@ -113,3 +113,13 @@ Milestone control
 - update
 - rm
 - merge(Update multiple milestones from file)
+
+### repo
+Repository control
+
+- list
+
+### issue
+Issue control
+
+- list
