@@ -83,6 +83,12 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
 }
 
 object GitHubAPI {
+
+  def fromEnv: GitHubAPI = {
+    implicit val client = new AsyncHttpClient
+    apply(sys.env("GITHUB_TOKEN"))
+  }
+  
   def apply(token: String)(implicit client: AsyncHttpClient): GitHubAPI = new GitHubAPI(token, client)
 
   def apply(username: String, password: String)(implicit client: AsyncHttpClient): GitHubAPI = {
