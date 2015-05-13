@@ -7,6 +7,8 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.models.User
 import codecheck.github.models.UserInput
 import codecheck.github.utils.ToDo
+import scala.language.implicitConversions
+
 
 trait UserOp {
   self: GitHubAPI =>
@@ -15,7 +17,20 @@ trait UserOp {
     User(res.body)
   }
 
-  def getUser(username: String): Future[Option[User]] = ToDo[Future[Option[User]]]
-  def updateAuthenticatedUser(input: UserInput): Future[User] = ToDo[Future[User]]
+  def getUser(username: String): Future[Option[User]] = {
+    exec("GET", s"/users/${username}", fail404=false).map { res =>
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(new User(res.body))
+      }
+    }
+  }
+  
+  def updateAuthenticatedUser(input: UserInput): Future[User] = {
+    exec("PATCH", s"/user",input.value,fail404=false).map{ res =>
+      User(res.body)
+    }
+  }
+
   def getAllUsers(sinse: Long = 0): Future[List[User]] = ToDo[Future[List[User]]]
 }
