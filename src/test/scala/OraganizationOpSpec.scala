@@ -38,10 +38,9 @@ class OrganizationOpSpec extends FunSpec with Constants {
   }
   describe("updateOrganization") {
     it("should return true if values updated correctly") {
-      val input = new OrganizationInput(Some("Celestial Beings"), None, None, Some("Moon"), None, None)
-      Await.result(api.updateOrganization("celestialbeings", input), TIMEOUT).map { org =>
-        assert(org.name == "Celestial Beings")
-        assert(org.location == "Moon")
+      val input = new OrganizationInput(None, None, None, "Tokyo, Kanto, Japan", None, None)
+      Await.result(api.updateOrganization("code-check", input), TIMEOUT).map { org =>
+        assert(org.location == "Tokyo, Kanto, Japan")
       }
     }
   }
