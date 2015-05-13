@@ -9,7 +9,6 @@ import codecheck.github.models.UserInput
 import codecheck.github.utils.ToDo
 import scala.language.implicitConversions
 
-
 trait UserOp {
   self: GitHubAPI =>
 
