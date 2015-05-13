@@ -1,6 +1,8 @@
 import org.scalatest.FunSpec
 import scala.concurrent.Await
 
+import codecheck.github.models.OrganizationInput
+
 class OrganizationOpSpec extends FunSpec with Constants {
 
   describe("listOwnOrganizations(user)") {
@@ -32,6 +34,15 @@ class OrganizationOpSpec extends FunSpec with Constants {
     }
     it("should be None.") {
       assert(Await.result(api.getOrganization("code-check-x"), TIMEOUT).isEmpty)
+    }
+  }
+  describe("updateOrganization") {
+    it("should return true if values updated correctly") {
+      val input = new OrganizationInput(Some("Celestial Beings"), None, None, Some("Moon"), None, None)
+      Await.result(api.updateOrganization("celestialbeings", input), TIMEOUT).map { org =>
+        assert(org.name == "Celestial Beings")
+        assert(org.location == "Moon")
+      }
     }
   }
 }
