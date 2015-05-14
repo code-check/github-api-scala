@@ -14,34 +14,48 @@ class RepositoryOpSpec extends FunSpec
     it("should succeed") {
       val list = Await.result(api.listOwnRepositories(), TIMEOUT)
       assert(list.size > 0)
-      println(list)
+    }
+
+    it("Response: listOwnRepositories()") {
+      val list = Await.result(api.listOwnRepositories(), TIMEOUT)
+      if (showResponse) println(list) 
     }
     //ToDo option test
   }
   describe("listUserRepositories") {
     it("should succeed") {
-      val list = Await.result(api.listUserRepositories("shunjikonishi"), TIMEOUT)
+      val list = Await.result(api.listUserRepositories(otherUser), TIMEOUT)
       assert(list.size > 0)
-      println(list)
+    }
+
+    it("Response: listUserRepositories()") {
+      val list = Await.result(api.listUserRepositories(otherUser), TIMEOUT)
+      assert(list.size > 0)
+      if (showResponse) println(list) 
     }
   }
   describe("listOrgRepositories") {
     it("should succeed") {
-      val list = Await.result(api.listOrgRepositories("code-check"), TIMEOUT)
+      val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
       assert(list.size > 0)
-      println(list)
+    }
+
+    it("Response: listOrgRepositories()") {
+      val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
+      assert(list.size > 0)
+      if (showResponse) println(list) 
     }
   }
   describe("getRepository") {
     it("should succeed") {
-      Await.result(api.getRepository("code-check", "github-api-scala"), TIMEOUT).map { repo =>
-        assert(repo.name == "github-api-scala")
-        assert(repo.owner.login == "code-check")
+      Await.result(api.getRepository(organization, repo), TIMEOUT).map { res =>
+        assert(res.name == repo)
+        assert(res.owner.login == organization)
         //ToDo other field
       }
     }
     it("should be None") {
-      assert(Await.result(api.getRepository("code-check", "github-api-scala-x"), TIMEOUT).isEmpty)
+      assert(Await.result(api.getRepository(organization, repoInvalid), TIMEOUT).isEmpty)
     }
   }
 }

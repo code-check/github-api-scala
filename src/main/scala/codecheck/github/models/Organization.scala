@@ -28,13 +28,9 @@ case class OrganizationInput(
   location: Option[String] = None,
   email: Option[String] = None,
   billing_email: Option[String] = None
-) extends AbstractInput {
-  override val value: JValue = {
-    ("name" -> name) ~
-    ("company" -> company) ~
-    ("description" -> description) ~
-    ("location" -> location) ~
-    ("email" -> email) ~
-    ("billing_email" -> email)
-  }
+) extends AbstractInput 
+
+object OrganizationInput {
+  import scala.language.implicitConversions
+  implicit def fromString(s: String): Option[String] = Option(s)
 }

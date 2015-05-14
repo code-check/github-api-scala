@@ -11,8 +11,18 @@ trait Constants {
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
 
-  protected val owner = "code-check"
+  protected val user = "fanwashere" //REQUIRED: Edit this to your own username.
+
+  //Request membership of dummy organization "celestialbeing" if you are not member. Do not edit.
+  protected val organization = "celestialbeings"
   protected val repo = "test-repo"
+
+  //Other Options
+  protected val showResponse = true //Set true to see all response outputs
+  protected val otherUser = "shunjikonishi" 
+  protected val otherUserInvalid = "loremipsom123"
+  protected val repoInvalid = "loremipsom123"
+
 }
 
 object Constants {

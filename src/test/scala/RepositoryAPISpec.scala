@@ -1,7 +1,7 @@
 import org.scalatest.FunSpec
 
 class RepositoryAPISpec extends FunSpec with Constants {
-
+	/*
   describe("with dummy repo") {
     val repo = api.repositoryAPI("dummy", "repo")
     it("should has owner 'dummy'") {
@@ -12,5 +12,5 @@ class RepositoryAPISpec extends FunSpec with Constants {
     }
   }
 
-  
+  */
 }

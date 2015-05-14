@@ -16,13 +16,13 @@ class MilestoneOpSpec extends FunSpec
 {
 
   private def removeAll = {
-    val list = Await.result(api.listMilestones(owner, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
+    val list = Await.result(api.listMilestones(organization, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     list.foreach { m =>
-      Await.result(api.removeMilestone(owner, repo, m.number), TIMEOUT)
+      Await.result(api.removeMilestone(organization, repo, m.number), TIMEOUT)
     }
   }
   private def create(input: MilestoneInput): Milestone = {
-    Await.result(api.createMilestone(owner, repo, input), TIMEOUT)
+    Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
   }
 
   describe("createMilestone") {
@@ -30,7 +30,7 @@ class MilestoneOpSpec extends FunSpec
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
     it("without description and due_on should succeed") {
       val input = MilestoneInput("test1")
-      val m = Await.result(api.createMilestone(owner, repo, input), TIMEOUT)
+      val m = Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
       assert(m.title == "test1")
       assert(m.state == MilestoneState.open)
       assert(m.description.isEmpty)
@@ -38,7 +38,7 @@ class MilestoneOpSpec extends FunSpec
     }
     it("without due_on should succeed") {
       val input = MilestoneInput("test2", "description")
-      val m = Await.result(api.createMilestone(owner, repo, input), TIMEOUT)
+      val m = Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
       assert(m.title == "test2")
       assert(m.state == MilestoneState.open)
       assert(m.description.get == "description")
@@ -46,7 +46,7 @@ class MilestoneOpSpec extends FunSpec
     }
     it("without description should succeed") {
       val input = MilestoneInput("test3", d1)
-      val m = Await.result(api.createMilestone(owner, repo, input), TIMEOUT)
+      val m = Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
       assert(m.title == "test3")
       assert(m.state == MilestoneState.open)
       assert(m.description.isEmpty)
@@ -54,7 +54,7 @@ class MilestoneOpSpec extends FunSpec
     }
     it("with description and due_on should succeed") {
       val input = MilestoneInput("test4", "description", d1)
-      val m = Await.result(api.createMilestone(owner, repo, input), TIMEOUT)
+      val m = Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
       assert(m.title == "test4")
       assert(m.state == MilestoneState.open)
       assert(m.description.get == "description")
@@ -62,7 +62,7 @@ class MilestoneOpSpec extends FunSpec
     }
     it("with wrong reponame should fail") {
       val input = MilestoneInput("test5", "description", d1)
-      val ex = Await.result(api.createMilestone(owner, repo + "-unknown", input).failed, TIMEOUT)
+      val ex = Await.result(api.createMilestone(organization, repo + "-unknown", input).failed, TIMEOUT)
       ex match {
         case e: NotFoundException => 
         case _ => fail
@@ -76,7 +76,7 @@ class MilestoneOpSpec extends FunSpec
     val m1 = create(MilestoneInput("test", "test", d1))
 
     it("should succeed") {
-      Await.result(api.getMilestone(owner, repo, m1.number), TIMEOUT).map { m =>
+      Await.result(api.getMilestone(organization, repo, m1.number), TIMEOUT).map { m =>
         assert(m.url == m1.url)
         assert(m.id == m1.id)
         assert(m.number == m1.number)
@@ -93,7 +93,7 @@ class MilestoneOpSpec extends FunSpec
       }
     }
     it("should be None") {
-      assert(Await.result(api.getMilestone(owner, repo, 999), TIMEOUT).isEmpty)
+      assert(Await.result(api.getMilestone(organization, repo, 999), TIMEOUT).isEmpty)
     }
   }
   describe("updateMilestone") {
@@ -110,7 +110,7 @@ class MilestoneOpSpec extends FunSpec
         description=Some("description"),
         due_on=Some(d2)
       )
-      val m = Await.result(api.updateMilestone(owner, repo, m1.number, input), TIMEOUT)
+      val m = Await.result(api.updateMilestone(organization, repo, m1.number, input), TIMEOUT)
       assert(m.id == m1.id)
       assert(m.number == m1.number)
       assert(m.state == MilestoneState.closed)
@@ -119,7 +119,7 @@ class MilestoneOpSpec extends FunSpec
       assert(m.closed_at.isDefined)
       assert(m.due_on.get == d2)
 
-      Await.result(api.getMilestone(owner, repo, m.number), TIMEOUT).map { m2=>
+      Await.result(api.getMilestone(organization, repo, m.number), TIMEOUT).map { m2=>
         assert(m2.id == m1.id)
         assert(m2.number == m1.number)
         assert(m2.state == MilestoneState.closed)
@@ -139,7 +139,7 @@ class MilestoneOpSpec extends FunSpec
     val m2 = create(MilestoneInput("test2", "test2", d2))
 
     it("should succeed") {
-      val list = Await.result(api.listMilestones(owner, repo), TIMEOUT)
+      val list = Await.result(api.listMilestones(organization, repo), TIMEOUT)
       assert(list.size == 2)
       val m = list.head
       assert(m.title == "test")
@@ -147,14 +147,14 @@ class MilestoneOpSpec extends FunSpec
     }
     it("with sort desc should succeed") {
       val option = MilestoneListOption(direction=SortDirection.desc)
-      val list = Await.result(api.listMilestones(owner, repo, option), TIMEOUT)
+      val list = Await.result(api.listMilestones(organization, repo, option), TIMEOUT)
       assert(list.size == 2)
       val m = list.head
       assert(m.title == "test2")
       assert(m.due_on.get == d2)
     }
     it("with wrong reponame should fail") {
-      val ex = Await.result(api.listMilestones(owner, repo + "-unknown").failed, TIMEOUT)
+      val ex = Await.result(api.listMilestones(organization, repo + "-unknown").failed, TIMEOUT)
       ex match {
         case e: NotFoundException => 
         case _ => fail
@@ -168,12 +168,12 @@ class MilestoneOpSpec extends FunSpec
     val m1 = create(MilestoneInput("test", "test", d1))
 
     it("should succeed") {
-      val b = Await.result(api.removeMilestone(owner, repo, m1.number), TIMEOUT)
+      val b = Await.result(api.removeMilestone(organization, repo, m1.number), TIMEOUT)
       assert(b)
 
-      assert(Await.result(api.getMilestone(owner, repo, m1.number), TIMEOUT).isEmpty)
+      assert(Await.result(api.getMilestone(organization, repo, m1.number), TIMEOUT).isEmpty)
 
-      val ex = Await.result(api.removeMilestone(owner, repo, m1.number).failed, TIMEOUT)
+      val ex = Await.result(api.removeMilestone(organization, repo, m1.number).failed, TIMEOUT)
       ex match {
         case e: NotFoundException => 
         case _ => fail

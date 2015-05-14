@@ -8,12 +8,17 @@ class IssueOpSpec extends FunSpec with Constants {
 
   describe("assign operations") {
     it("assign should succeed") {
-      val result = Await.result(api.assign(owner, repo, number, assignee), TIMEOUT)
+      val result = Await.result(api.assign(organization, repo, number, assignee), TIMEOUT)
       assert(result.get("assignee.login") == assignee)
-      println(result)
     }
+
+    it("Response: assign()") {
+      val result = Await.result(api.assign(organization, repo, number, assignee), TIMEOUT)
+      if (showResponse) println(result) 
+    }
+
     it("unassign should succeed") {
-      val result = Await.result(api.unassign(owner, repo, number), TIMEOUT)
+      val result = Await.result(api.unassign(organization, repo, number), TIMEOUT)
       assert(result.opt("assignee").isEmpty)
     }
   }
