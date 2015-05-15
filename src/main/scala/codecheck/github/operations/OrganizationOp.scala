@@ -8,7 +8,7 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Organization
 import codecheck.github.models.OrganizationDetail
-import codecheck.github.models.OrganizationInput
+//import codecheck.github.models.OrganizationInput
 
 trait OrganizationOp {
   self: GitHubAPI =>
