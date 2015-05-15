@@ -23,6 +23,12 @@ trait UserOp {
       }
     }
   }
-  def updateAuthenticatedUser(input: UserInput): Future[User] = ToDo[Future[User]]
+  
+  def updateAuthenticatedUser(input: UserInput): Future[User] = {
+    exec("PATCH", s"/user",input.value,fail404=false).map{ res =>
+      User(res.body)
+    }
+  }
+
   def getAllUsers(sinse: Long = 0): Future[List[User]] = ToDo[Future[List[User]]]
 }
