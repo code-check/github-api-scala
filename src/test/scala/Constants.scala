@@ -19,7 +19,14 @@ trait Constants {
   protected val repo = "test-repo"
 
   //Other Options
-  protected val showResponse = false //Set true to see all response outputs
+  private val debug = sys.env.get("DEBUG")
+    .map(v => v.equalsIgnoreCase("true") || v.equalsIgnoreCase("yes")).getOrElse(false)
+
+  protected def showResponse(v: Any): Unit = {
+    if (debug) {
+      println(v)
+    }
+  }
   protected val otherUser = "shunjikonishi" 
   protected val otherUserInvalid = "loremipsom123"
   protected val organizationInvalid = "loremipsom123"

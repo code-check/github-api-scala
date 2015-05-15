@@ -17,7 +17,7 @@ class RepositoryOpSpec extends FunSpec with Constants
 
     it("Response: listOwnRepositories()") {
       val list = Await.result(api.listOwnRepositories(), TIMEOUT)
-      if (showResponse) println(list) 
+      showResponse(list)
     }
     //ToDo option test
   }
@@ -29,8 +29,8 @@ class RepositoryOpSpec extends FunSpec with Constants
 
     it("Response: listUserRepositories()") {
       val list = Await.result(api.listUserRepositories(otherUser), TIMEOUT)
+      showResponse(list)
       assert(list.size > 0)
-      if (showResponse) println(list) 
     }
   }
   describe("listOrgRepositories") {
@@ -41,8 +41,8 @@ class RepositoryOpSpec extends FunSpec with Constants
 
     it("Response: listOrgRepositories()") {
       val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
+      showResponse(list)
       assert(list.size > 0)
-      if (showResponse) println(list) 
     }
 
     
