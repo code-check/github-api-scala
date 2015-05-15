@@ -27,8 +27,8 @@ class MilestoneOpSpec extends FunSpec
 
   describe("createMilestone") {
     removeAll
-    val gName = generateRandomString()
-    val gDescription = generateRandomString()
+    val gName = generateRandomString
+    val gDescription = generateRandomString
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
 
     it("without description and due_on should succeed") {
@@ -74,8 +74,8 @@ class MilestoneOpSpec extends FunSpec
   }
   describe("getMilestone") {
     removeAll
-    val gName = generateRandomString()
-    val gDescription = generateRandomString()
+    val gName = generateRandomString
+    val gDescription = generateRandomString
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
     val m1 = create(MilestoneInput(gName, gDescription, d1))
 
@@ -101,11 +101,11 @@ class MilestoneOpSpec extends FunSpec
     }
   }
   describe("updateMilestone") {
-    val gName1 = generateRandomString()
-    val gDescription1 = generateRandomString()
+    val gName1 = generateRandomString
+    val gDescription1 = generateRandomString
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
-    val gName2 = generateRandomString()
-    val gDescription2 = generateRandomString()
+    val gName2 = generateRandomString
+    val gDescription2 = generateRandomString
     val d2 = d1.plusMonths(1)
 
     removeAll
@@ -139,11 +139,11 @@ class MilestoneOpSpec extends FunSpec
     }
   }
   describe("listMilestones") {
-    val gName1 = generateRandomString()
-    val gDescription1 = generateRandomString()
+    val gName1 = generateRandomString
+    val gDescription1 = generateRandomString
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
-    val gName2 = generateRandomString()
-    val gDescription2 = generateRandomString()
+    val gName2 = generateRandomString
+    val gDescription2 = generateRandomString
     val d2 = d1.plusMonths(1)
 
     removeAll
@@ -174,8 +174,8 @@ class MilestoneOpSpec extends FunSpec
     }
   }
   describe("removeMilestone") {
-    val gName = generateRandomString()
-    val gDescription = generateRandomString()
+    val gName = generateRandomString
+    val gDescription = generateRandomString
     val d1 = DateTime.now().plusMonths(1).withMillisOfSecond(0)
 
     removeAll

@@ -8,7 +8,7 @@ import codecheck.github.exceptions.NotFoundException
 class LabelOpSpec extends FunSpec with Constants {
 
   val number = 1
-  val gName = generateRandomWord()
+  val gName = generateRandomWord
 
   describe("removeAllLabels") {
     it("should succeed") {
