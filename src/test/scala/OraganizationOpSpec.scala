@@ -6,10 +6,10 @@ import codecheck.github.models.OrganizationInput
 
 class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
-  val gName = generateRandomString()
-  val gCompany = generateRandomString()
-  val gDescription = generateRandomString()
-  val gLocation = generateRandomString()
+  val gName = Some(generateRandomString)
+  val gCompany = Some(generateRandomString)
+  val gDescription = Some(generateRandomString)
+  val gLocation = Some(generateRandomString)
 
   before {
 
@@ -51,15 +51,13 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
   describe("updateOrganization") {
     it("should return true if values updated correctly") {
-      implicit def s2o(s: String) = Some(s)
-
       val input = new OrganizationInput(gName, gCompany, gDescription, gLocation)
       println(input.name)
       Await.result(api.updateOrganization(organization, input), TIMEOUT).map { org =>
-        assert(org.name == gName)
-        println(org.company)
-        assert(org.description == gDescription)
-        assert(org.location == gLocation)
+        assert(org.name == gName.get)
+        assert(org.company.get == gCompany.get)
+        assert(org.description == gDescription.get)
+        assert(org.location == gLocation.get)
       }
     }
   }

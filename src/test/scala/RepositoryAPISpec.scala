@@ -2,8 +2,8 @@ import org.scalatest.FunSpec
 
 class RepositoryAPISpec extends FunSpec with Constants {
 	
-  val gDummy = generateRandomString()
-  val gRepo = generateRandomString()
+  val gDummy = generateRandomString
+  val gRepo = generateRandomString
 
   describe("with dummy repo") {
     val repo = api.repositoryAPI(gDummy, gRepo)
