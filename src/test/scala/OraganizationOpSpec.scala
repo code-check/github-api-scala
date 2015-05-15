@@ -1,14 +1,29 @@
 import org.scalatest.FunSpec
+import org.scalatest.BeforeAndAfter
 import scala.concurrent.Await
 
 import codecheck.github.models.OrganizationInput
 
-class OrganizationOpSpec extends FunSpec with Constants {
+class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
   val gName = generateRandomString()
   val gCompany = generateRandomString()
   val gDescription = generateRandomString()
   val gLocation = generateRandomString()
+
+  before {
+
+  }
+
+  after {
+    val input = new OrganizationInput(
+      Some("celestialbeings"),
+      Some("givery"),
+      Some("No description"),
+      Some("Tokyo")
+    )
+    Await.result(api.updateOrganization(organization, input), TIMEOUT)
+  }
 
   describe("listOwnOrganizations(user)") {
     it("should return at least one organization.") {
@@ -24,19 +39,20 @@ class OrganizationOpSpec extends FunSpec with Constants {
 
   describe("listUserOrganizations") {
     it("should return at least one organization.") {
-      val result = Await.result(api.listUserOrganizations(user), TIMEOUT)
+      val result = Await.result(api.listUserOrganizations(otherUser), TIMEOUT)
       assert(result.length >= 1)
     }
 
     it("should return multiple organizations if user belongs in more than one.") {
-      val result = Await.result(api.listUserOrganizations(user), TIMEOUT)
+      val result = Await.result(api.listUserOrganizations(otherUser), TIMEOUT)
       assert(result.length > 1)
     }
   }
 
   describe("updateOrganization") {
-    import OrganizationInput._
     it("should return true if values updated correctly") {
+      implicit def s2o(s: String) = Some(s)
+
       val input = new OrganizationInput(gName, gCompany, gDescription, gLocation)
       println(input.name)
       Await.result(api.updateOrganization(organization, input), TIMEOUT).map { org =>

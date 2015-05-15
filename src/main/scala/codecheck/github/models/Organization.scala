@@ -21,12 +21,12 @@ case class OrganizationDetail(value: JValue) extends Organization(value) {
   def public_gists = get("public_gists").toInt
 }
 case class OrganizationInput(
-  name: String = "",
-  company: String = "",
-  description: String = "",
-  location: String = "",
-  email: String = "",
-  billing_email: String = ""
+  name: Option[String] = None,
+  company: Option[String] = None,
+  description: Option[String] = None,
+  location: Option[String] = None,
+  email: Option[String] = None,
+  billing_email: Option[String] = None
 ) extends AbstractInput 
 
 /*
