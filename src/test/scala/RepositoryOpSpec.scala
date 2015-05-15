@@ -6,8 +6,7 @@ import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RepositoryOpSpec extends FunSpec 
-  with Constants 
+class RepositoryOpSpec extends FunSpec with Constants 
 {
 
   describe("listOwnRepositories") {
@@ -35,9 +34,13 @@ class RepositoryOpSpec extends FunSpec
     }
   }
   describe("listOrgRepositories") {
-    it("should succeed") {
+    it("should succeed with valid organization.") {
       val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
       assert(list.size > 0)
+    }
+
+    it ("should fail with invalid organization.") {
+      assert(Await.result(api.listOrgRepositories(organizationInvalid), TIMEOUT).isEmpty)
     }
 
     it("Response: listOrgRepositories()") {
@@ -45,13 +48,17 @@ class RepositoryOpSpec extends FunSpec
       assert(list.size > 0)
       if (showResponse) println(list) 
     }
+
+    
   }
   describe("getRepository") {
     it("should succeed") {
       Await.result(api.getRepository(organization, repo), TIMEOUT).map { res =>
-        assert(res.name == repo)
         assert(res.owner.login == organization)
-        //ToDo other field
+        assert(res.name == repo)
+        assert(res.full_name == organization + "/" + repo)
+        assert(res.url == "https://api.github.com/repos/" + organization + "/" + repo)
+        //ToDo add more fields
       }
     }
     it("should be None") {
