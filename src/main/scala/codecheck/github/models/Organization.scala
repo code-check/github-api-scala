@@ -20,7 +20,6 @@ case class OrganizationDetail(value: JValue) extends Organization(value) {
   def public_repos = get("public_repos").toInt
   def public_gists = get("public_gists").toInt
 }
-/*
 case class OrganizationInput(
   name: String = "",
   company: String = "",
@@ -30,6 +29,7 @@ case class OrganizationInput(
   billing_email: String = ""
 ) extends AbstractInput 
 
+/*
 object OrganizationInput {
   import scala.language.implicitConversions
   //implicit def fromString(s: String): Option[String] = Some(s)
