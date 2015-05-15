@@ -52,7 +52,6 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
   describe("updateOrganization") {
     it("should return true if values updated correctly") {
       val input = new OrganizationInput(gName, gCompany, gDescription, gLocation)
-      println(input.name)
       Await.result(api.updateOrganization(organization, input), TIMEOUT).map { org =>
         assert(org.name == gName.get)
         assert(org.company.get == gCompany.get)
