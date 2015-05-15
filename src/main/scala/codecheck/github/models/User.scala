@@ -12,8 +12,8 @@ case class User(value: JValue) extends AbstractJson(value) {
   def blog: String = get("blog")
   def company: String = get("company")
   def location: String = get("location")
-  def hireable: String = get("hireable")
-  def bio: String = get("bio")
+  def hireable: Boolean = boolean("hireable")
+  def bio: Option[String] = opt("bio")
 }
 
 /*case class UserInput extends ToDo*/
@@ -23,6 +23,6 @@ case class UserInput (
 	blog: Option[String] = None,
 	company: Option[String] = None,
 	location: Option[String] = None,
-	hireable: Option[String] = None,
+	hireable: Option[Boolean] = None,
 	bio: Option[String] = None
 ) extends AbstractInput
