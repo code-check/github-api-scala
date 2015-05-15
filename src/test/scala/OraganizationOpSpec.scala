@@ -33,7 +33,7 @@ class OrganizationOpSpec extends FunSpec with Constants {
       assert(result.length > 1)
     }
   }
-  /*
+
   describe("updateOrganization") {
     import OrganizationInput._
     it("should return true if values updated correctly") {
@@ -46,7 +46,7 @@ class OrganizationOpSpec extends FunSpec with Constants {
         assert(org.location == gLocation)
       }
     }
-  } */
+  }
 
   describe("getOrganization") {
     it("should return correct values.") {
