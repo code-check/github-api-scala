@@ -1,7 +1,7 @@
 import org.scalatest.FunSpec
 import scala.concurrent.Await
 
-//import codecheck.github.models.OrganizationInput
+import codecheck.github.models.OrganizationInput
 
 class OrganizationOpSpec extends FunSpec with Constants {
 

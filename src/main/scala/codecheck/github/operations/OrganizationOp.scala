@@ -8,7 +8,7 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Organization
 import codecheck.github.models.OrganizationDetail
-//import codecheck.github.models.OrganizationInput
+import codecheck.github.models.OrganizationInput
 
 trait OrganizationOp {
   self: GitHubAPI =>
@@ -39,7 +39,7 @@ trait OrganizationOp {
       }
     }
   }
-/*
+
   def updateOrganization(org: String, input: OrganizationInput): Future[Option[OrganizationDetail]] = {
     self.exec("PATCH", s"/orgs/${org}", input.value, true).map { res => 
       res.statusCode match {
@@ -47,5 +47,5 @@ trait OrganizationOp {
         case 200 => Some(new OrganizationDetail(res.body))
       }
     }
-  } */
+  }
 }
