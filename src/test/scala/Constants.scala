@@ -2,6 +2,7 @@
 import com.ning.http.client.AsyncHttpClient
 import codecheck.github.api.GitHubAPI
 import scala.concurrent.duration._
+import scala.util.Random._
 import org.scalatest.time.Span._
 import org.scalatest.concurrent.ScalaFutures
 
@@ -11,8 +12,31 @@ trait Constants {
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
 
-  protected val owner = "code-check"
+  protected val user = "fanwashere" //REQUIRED: Edit this to your own username.
+
+  //Request membership of dummy organization "celestialbeing" if you are not member. Do not edit.
+  protected val organization = "celestialbeings"
   protected val repo = "test-repo"
+
+  //Other Options
+  private val debug = sys.env.get("DEBUG")
+    .map(v => v.equalsIgnoreCase("true") || v.equalsIgnoreCase("yes")).getOrElse(false)
+
+  protected def showResponse(v: Any): Unit = {
+    if (debug) {
+      println(v)
+    }
+  }
+  protected val otherUser = "shunjikonishi" 
+  protected val otherUserInvalid = "loremipsom123"
+  protected val organizationInvalid = "loremipsom123"
+  protected val repoInvalid = "loremipsom123"
+
+  val wordBank = Array("Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Theta", "Lambda", "Pi", "Sigma")
+  def generateRandomString: String = 
+  wordBank(nextInt(10)) + " " + wordBank(nextInt(10)) + " " + wordBank(nextInt(10))
+  def generateRandomWord: String = wordBank(nextInt(10))
+  def generateRandomInt: Int = nextInt(1000)
 }
 
 object Constants {

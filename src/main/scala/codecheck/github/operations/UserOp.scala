@@ -24,14 +24,24 @@ trait UserOp {
       }
     }
   }
-  def updateAuthenticatedUser(input: UserInput): Future[User] = ToDo[Future[User]]
+  
+  def updateAuthenticatedUser(input: UserInput): Future[User] = {
+    exec("PATCH", s"/user",input.value,fail404=false).map{ res =>
+      User(res.body)
+    }
+  }
 
   def getAllUsers(since: Long = 0): Future[List[User]] = {
-    exec("GET", s"/users/${since}").map (
+    val path = if (since == 0) "/users" else s"/users?since=$since"
+    exec("GET", path).map (
       _.body match {
-        case JArray(arr) => arr.map(v => User(v))
+        case JArray(arr) => {
+          println(arr.mkString("\n"))
+          arr.map(v => User(v))
+        }
         case _ => throw new IllegalStateException()
       }
     )
   }
+
 }
