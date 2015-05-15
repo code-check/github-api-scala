@@ -22,15 +22,15 @@ case class OrganizationDetail(value: JValue) extends Organization(value) {
 }
 
 case class OrganizationInput(
-  name: Option[String] = None,
-  company: Option[String] = None,
-  description: Option[String] = None,
-  location: Option[String] = None,
-  email: Option[String] = None,
-  billing_email: Option[String] = None
+  name: String = "",
+  company: String = "",
+  description: String = "",
+  location: String = "",
+  email: String = "",
+  billing_email: String = ""
 ) extends AbstractInput 
 
 object OrganizationInput {
   import scala.language.implicitConversions
-  implicit def fromString(s: String): Option[String] = Option(s)
+  //implicit def fromString(s: String): Option[String] = Some(s)
 }

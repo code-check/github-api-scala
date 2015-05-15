@@ -39,10 +39,6 @@ class RepositoryOpSpec extends FunSpec with Constants
       assert(list.size > 0)
     }
 
-    it ("should fail with invalid organization.") {
-      assert(Await.result(api.listOrgRepositories(organizationInvalid), TIMEOUT).isEmpty)
-    }
-
     it("Response: listOrgRepositories()") {
       val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
       assert(list.size > 0)

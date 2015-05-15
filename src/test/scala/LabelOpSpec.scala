@@ -8,6 +8,7 @@ import codecheck.github.exceptions.NotFoundException
 class LabelOpSpec extends FunSpec with Constants {
 
   val number = 1
+  val gName = generateRandomWord()
 
   describe("removeAllLabels") {
     it("should succeed") {
@@ -84,14 +85,14 @@ class LabelOpSpec extends FunSpec with Constants {
   
   describe("createLabelDef") {
     it("should succeed") {
-      val input = LabelInput("test", "cc317c")
+      val input = LabelInput(gName, "cc317c")
       val label = Await.result(api.createLabelDef(organization, repo, input), TIMEOUT)
-      assert(label.name == "test")
+      assert(label.name == gName)
       assert(label.url.length > 0)
       assert(label.color == "cc317c")
     }
     it("again should fail") {
-      val input = LabelInput("test", "cc317c")
+      val input = LabelInput(gName, "cc317c")
       try {
         val label = Await.result(api.createLabelDef(organization, repo, input), TIMEOUT)
         fail
@@ -105,9 +106,9 @@ class LabelOpSpec extends FunSpec with Constants {
   
   describe("updateLabelDef") {
     it("should succeed") {
-      val input = LabelInput("test", "84b6eb")
-      val label = Await.result(api.updateLabelDef(organization, repo, "test", input), TIMEOUT)
-      assert(label.name == "test")
+      val input = LabelInput(gName, "84b6eb")
+      val label = Await.result(api.updateLabelDef(organization, repo, gName, input), TIMEOUT)
+      assert(label.name == gName)
       assert(label.url.length > 0)
       assert(label.color == "84b6eb")
     }
@@ -115,12 +116,12 @@ class LabelOpSpec extends FunSpec with Constants {
   
   describe("removeLabelDef") {
     it("should succeed") {
-      val result = Await.result(api.removeLabelDef(organization, repo, "test"), TIMEOUT)
+      val result = Await.result(api.removeLabelDef(organization, repo, gName), TIMEOUT)
       assert(result)
     }
     it("removeLabelDef again should fail") {
       try {
-        val result = Await.result(api.removeLabelDef(organization, repo, "test"), TIMEOUT)
+        val result = Await.result(api.removeLabelDef(organization, repo, gName), TIMEOUT)
         fail
       } catch {
         case e: NotFoundException =>
