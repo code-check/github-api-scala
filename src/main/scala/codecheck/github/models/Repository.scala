@@ -51,6 +51,8 @@ case class RepositoryListOption(
 case class Repository(value: JValue) extends AbstractJson(value) {
   def id = get("id").toLong
   def name = get("name")
+  def full_name = get("full_name")
+  def url = get("url")
 
   def description = opt("description")
   def open_issues_count = get("open_issues_count").toInt

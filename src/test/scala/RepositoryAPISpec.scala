@@ -1,16 +1,17 @@
 import org.scalatest.FunSpec
 
 class RepositoryAPISpec extends FunSpec with Constants {
+	
+  val gDummy = generateRandomString()
+  val gRepo = generateRandomString()
 
   describe("with dummy repo") {
-    val repo = api.repositoryAPI("dummy", "repo")
-    it("should has owner 'dummy'") {
-      assert(repo.owner == "dummy")
+    val repo = api.repositoryAPI(gDummy, gRepo)
+    it(s"should has owner ${gDummy}") {
+      assert(repo.owner == gDummy)
     }
-    it("should has repo 'repo'") {
-      assert(repo.repo == "repo")
+    it(s"should has repo ${gRepo}") {
+      assert(repo.repo == gRepo)
     }
   }
-
-  
 }

@@ -6,42 +6,59 @@ import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RepositoryOpSpec extends FunSpec 
-  with Constants 
+class RepositoryOpSpec extends FunSpec with Constants 
 {
 
   describe("listOwnRepositories") {
     it("should succeed") {
       val list = Await.result(api.listOwnRepositories(), TIMEOUT)
       assert(list.size > 0)
-      println(list)
+    }
+
+    it("Response: listOwnRepositories()") {
+      val list = Await.result(api.listOwnRepositories(), TIMEOUT)
+      showResponse(list)
     }
     //ToDo option test
   }
   describe("listUserRepositories") {
     it("should succeed") {
-      val list = Await.result(api.listUserRepositories("shunjikonishi"), TIMEOUT)
+      val list = Await.result(api.listUserRepositories(otherUser), TIMEOUT)
       assert(list.size > 0)
-      println(list)
+    }
+
+    it("Response: listUserRepositories()") {
+      val list = Await.result(api.listUserRepositories(otherUser), TIMEOUT)
+      showResponse(list)
+      assert(list.size > 0)
     }
   }
   describe("listOrgRepositories") {
-    it("should succeed") {
-      val list = Await.result(api.listOrgRepositories("code-check"), TIMEOUT)
+    it("should succeed with valid organization.") {
+      val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
       assert(list.size > 0)
-      println(list)
     }
+
+    it("Response: listOrgRepositories()") {
+      val list = Await.result(api.listOrgRepositories(organization), TIMEOUT)
+      showResponse(list)
+      assert(list.size > 0)
+    }
+
+    
   }
   describe("getRepository") {
     it("should succeed") {
-      Await.result(api.getRepository("code-check", "github-api-scala"), TIMEOUT).map { repo =>
-        assert(repo.name == "github-api-scala")
-        assert(repo.owner.login == "code-check")
-        //ToDo other field
+      Await.result(api.getRepository(organization, repo), TIMEOUT).map { res =>
+        assert(res.owner.login == organization)
+        assert(res.name == repo)
+        assert(res.full_name == organization + "/" + repo)
+        assert(res.url == "https://api.github.com/repos/" + organization + "/" + repo)
+        //ToDo add more fields
       }
     }
     it("should be None") {
-      assert(Await.result(api.getRepository("code-check", "github-api-scala-x"), TIMEOUT).isEmpty)
+      assert(Await.result(api.getRepository(organization, repoInvalid), TIMEOUT).isEmpty)
     }
   }
 }
