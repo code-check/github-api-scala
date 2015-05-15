@@ -35,13 +35,9 @@ trait UserOp {
     val path = if (since == 0) "/users" else s"/users?since=$since"
     exec("GET", path).map (
       _.body match {
-        case JArray(arr) => {
-          println(arr.mkString("\n"))
-          arr.map(v => User(v))
-        }
+        case JArray(arr) => arr.map(v => User(v))
         case _ => throw new IllegalStateException()
       }
     )
   }
-
 }
