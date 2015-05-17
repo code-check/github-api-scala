@@ -65,7 +65,6 @@ class UserOpSpec extends FunSpec
   describe("getAllUsers") {
     it("with no since parameter it should succeed") {
       val res = Await.result(api.getAllUsers(), TIMEOUT)
-      assert(res.isDefined)
       println("TEST: " + res)
       assert(res{0}.id == 1)
     }
@@ -74,7 +73,6 @@ class UserOpSpec extends FunSpec
       assert(userOp.isDefined)
       val userOpGet = userOp.get
       val res = Await.result(api.getAllUsers(userOpGet.id), TIMEOUT)
-      assert(res.isDefined)
       println("TEST: " + res)
       assert((res{0}.id).toLong == userOpGet.id+1)
     }
