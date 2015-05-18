@@ -4,6 +4,7 @@ import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.JNull
 import org.json4s.JObject
+import org.json4s.JArray
 import org.json4s.Formats
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
@@ -59,4 +60,16 @@ class AbstractJson(value: JValue) {
   }
 
   override def toString = JsonMethods.pretty(value)
+
+  def seqOpt[T](path: String): Seq[T] = {
+    path.split("\\.").foldLeft(value) { (v, s) =>
+      v \ s
+    } match {
+      case JNothing => Nil
+      case JNull => Nil
+      case v: JArray => v.values.map(_.asInstanceOf[T])
+    }
+  }
+
+  def seq(path: String): Seq[String] = seqOpt(path)
 }
