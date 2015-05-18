@@ -4,7 +4,7 @@ import org.json4s.JValue
 import org.json4s.jackson.JsonMethods
 
 case class Collaborators(value: JValue) extends AbstractJson(value) {
-  def login = get("name")
+  def login = get("login")
   def id = get("id").toLong
   def avatar_url = get("avatar_url")
   def url = get("url")
