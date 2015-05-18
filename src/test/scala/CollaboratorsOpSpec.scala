@@ -1,5 +1,5 @@
 import org.scalatest.path.FunSpec
-import codecheck.github.models.UserInput
+//import codecheck.github.models.Collaborators
 import scala.concurrent.Await
 
 class CollaboratorsOpSpec extends FunSpec with Constants {
