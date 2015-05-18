@@ -3,8 +3,6 @@ package codecheck.github.operations
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.JArray
-import org.json4s.JString
-import org.json4s.JNothing
 
 import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.NotFoundException
@@ -17,7 +15,7 @@ trait CollaboratorsOp {
 	val path = s"/repos/$owner/$repo/collaborators"
 	exec("GET", path).map( 
       _.body match {
-	    case JArray(arr) => arr.map(v => User(v))
+	      case JArray(arr) => arr.map(v => User(v))
       	case _ => throw new IllegalStateException()
       }
     )
