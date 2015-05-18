@@ -2,6 +2,7 @@ package codecheck.github.operations
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.json4s.JArray
 
 import codecheck.github.api.GitHubAPI
 import codecheck.github.models.User
@@ -30,5 +31,13 @@ trait UserOp {
     }
   }
 
-  def getAllUsers(sinse: Long = 0): Future[List[User]] = ToDo[Future[List[User]]]
+  def getAllUsers(since: Long = 0): Future[List[User]] = {
+    val path = if (since == 0) "/users" else s"/users?since=$since"
+    exec("GET", path).map (
+      _.body match {
+        case JArray(arr) => arr.map(v => User(v))
+        case _ => throw new IllegalStateException()
+      }
+    )
+  }
 }
