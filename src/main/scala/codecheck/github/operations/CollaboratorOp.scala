@@ -11,12 +11,12 @@ import codecheck.github.models.Collaborator
 trait CollaboratorOp {
   self: GitHubAPI =>
 
-  def listCollaborators(owner: String, repo: String): Future[List[Collaborator]] = {
-	val path = s"/repos/${owner}/${repo}/collaborators"
-	exec("GET", path).map( 
+  def listCollaborators(owner: String,repo:String): Future[List[Collaborator]] = {
+    val path = s"/repos/${owner}/${repo}/collaborators"
+    exec("GET",path).map(
       _.body match {
-	      case JArray(arr) => arr.map(v => Collaborator(v))
-      	case _ => throw new IllegalStateException()
+        case JArray(arr) => arr.map(v => Collaborator(v))
+        case _ => throw new IllegalStateException()
       }
     )
   }
