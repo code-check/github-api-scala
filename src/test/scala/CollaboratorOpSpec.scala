@@ -1,5 +1,6 @@
 import org.scalatest.path.FunSpec
 import codecheck.github.models.Collaborator
+import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 
 class CollaboratorOpSpec extends FunSpec with Constants {
@@ -14,6 +15,19 @@ class CollaboratorOpSpec extends FunSpec with Constants {
       assert(c.avatar_url.length > 0)
       assert(c.url.length > 0)
       assert(c.site_admin == false)
+    }
+  }
+  describe("isCollaborator"){
+    it("if it is Collaborator"){
+      val res = Await.result(api.isCollaborator(organization, repo, user),TIMEOUT)
+      assert(res == true)
+    }
+    it("if it is not a Collaborator"){
+      val res1 = Await.result(api.isCollaborator(organization, repo, otherUserInvalid).failed,TIMEOUT)
+      res1 match {
+        case e: NotFoundException =>
+        case _ => fail
+      }
     }
   }
 }

@@ -20,4 +20,14 @@ trait CollaboratorOp {
       }
     )
   }
+
+  def isCollaborator(owner: String, repo: String, name: String): Future[Boolean] = {
+    val path = s"/repos/${owner}/${repo}/collaborators/" + encode(name)
+    exec("GET", path).map { res =>
+      res.statusCode match {
+        case 404 => false
+        case 204 => true
+      }
+    }
+  }
 }
