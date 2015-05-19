@@ -6,14 +6,14 @@ class CollaboratorOpSpec extends FunSpec with Constants {
 
   describe("listCollaborators") {
     it("should return atleast one collaborator") {
-      	val res = Await.result(api.listCollaborators(organization, repo), TIMEOUT)
-      	assert(res.length >= 1)
+      val res = Await.result(api.listCollaborators(organization, repo), TIMEOUT)
+      assert(res.length >= 1)
 	  	val c = res(0)
 	  	assert(c.login.length > 0)
-		assert(c.id > 0)
-		assert(c.avatar_url.length > 0)
-		assert(c.url.length > 0)
-		assert(c.site_admin == false)
+		  assert(c.id > 0)
+		  assert(c.avatar_url.length > 0)
+		  assert(c.url.length > 0)
+		  assert(c.site_admin == false)
     }
   }
 }
