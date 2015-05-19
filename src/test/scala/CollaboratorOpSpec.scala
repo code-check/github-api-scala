@@ -1,7 +1,8 @@
 import org.scalatest.path.FunSpec
-import codecheck.github.models.Collaborator
-import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
+import codecheck.github.models.Collaborator
+import codecheck.github.exceptions.GitHubAPIException
+import codecheck.github.exceptions.NotFoundException
 
 class CollaboratorOpSpec extends FunSpec with Constants {
 
@@ -28,6 +29,32 @@ class CollaboratorOpSpec extends FunSpec with Constants {
         case e: NotFoundException =>
         case _ => fail
       }
+    }
+  }
+  describe("addCollaborator"){
+    it("should add Collaborator User to user Repo"){
+      val res = Await.result(api.addCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
+      assert(res)
+    }
+    it("should fail for non existent User Repo"){
+      val res = Await.result(api.addCollaborator(user, repoInvalid, collaboratorUser).failed,TIMEOUT)
+      res match {
+        case e: NotFoundException  =>
+        case _ => fail
+      }
+    }
+  }
+ describe("removeCollaborator"){
+    it("should remove the Collaborator"){
+      var res = Await.result(api.removeCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
+      assert(res)
+    }
+  }
+  it("should fail for non existent User Repo"){
+    var res = Await.result(api.removeCollaborator(user, repoInvalid, collaboratorUser).failed,TIMEOUT)
+    res match {
+      case e: NotFoundException  =>
+      case _ => fail
     }
   }
 }

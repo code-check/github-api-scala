@@ -30,4 +30,18 @@ trait CollaboratorOp {
       }
     }
   }
+
+  def addCollaborator(owner: String, repo: String, name: String): Future[Boolean] = {
+    val path = s"/repos/${owner}/${repo}/collaborators/" + encode(name)
+    exec("PUT", path).map {
+      _.statusCode == 204
+    }
+  }
+
+  def removeCollaborator(owner: String, repo: String, name: String): Future[Boolean] = {
+    val path = s"/repos/${owner}/${repo}/collaborators/" + encode(name)
+    exec("DELETE", path).map {
+      _.statusCode == 204
+    }
+  }
 }

@@ -20,7 +20,7 @@ import codecheck.github.operations._
 import codecheck.github.models.User
 
 class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends UserOp
-  with OrganizationOp 
+  with OrganizationOp
   with RepositoryOp
   with LabelOp
   with IssueOp
@@ -52,15 +52,19 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
     request
       .setHeader("Authorization", s"$tokenType $token")
       .setHeader("Content-Type", "application/json")
+    if (method == "PUT" && body == JNothing){
+      request
+        .setHeader("Content-Length", "0")
+    }
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
         val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
         res.getStatusCode match {
-          case 401 => 
+          case 401 =>
             deferred.failure(new UnauthorizedException(json))
           case 422 =>
             deferred.failure(new GitHubAPIException(json))
-          case 404 if fail404 => 
+          case 404 if fail404 =>
             deferred.failure(new NotFoundException(json))
           case _ =>
             val result = APIResult(res.getStatusCode, json)
@@ -89,7 +93,7 @@ object GitHubAPI {
     implicit val client = new AsyncHttpClient
     apply(sys.env("GITHUB_TOKEN"))
   }
-  
+
   def apply(token: String)(implicit client: AsyncHttpClient): GitHubAPI = new GitHubAPI(token, client)
 
   def apply(username: String, password: String)(implicit client: AsyncHttpClient): GitHubAPI = {
