@@ -45,6 +45,3 @@ case class WebhookResponse(value: JValue) extends AbstractJson(value) {
   def status = get("status")
   def message = get("message")
 }
-
-
-
