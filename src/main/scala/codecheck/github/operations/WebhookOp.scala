@@ -8,6 +8,7 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Webhook
 import codecheck.github.models.WebhookConfig
+import codecheck.github.models.WebhookUpdateInput
 import codecheck.github.models.WebhookInput
 
 trait WebhookOp {
@@ -38,9 +39,11 @@ trait WebhookOp {
   			case 201 => Some(new Webhook(res.body))
   		}
   	}
-  } 
+  }
 
-  def updateWebhook(owner: String, repo: String, id: Long, input: WebhookInput): Future[Option[Webhook]] = {
+  //It is apparently an issue with Github's Webhook API that add_events and remove_events cannot be done
+  //in a single operation. To add and remove events, it must be done through two seperate calls of updateWebhook.
+  def updateWebhook(owner: String, repo: String, id: Long, input: WebhookUpdateInput): Future[Option[Webhook]] = {
     self.exec("PATCH", s"/repos/${owner}/${repo}/hooks/${id}", input.value, false).map { res =>
       res.statusCode match {
         case 404 => None
