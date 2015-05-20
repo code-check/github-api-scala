@@ -17,13 +17,22 @@ class Webhook(value: JValue) extends AbstractJson(value) {
 }
 
 case class WebhookConfig(
-  val url: String,
+  url: String,
   content_type: String = "json",
   secret: String = "",
   insecure_ssl: String = "0"
   ) extends AbstractInput 
 
-case class WebhookUpdateInput(
+case class WebhookCreateInput(
+  name: String,
+  config: WebhookConfig,
+  active: Boolean = true,
+  events: Seq[String] = Seq("push"),
+  add_events: Seq[String] = Nil,
+  remove_events: Seq[String] = Nil
+  ) extends AbstractInput
+
+case class WebhookInput(
   config: Option[WebhookConfig] = None,
   events: Option[Seq[String]] = None,
   add_events: Option[Seq[String]] = None,
@@ -37,12 +46,5 @@ case class WebhookResponse(value: JValue) extends AbstractJson(value) {
   def message = get("message")
 }
 
-case class WebhookInput(
-  name: String,
-  config: WebhookConfig,
-  active: Boolean = true,
-  events: Seq[String] = Seq("push"),
-  add_events: Seq[String] = Nil,
-  remove_events: Seq[String] = Nil
-  ) extends AbstractInput
+
 
