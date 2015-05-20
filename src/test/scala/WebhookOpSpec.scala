@@ -15,11 +15,11 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
   var nID: Long = 0;
 
   describe("listWebhooks(owner, repo)") {
-      it("should succeed with valid owner, repo.") {
-        val result = Await.result(api.listWebhooks(organization, repo), TIMEOUT)
-        assert(result.length > 0)
-      }
+    it("should succeed with valid owner, repo.") {
+      val result = Await.result(api.listWebhooks(organization, repo), TIMEOUT)
+      assert(result.length > 0)
     }
+  }
 
   describe("createWebhook(owner, repo, input)") {
     it("should succeed with valid organization, repo, and inputs.") {
