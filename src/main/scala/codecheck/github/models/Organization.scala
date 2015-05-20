@@ -39,15 +39,15 @@ class Organization(value: JValue) extends AbstractJson(value) {
   def members_url = get("members_url")
   def public_members_url = get("public_members_url")
   def avatar_url = get("avatar_url")
-  def description = opt("description")
+  def description = get("description")
 }
 
 case class OrganizationDetail(value: JValue) extends Organization(value) {
-  def name = opt("name")
+  def name = get("name")
   def company = opt("company")
-  def blog = opt("blog")
-  def location = opt("location")
-  def email = opt("email")
+  def blog = get("blog")
+  def location = get("location")
+  def email = get("email")
   def public_repos = get("public_repos").toInt
   def public_gists = get("public_gists").toInt
   def followers = get("followers").toInt
