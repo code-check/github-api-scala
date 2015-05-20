@@ -7,8 +7,8 @@ This readme documents the changes to the tests.
 
 ``` bash
 export GITHUB_TOKEN=[Your GitHub Token]
-export USER=[Your User Name]
-export USER_REPO=[Your Repo name that exists]
+export GITHUB_USER=[Your User Name]
+export GITHUB_REPO=[Your Repo name that exists]
 ```
 
 ## Optional settings
