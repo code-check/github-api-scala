@@ -24,11 +24,8 @@ class CollaboratorOpSpec extends FunSpec with Constants {
       assert(res == true)
     }
     it("if it is not a Collaborator"){
-      val res1 = Await.result(api.isCollaborator(organization, repo, otherUserInvalid).failed,TIMEOUT)
-      res1 match {
-        case e: NotFoundException =>
-        case _ => fail
-      }
+      val res1 = Await.result(api.isCollaborator(organization, repo, otherUserInvalid),TIMEOUT)
+      assert(res1 == false)
     }
   }
   describe("addCollaborator"){
