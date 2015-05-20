@@ -20,10 +20,14 @@ class CollaboratorOpSpec extends FunSpec with Constants {
   }
   describe("isCollaborator"){
     it("if it is Collaborator"){
-      val res = Await.result(api.isCollaborator(organization, repo, user),TIMEOUT)
-      assert(res == true)
+      val res = Await.result(api.addCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
+      assert(res)
+      val res1 = Await.result(api.isCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
+      assert(res1 == true)
+      var res2 = Await.result(api.removeCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
+      assert(res2)
     }
-    it("if it is not a Collaborator"){
+    it("if it is not a valid Collaborator"){
       val res1 = Await.result(api.isCollaborator(organization, repo, otherUserInvalid),TIMEOUT)
       assert(res1 == false)
     }
