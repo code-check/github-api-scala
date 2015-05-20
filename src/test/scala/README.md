@@ -2,15 +2,17 @@
 This readme documents the changes to the tests.
 
 ## Initial Setup
-1. Change variable user in Constants.scala to your own Github username.
+1. Please export username and repository that exists under your name.
 2. If you have no yet exported your Github token, create one [here](https://github.com/settings/tokens) and export it.
 
 ``` bash
-export GITHUB_TOKEN=[Your GitHub Token] 
+export GITHUB_TOKEN=[Your GitHub Token]
+export USER=[Your User Name]
+export USER_REPO=[Your Repo name that exists]
 ```
 
 ## Optional settings
-- showResponse 
+- showResponse
 -- Set this to true if you would like to see the response JSON data. Otherwise it is omitted when running tests.
 
 The following variables are for futureproofing. Generally won't need to be modified.

@@ -12,11 +12,6 @@ trait Constants {
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
 
-  protected val user = "sukeshni" //REQUIRED: Edit this to your own username.
-
-  protected val userRepo = "test-repo" //REQUIRED: Edit this to your repo
-  protected val collaboratorUser = "givery-dev"
-
   //Request membership of dummy organization "celestialbeing" if you are not member. Do not edit.
   protected val organization = "celestialbeings"
   protected val repo = "test-repo"
@@ -30,7 +25,12 @@ trait Constants {
       println(v)
     }
   }
+
+  protected val user = sys.env("USER")
+  protected val userRepo = sys.env("USER_REPO")
+
   protected val otherUser = "shunjikonishi"
+  protected val collaboratorUser = "givery-dev"
   protected val otherUserInvalid = "loremipsom123"
   protected val organizationInvalid = "loremipsom123"
   protected val repoInvalid = "loremipsom123"
