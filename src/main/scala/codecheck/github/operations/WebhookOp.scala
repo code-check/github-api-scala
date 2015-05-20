@@ -32,23 +32,17 @@ trait WebhookOp {
   	}
   } 
 
-  def createWebhook(owner: String, repo: String, input: WebhookCreateInput): Future[Option[Webhook]] = {
-  	self.exec("POST", s"/repos/${owner}/${repo}/hooks", input.value, false).map { res =>
-  		res.statusCode match {
-  			case 404 => None
-  			case 201 => Some(new Webhook(res.body))
-  		}
+  def createWebhook(owner: String, repo: String, input: WebhookCreateInput): Future[Webhook] = {
+  	self.exec("POST", s"/repos/${owner}/${repo}/hooks", input.value).map { res =>
+  		new Webhook(res.body)
   	}
   }
 
   //It is apparently an issue with Github's Webhook API that add_events and remove_events cannot be done
   //in a single operation. To add and remove events, it must be done through two seperate calls of updateWebhook.
-  def updateWebhook(owner: String, repo: String, id: Long, input: WebhookInput): Future[Option[Webhook]] = {
-    self.exec("PATCH", s"/repos/${owner}/${repo}/hooks/${id}", input.value, false).map { res =>
-      res.statusCode match {
-        case 404 => None
-        case 200 => Some(new Webhook(res.body))
-      }
+  def updateWebhook(owner: String, repo: String, id: Long, input: WebhookInput): Future[Webhook] = {
+    self.exec("PATCH", s"/repos/${owner}/${repo}/hooks/${id}", input.value).map { res =>
+      new Webhook(res.body)
     }
   } 
 
