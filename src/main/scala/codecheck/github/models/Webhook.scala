@@ -32,7 +32,7 @@ case class WebhookCreateInput(
   remove_events: Seq[String] = Nil
   ) extends AbstractInput
 
-case class WebhookInput(
+case class WebhookUpdateInput(
   config: Option[WebhookConfig] = None,
   events: Option[Seq[String]] = None,
   add_events: Option[Seq[String]] = None,

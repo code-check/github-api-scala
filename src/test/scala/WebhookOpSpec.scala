@@ -6,7 +6,7 @@ import scala.concurrent.Await
 import codecheck.github.models.Webhook
 import codecheck.github.models.WebhookConfig
 import codecheck.github.models.WebhookCreateInput
-import codecheck.github.models.WebhookInput
+import codecheck.github.models.WebhookUpdateInput
 
 
 class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
@@ -51,20 +51,20 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
   
   describe("updateWebhook(owner, repo, id, input)") {
     it("should succeed updating by rewriting events.") {
-      val input = new WebhookInput(events=Some(Seq("create", "pull_request")))
+      val input = new WebhookUpdateInput(events=Some(Seq("create", "pull_request")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.events == Seq("create", "pull_request"))
     }
 
     it("should succeed updating by using add_events.") {
-      val input = new WebhookInput(add_events=Some(Seq("push")))
+      val input = new WebhookUpdateInput(add_events=Some(Seq("push")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.config.url == targetURL)
       assert(res.events == Seq("create", "pull_request", "push"))
     }
 
     it("should succeed updating by using remove_events.") {
-      val input = new WebhookInput(remove_events=Some(Seq("pull_request")))
+      val input = new WebhookUpdateInput(remove_events=Some(Seq("pull_request")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.config.url == targetURL)
       assert(res.events == Seq("create", "push"))
@@ -72,7 +72,7 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
     it("should succeed updating by rewriting config.") {
       val config = new WebhookConfig(targetURL)
-      val input = new WebhookInput(Some(config))
+      val input = new WebhookUpdateInput(Some(config))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.config.url == targetURL)
     }
