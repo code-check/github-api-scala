@@ -25,7 +25,7 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
     Await.result(api.updateOrganization(organization, input), TIMEOUT)
   }
 
-  describe("listOwnOrganizations(user)") {
+  describe("listOwnOrganizations") {
     it("should return at least one organization.") {
       val result = Await.result(api.listOwnOrganizations, TIMEOUT)
       assert(result.length >= 1)
@@ -37,7 +37,7 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
   }
 
-  describe("listUserOrganizations") {
+  describe("listUserOrganizations(user)") {
     it("should return at least one organization.") {
       val result = Await.result(api.listUserOrganizations(otherUser), TIMEOUT)
       assert(result.length >= 1)
@@ -53,10 +53,10 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
     it("should return true if values updated correctly") {
       val input = new OrganizationInput(gName, gCompany, gDescription, gLocation)
       Await.result(api.updateOrganization(organization, input), TIMEOUT).map { org =>
-        assert(org.name == gName.get)
-        assert(org.company.get == gCompany.get)
-        assert(org.description == gDescription.get)
-        assert(org.location == gLocation.get)
+        assert(org.name == gName)
+        assert(org.company == gCompany)
+        assert(org.description == gDescription)
+        assert(org.location == gLocation)
       }
     }
   }
@@ -64,18 +64,16 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
   describe("getOrganization") {
     it("should return correct values.") {
       Await.result(api.getOrganization(organization), TIMEOUT).map { org =>
+        showResponse(org)
         assert(org.login == "celestialbeings")
         assert(org.id > 0)
         assert(org.url == "https://api.github.com/orgs/celestialbeings")
+        assert(org.repos_url == "https://api.github.com/orgs/celestialbeings/repos")
+        assert(org.events_url == "https://api.github.com/orgs/celestialbeings/events")
+        assert(org.members_url == "https://api.github.com/orgs/celestialbeings/members{/member}")
+        assert(org.public_members_url == "https://api.github.com/orgs/celestialbeings/public_members{/member}")
         assert(org.avatar_url.length > 0)
-        //assert(org.name == gName)
-        //assert(org.company == gCompany)
-        //assert(org.description == gDescription)
-        //assert(org.location == gLocation)
-        //assert(org.email == "")
-        //assert(org.billing_email == "")
-        //assert(org.public_repos == 0)
-        //assert(org.public_gists == 0)
+        assert(org.description.get == "No description")
       }
     }
 
@@ -83,6 +81,4 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
       assert(Await.result(api.getOrganization("code-check-x"), TIMEOUT).isEmpty)
     }
   }
-  
-  
 }
