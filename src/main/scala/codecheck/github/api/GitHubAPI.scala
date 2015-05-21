@@ -28,6 +28,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
   with WebhookOp
   with CollaboratorOp
   with BranchOp
+  with SearchOp
 {
 
   private val endpoint = "https://api.github.com"
