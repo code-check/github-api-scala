@@ -11,6 +11,7 @@ import org.json4s.jackson.JsonMethods
 import org.json4s.DefaultFormats
 import java.util.UUID
 import codecheck.github.models.AccessToken
+import codecheck.github.exceptions.OAuthAPIException
 
 class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, client: AsyncHttpClient) {
   private implicit val format = DefaultFormats
@@ -48,7 +49,10 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
     client.prepareRequest(builder.build).execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
         val json = JsonMethods.parse(res.getResponseBody("utf-8"))
-        deferred.success(AccessToken(json))
+        (json \ "error").toOption match {
+          case Some(_) => deferred.failure(new OAuthAPIException(json))
+          case None => deferred.success(AccessToken(json))
+        }
         res
       }
       override def onThrowable(t: Throwable) {

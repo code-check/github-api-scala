@@ -40,12 +40,9 @@ trait OrganizationOp {
     }
   }
 
-  def updateOrganization(org: String, input: OrganizationInput): Future[Option[OrganizationDetail]] = {
-    self.exec("PATCH", s"/orgs/${org}", input.value, true).map { res => 
-      res.statusCode match {
-        case 404 => None
-        case 200 => Some(new OrganizationDetail(res.body))
-      }
+  def updateOrganization(org: String, input: OrganizationInput): Future[OrganizationDetail] = {
+    self.exec("PATCH", s"/orgs/${org}", input.value).map { res => 
+      new OrganizationDetail(res.body)
     }
   }
 }
