@@ -12,8 +12,6 @@ trait Constants {
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
 
-  protected val user = "fanwashere" //REQUIRED: Edit this to your own username.
-
   //Request membership of dummy organization "celestialbeing" if you are not member. Do not edit.
   protected val organization = "celestialbeings"
   protected val repo = "test-repo"
@@ -27,13 +25,18 @@ trait Constants {
       println(v)
     }
   }
-  protected val otherUser = "shunjikonishi" 
+
+  protected val user = sys.env("GITHUB_USER")
+  protected val userRepo = sys.env("GITHUB_REPO")
+
+  protected val otherUser = "shunjikonishi"
+  protected val collaboratorUser = "givery-dev"
   protected val otherUserInvalid = "loremipsom123"
   protected val organizationInvalid = "loremipsom123"
   protected val repoInvalid = "loremipsom123"
 
   val wordBank = Array("Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Theta", "Lambda", "Pi", "Sigma")
-  def generateRandomString: String = 
+  def generateRandomString: String =
   wordBank(nextInt(10)) + " " + wordBank(nextInt(10)) + " " + wordBank(nextInt(10))
   def generateRandomWord: String = wordBank(nextInt(10))
   def generateRandomInt: Int = nextInt(1000)

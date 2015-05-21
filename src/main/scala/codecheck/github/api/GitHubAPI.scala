@@ -53,6 +53,10 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
     request
       .setHeader("Authorization", s"$tokenType $token")
       .setHeader("Content-Type", "application/json")
+    if (method == "PUT" && body == JNothing){
+      request
+        .setHeader("Content-Length", "0")
+    }
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
         val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
