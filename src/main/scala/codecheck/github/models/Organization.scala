@@ -53,8 +53,8 @@ case class OrganizationDetail(value: JValue) extends Organization(value) {
   def followers = get("followers").toInt
   def following = get("following").toInt
   def html_url = get("html_url")
-  def created_at = date("created_at")
-  def updated_at = date("updated_at")
+  def created_at = getDate("created_at")
+  def updated_at = getDate("updated_at")
   def `type` = get("type")
 }
 

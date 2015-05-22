@@ -112,7 +112,7 @@ case class Issue(value: JValue) extends AbstractJson(value) {
   lazy val repository = new Repository(value \ "repository")
 
   def comments = get("comments").toInt
-  def created_at = date("created_at")
-  def updated_at = date("updated_at")
+  def created_at = getDate("created_at")
+  def updated_at = getDate("updated_at")
   def closed_at = dateOpt("closed_at")
 }

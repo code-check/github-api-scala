@@ -36,7 +36,7 @@ class AbstractJson(value: JValue) {
     }
   }
 
-  def date(path: String): DateTime = dateOpt(path).get
+  def getDate(path: String): DateTime = dateOpt(path).get
 
   def booleanOpt(path: String): Option[Boolean] = {
     path.split("\\.").foldLeft(value) { (v, s) =>

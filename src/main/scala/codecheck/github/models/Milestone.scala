@@ -72,8 +72,8 @@ case class Milestone(value: JValue) extends AbstractJson(value) {
   lazy val creator = User(value \ "creator")
   def open_issues = get("open_issues").toInt
   def closed_issues = get("closed_issues").toInt
-  def created_at = date("created_at")
-  def updated_at = date("updated_at")
+  def created_at = getDate("created_at")
+  def updated_at = getDate("updated_at")
   def closed_at = dateOpt("closed_at")
   def due_on = dateOpt("due_on")
 }
