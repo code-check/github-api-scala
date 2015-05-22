@@ -1,6 +1,7 @@
 package codecheck.github.models
 
 import org.json4s.JValue
+import org.json4s.JArray
 import codecheck.github.models.SortDirection
 
 sealed abstract class SearchSort(val name: String) {
@@ -21,5 +22,8 @@ case class SearchInput (
 case class SearchRepositoryResult(value: JValue) extends AbstractJson(value) {
  def total_count: Long = get("total_count").toLong
  def incomplete_results: Boolean = boolean("incomplete_results")
- lazy val items = Repository(value \ "items")
+ lazy val items = (value \ "items") match {
+    case JArray(arr) => arr.map(new Repository(_))
+    case _ => Nil
+  }
 }
