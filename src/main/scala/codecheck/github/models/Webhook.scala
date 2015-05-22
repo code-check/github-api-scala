@@ -12,8 +12,8 @@ class Webhook(value: JValue) extends AbstractJson(value) {
   def active = boolean("active")
   def config = new WebhookConfig(get("config.url"), get("config.content_type"), get("config.secret"), get("config.insecure_ssl"));
   def last_response = new WebhookResponse(value \ "last_response")
-  def updated_at = date("updated_at")
-  def created_at = date("created_at")
+  def updated_at = getDate("updated_at")
+  def created_at = getDate("created_at")
 }
 
 case class WebhookConfig(
