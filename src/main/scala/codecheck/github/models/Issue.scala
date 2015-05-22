@@ -4,6 +4,7 @@ import org.json4s.JValue
 import org.json4s.JString
 import org.json4s.JNothing
 import org.json4s.JNull
+import org.json4s.JInt
 import org.json4s.JArray
 import org.json4s.JsonDSL._
 import org.joda.time.DateTime
@@ -54,6 +55,26 @@ object IssueSort {
   def fromString(str: String) = values.filter(_.name == str).head
 }
 
+sealed abstract class MilestoneSearchOption {
+
+}
+
+object MilestoneSearchOption {
+  case object all extends MilestoneSearchOption {
+    val value = JString("*")
+  }
+
+  case object none extends MilestoneSearchOption {
+    val value = JString("none")
+  }
+
+  case class Specified(number: Int) extends MilestoneSearchOption {
+    val value = JInt(number)
+  }
+
+  def apply(number: Int) = Specified(number)
+}
+
 case class IssueListOption(
   filter: IssueFilter = IssueFilter.assigned,
   state: IssueState = IssueState.open,
@@ -67,7 +88,27 @@ case class IssueListOption(
     since.map("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ssZ"))
 }
 
-/*case*/ class IssueListOption4Repository extends ToDo
+case class IssueListOption4Repository(
+  milestone: Option[MilestoneSearchOption] = None,
+  state: IssueState = IssueState.open,
+  assignee: Option[String] = None,
+  creator: Option[String] = None,
+  mentioned: Option[String] = None,
+  labels: Seq[String] = Nil,
+  sort: IssueSort = IssueSort.created,
+  direction: SortDirection = SortDirection.desc,
+  since: Option[DateTime] = None
+) {
+    def q: String = "?" + (if (!milestone.isEmpty) milestone map (t => s"milestone=$t&")) +
+      s"state=$state" +
+      (if (!assignee.isEmpty) assignee map (t => s"&assignee=$t")) +
+      (if (!creator.isEmpty) creator map (t => s"&creator=$t")) +
+      (if (!mentioned.isEmpty) mentioned map (t => s"&mentioned=$t")) +
+      (if (!labels.isEmpty) "&labels=" + labels.mkString(",")) +
+      s"&sort=$sort" +
+      s"&direction=$direction" +
+      (if (!since.isEmpty) since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+ }
 
 case class IssueInput(
   title: Option[String] = None,
@@ -96,23 +137,36 @@ object IssueInput {
   def apply(title: String, body: Option[String], assignee: Option[String], milestone: Option[Int], labels: Seq[String]): IssueInput =
     IssueInput(Some(title), body, assignee, milestone, labels, None)
 }
+
 case class Issue(value: JValue) extends AbstractJson(value) {
+  def url = get("url")
+  def labels_url = get("labels_url")
+  def comments_url = get("comments_url")
+  def events_url = get("events_url")
+  def html_url = get("html_url")
+  def id = get("id").toLong
   def number = get("number").toLong
   def title = get("title")
-  def body = opt("body")
-
-  lazy val assignee = objectOpt("assignee")(v => User(v))
-  lazy val milestone = objectOpt("milestone")(v => Milestone(v))
 
   lazy val user = new User(value \ "user")
   lazy val labels = (value \ "labels") match {
     case JArray(arr) => arr.map(new Label(_))
     case _ => Nil
   }
-  lazy val repository = new Repository(value \ "repository")
+
+  def state = get("state")
+  def locked = boolean("locked")
+
+  lazy val assignee = objectOpt("assignee")(v => User(v))
+  lazy val milestone = objectOpt("milestone")(v => Milestone(v))
 
   def comments = get("comments").toInt
   def created_at = getDate("created_at")
   def updated_at = getDate("updated_at")
   def closed_at = dateOpt("closed_at")
+  def body = opt("body")
+
+  lazy val closed_by = objectOpt("closed_by")(v => User(v))
+
+  lazy val repository = new Repository(value \ "repository")
 }

@@ -1,4 +1,5 @@
 import org.scalatest.path.FunSpec
+import org.scalatest.BeforeAndAfter
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Milestone
 import codecheck.github.models.MilestoneInput
@@ -11,10 +12,21 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTime
 
-class MilestoneOpSpec extends FunSpec 
-  with Constants 
-{
+class MilestoneOpSpec extends FunSpec with Constants {
+  /*
+  before { }
 
+  after {
+    val input = new MilestoneInput(Some("test milestone"))
+    val input2 = new MilestoneInput(Some("test milestone 2"))
+
+    Await.result(api.createMilestone(user, userRepo, input), TIMEOUT)
+    Await.result(api.createMilestone(user, userRepo, input2), TIMEOUT)
+
+    Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
+    Await.result(api.createMilestone(organization, repo, input2), TIMEOUT)
+  }
+*/
   private def removeAll = {
     val list = Await.result(api.listMilestones(organization, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     list.foreach { m =>
@@ -67,7 +79,7 @@ class MilestoneOpSpec extends FunSpec
       val input = MilestoneInput(gName, gDescription, d1)
       val ex = Await.result(api.createMilestone(organization, repoInvalid, input).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }
@@ -168,7 +180,7 @@ class MilestoneOpSpec extends FunSpec
     it("with wrong reponame should fail") {
       val ex = Await.result(api.listMilestones(organization, repoInvalid).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }
@@ -189,7 +201,7 @@ class MilestoneOpSpec extends FunSpec
 
       val ex = Await.result(api.removeMilestone(organization, repo, m1.number).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }
