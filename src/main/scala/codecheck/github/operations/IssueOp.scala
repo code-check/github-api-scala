@@ -26,6 +26,7 @@ trait IssueOp {
     )
   }
 
+  //Only listAll/User/OrgIssues return Repository object
   def listAllIssues(option: IssueListOption = IssueListOption()): Future[List[Issue]] =
     doList("/issues" + option.q)
 

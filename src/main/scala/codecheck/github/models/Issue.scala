@@ -91,7 +91,7 @@ case class IssueListOption4Repository(
   direction: SortDirection = SortDirection.desc,
   since: Option[DateTime] = None
 ) {
-    def q: String = "?" + (if (!milestone.isEmpty) (milestone map (t => s"milestone=$t&")).get else "") +
+    def q = "?" + (if (!milestone.isEmpty) (milestone map (t => s"milestone=$t&")).get else "") +
       s"state=$state" +
       (if (!assignee.isEmpty) (assignee map (t => s"&assignee=$t")).get else "") +
       (if (!creator.isEmpty) (creator map (t => s"&creator=$t")).get else "") +

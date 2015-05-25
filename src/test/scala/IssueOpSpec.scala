@@ -1,5 +1,6 @@
 
 import org.scalatest.FunSpec
+import org.scalatest.BeforeAndAfter
 import scala.concurrent.Await
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -11,6 +12,8 @@ import codecheck.github.models.IssueState
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueInput
 import codecheck.github.models.MilestoneSearchOption
+
+import codecheck.github.models.MilestoneInput
 
 class IssueOpSpec extends FunSpec with Constants {
 
@@ -108,6 +111,7 @@ class IssueOpSpec extends FunSpec with Constants {
     it("shold return at least one issue.") {
       val result = Await.result(api.listAllIssues(), TIMEOUT)
       assert(result.length > 0)
+      assert(result.head.repository.name == "test-repo")
     }
 
     it("shold return only two issues when using options.") {
@@ -122,6 +126,7 @@ class IssueOpSpec extends FunSpec with Constants {
     it("shold return at least one issue.") {
       val result = Await.result(api.listUserIssues(), TIMEOUT)
       assert(result.length > 0)
+      assert(result.head.repository.name == "test-repo")
     }
 
     it("shold return only one issues when using options.") {
@@ -148,7 +153,7 @@ class IssueOpSpec extends FunSpec with Constants {
 
   describe("listRepositoryIssues(owner, repo, option)") {
     it("should return at least one issue from user's own repo.") {
-      val result = Await.result(api.listRepositoryIssues(organization, repo), TIMEOUT)
+      val result = Await.result(api.listRepositoryIssues(user, userRepo), TIMEOUT)
       assert(result.length > 0)
     }
 
@@ -159,17 +164,17 @@ class IssueOpSpec extends FunSpec with Constants {
 
     it("should return only one issue from user's own repo when using options.") {
       val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
-      val result = Await.result(api.listRepositoryIssues(user, userRepo), TIMEOUT)
-      //showResponse(result)
+      val result = Await.result(api.listRepositoryIssues(user, userRepo, option), TIMEOUT)
+      showResponse(option.q)
       assert(result.length == 1)
+      assert(result.head.title == "test issue")
     }
 
     it("should return only one issue from organization's repo when using options.") {
-      val option = IssueListOption4Repository(Some(MilestoneSearchOption.all), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
+      val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
       val result = Await.result(api.listRepositoryIssues(organization, repo, option), TIMEOUT)
-      showResponse(option.q)
-      showResponse(result)
-      //assert(result.length == 1)
+      assert(result.length == 1)
+      assert(result.head.title == "test issue")
     }
   }
 
