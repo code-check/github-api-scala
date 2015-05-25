@@ -55,22 +55,14 @@ object IssueSort {
   def fromString(str: String) = values.filter(_.name == str).head
 }
 
-sealed abstract class MilestoneSearchOption {
-
+sealed abstract class MilestoneSearchOption(val name: String) {
+  override def toString = name
 }
 
 object MilestoneSearchOption {
-  case object all extends MilestoneSearchOption {
-    val value = JString("*")
-  }
-
-  case object none extends MilestoneSearchOption {
-    val value = JString("none")
-  }
-
-  case class Specified(number: Int) extends MilestoneSearchOption {
-    val value = JInt(number)
-  }
+  case object all extends MilestoneSearchOption("*")
+  case object none extends MilestoneSearchOption("none")
+  case class Specified(number: Int) extends MilestoneSearchOption(number.toString())
 
   def apply(number: Int) = Specified(number)
 }
@@ -84,8 +76,8 @@ case class IssueListOption(
   since: Option[DateTime] = None
 ) {
   def q = s"?filter=$filter&state=$state&sort=$sort&direction=$direction" +
-    (if (labels.length == 0) "" else "&labels=" + labels.mkString(",")) +
-    since.map("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ssZ"))
+    (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
+    (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
 }
 
 case class IssueListOption4Repository(
@@ -99,15 +91,15 @@ case class IssueListOption4Repository(
   direction: SortDirection = SortDirection.desc,
   since: Option[DateTime] = None
 ) {
-    def q: String = "?" + (if (!milestone.isEmpty) milestone map (t => s"milestone=$t&")) +
+    def q: String = "?" + (if (!milestone.isEmpty) (milestone map (t => s"milestone=$t&")).get else "") +
       s"state=$state" +
-      (if (!assignee.isEmpty) assignee map (t => s"&assignee=$t")) +
-      (if (!creator.isEmpty) creator map (t => s"&creator=$t")) +
-      (if (!mentioned.isEmpty) mentioned map (t => s"&mentioned=$t")) +
-      (if (!labels.isEmpty) "&labels=" + labels.mkString(",")) +
+      (if (!assignee.isEmpty) (assignee map (t => s"&assignee=$t")).get else "") +
+      (if (!creator.isEmpty) (creator map (t => s"&creator=$t")).get else "") +
+      (if (!mentioned.isEmpty) (mentioned map (t => s"&mentioned=$t")).get else "") +
+      (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
       s"&sort=$sort" +
       s"&direction=$direction" +
-      (if (!since.isEmpty) since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+      (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
  }
 
 case class IssueInput(

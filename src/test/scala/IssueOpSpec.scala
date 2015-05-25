@@ -10,21 +10,20 @@ import codecheck.github.models.IssueListOption4Repository
 import codecheck.github.models.IssueState
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueInput
+import codecheck.github.models.MilestoneSearchOption
 
 class IssueOpSpec extends FunSpec with Constants {
 
   val number = 1
   var nUser: Long = 0
   var nOrg: Long = 0
-  var createdUser: DateTime = DateTime.now
-  var createdOrg: DateTime = DateTime.now
+  var nTime: DateTime = DateTime.now()
 
   describe("createIssue(owner, repo, input)") {
     val input = IssueInput(Some("test issue"), Some("testing"), Some(user), Some(1), Seq("question"))
 
     it("should create issue for user's own repo.") {
       val result = Await.result(api.createIssue(user, userRepo, input), TIMEOUT)
-      //showResponse(result)
       nUser = result.number
       assert(result.url == "https://api.github.com/repos/" + user + "/" + userRepo + "/issues/" + nUser)
       assert(result.labels_url == "https://api.github.com/repos/" + user + "/" + userRepo + "/issues/" + nUser + "/labels{/name}")
@@ -41,7 +40,6 @@ class IssueOpSpec extends FunSpec with Constants {
       assert(result.comments == 0)
       assert(result.created_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
-      createdUser = result.created_at
       assert(result.closed_at.isEmpty)
       assert(result.body.get == "testing")
       assert(result.closed_by.isEmpty)
@@ -65,8 +63,6 @@ class IssueOpSpec extends FunSpec with Constants {
       assert(result.comments == 0)
       assert(result.created_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
-      createdOrg = result.created_at
-      assert(result.closed_at.isEmpty)
       assert(result.body.get == "testing")
       assert(result.closed_by.isEmpty)
     }
@@ -114,10 +110,10 @@ class IssueOpSpec extends FunSpec with Constants {
       assert(result.length > 0)
     }
 
-    it("shold return only one issue.") {
-      val option = IssueListOption(IssueFilter.all, IssueState.open, since=Some(createdUser))
+    it("shold return only two issues when using options.") {
+      val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
       val result = Await.result(api.listAllIssues(option), TIMEOUT)
-      assert(result.length == 1)
+      assert(result.length == 2)
       assert(result.head.title == "test issue")
     }
   }
@@ -127,6 +123,13 @@ class IssueOpSpec extends FunSpec with Constants {
       val result = Await.result(api.listUserIssues(), TIMEOUT)
       assert(result.length > 0)
     }
+
+    it("shold return only one issues when using options.") {
+      val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
+      val result = Await.result(api.listUserIssues(option), TIMEOUT)
+      assert(result.length == 1)
+      assert(result.head.title == "test issue")
+    }
   }
 
   describe("listOrgIssues(org, option)") {
@@ -134,19 +137,39 @@ class IssueOpSpec extends FunSpec with Constants {
       val result = Await.result(api.listOrgIssues(organization), TIMEOUT)
       assert(result.length > 0)
     }
-  }
 
-  describe("listRepositoryIssues(owner, repo, option)") {
-    it("should return at least one issue.") {
-      val result = Await.result(api.listRepositoryIssues(organization, repo), TIMEOUT)
-      assert(result.length > 0)
+    it("shold return only one issues when using options.") {
+      val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
+      val result = Await.result(api.listOrgIssues(organization, option), TIMEOUT)
+      assert(result.length == 1)
+      assert(result.head.title == "test issue")
     }
   }
 
-  describe("listRepositoryIssues") {
-    it("is just testing.") {
-      val input = new IssueListOption4Repository(state=IssueState.all)
-      val result = Await.result(api.listRepositoryIssues(organization, repo, input), TIMEOUT)
+  describe("listRepositoryIssues(owner, repo, option)") {
+    it("should return at least one issue from user's own repo.") {
+      val result = Await.result(api.listRepositoryIssues(organization, repo), TIMEOUT)
+      assert(result.length > 0)
+    }
+
+    it("should return at least one issue from organization's repo.") {
+      val result = Await.result(api.listRepositoryIssues(organization, repo), TIMEOUT)
+      assert(result.length > 0)
+    }
+
+    it("should return only one issue from user's own repo when using options.") {
+      val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
+      val result = Await.result(api.listRepositoryIssues(user, userRepo), TIMEOUT)
+      //showResponse(result)
+      assert(result.length == 1)
+    }
+
+    it("should return only one issue from organization's repo when using options.") {
+      val option = IssueListOption4Repository(Some(MilestoneSearchOption.all), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
+      val result = Await.result(api.listRepositoryIssues(organization, repo, option), TIMEOUT)
+      showResponse(option.q)
+      showResponse(result)
+      //assert(result.length == 1)
     }
   }
 
