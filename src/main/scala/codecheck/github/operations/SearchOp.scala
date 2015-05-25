@@ -6,7 +6,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import codecheck.github.api.GitHubAPI
 import codecheck.github.models.SearchInput
 import codecheck.github.models.SearchRepositoryResult
-//import codecheck.github.models.SortDirection
 import codecheck.github.models.SearchCodeResult
 import codecheck.github.models.SearchIssueResult
 import codecheck.github.models.SearchUserResult
@@ -14,43 +13,31 @@ import codecheck.github.models.SearchUserResult
 trait SearchOp {
  self: GitHubAPI =>
 
-  def searchRepositories(input: SearchInput): Future[Option[SearchRepositoryResult]] = {
+  def searchRepositories(input: SearchInput): Future[SearchRepositoryResult] = {
     val path = s"/search/repositories?q=${input.q}&sort=${input.sort}&order=${input.order}"
     exec("GET", path ).map { res =>
-      res.statusCode match {
-        case 200 => Some(SearchRepositoryResult(res.body))
-        case 404 => None
-     }
+      SearchRepositoryResult(res.body)
    }
   }
 
-  def searchCode(input: SearchInput): Future[Option[SearchCodeResult]] = {
+  def searchCode(input: SearchInput): Future[SearchCodeResult] = {
     val path = s"/search/code?q=${input.q}&sort=${input.sort}&order=${input.order}"
     exec("GET", path ).map { res =>
-      res.statusCode match {
-        case 200 => Some(SearchCodeResult(res.body))
-        case 404 => None
-     }
+      SearchCodeResult(res.body)
     }
   }
 
-  def searchIssues(input: SearchInput): Future[Option[SearchIssueResult]] = {
+  def searchIssues(input: SearchInput): Future[SearchIssueResult] = {
     val path = s"/search/issues?q=${input.q}&sort=${input.sort}&order=${input.order}"
     exec("GET", path ).map { res =>
-      res.statusCode match {
-        case 200 => Some(SearchIssueResult(res.body))
-        case 404 => None
-     }
+      SearchIssueResult(res.body)
     }
   }
 
-  def searchUser(input: SearchInput): Future[Option[SearchUserResult]] = {
+  def searchUser(input: SearchInput): Future[SearchUserResult] = {
     val path = s"/search/users?q=${input.q}&sort=${input.sort}&order=${input.order}"
     exec("GET", path ).map { res =>
-      res.statusCode match {
-        case 200 => Some(SearchUserResult(res.body))
-        case 404 => None
-     }
+      SearchUserResult(res.body)
     }
   }
 }

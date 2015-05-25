@@ -18,29 +18,27 @@ class SearchOpSpec extends FunSpec
       var q = "tetris language:assembly"
       val q1 = q.trim.replaceAll(" ","+");
       val input = SearchInput(q1,sort=Some(SearchSort.stars),order=SortDirection.desc)
-      Await.result(api.searchRepositories(input), TIMEOUT).map { res =>
-        assert(res.total_count >= 1)
-        assert(res.items(0).id >= 1 )
-        assert(res.items(0).name.length >= 1)
-        assert(res.items(0).full_name.length >= 1)
-        assert(res.items(0).description.isDefined)
-        assert(res.items(0).open_issues_count >= 0)
-        assert(res.items(0).language == "Assembly")
-        assert(res.items(0).stargazers_count > res.items(1).stargazers_count)
-      }
+      val res = Await.result(api.searchRepositories(input), TIMEOUT)
+      assert(res.total_count >= 1)
+      assert(res.items(0).id >= 1 )
+      assert(res.items(0).name.length >= 1)
+      assert(res.items(0).full_name.length >= 1)
+      assert(res.items(0).description.isDefined)
+      assert(res.items(0).open_issues_count >= 0)
+      assert(res.items(0).language == "Assembly")
+      assert(res.items(0).stargazers_count > res.items(1).stargazers_count)
     }
     it("with valid changed query(q) SearchInput should succeed") {
       var q = "jquery in:name,description"
       val q1 = q.trim.replaceAll(" ","+");
       val input = SearchInput(q1,sort=Some(SearchSort.stars),order=SortDirection.desc)
-      Await.result(api.searchRepositories(input), TIMEOUT).map { res =>
-        assert(res.total_count >= 1)
-        assert(res.items(0).id >= 1 )
-        assert(res.items(0).name.length >= 1)
-        assert(res.items(0).full_name.length >= 1)
-        assert(res.items(0).description.isDefined)
-        assert(res.items(0).open_issues_count >= 0)
-      }
+      val res = Await.result(api.searchRepositories(input), TIMEOUT)
+      assert(res.total_count >= 1)
+      assert(res.items(0).id >= 1 )
+      assert(res.items(0).name.length >= 1)
+      assert(res.items(0).full_name.length >= 1)
+      assert(res.items(0).description.isDefined)
+      assert(res.items(0).open_issues_count >= 0)
     }
   }
   describe("searchCode") {
@@ -48,11 +46,10 @@ class SearchOpSpec extends FunSpec
       var q = "addClass in:file language:js repo:jquery/jquery"
       val q1 = q.trim.replaceAll(" ","+");
       val input = SearchInput(q1,sort=None,order=SortDirection.desc)
-      Await.result(api.searchCode(input), TIMEOUT).map { res =>
-        assert(res.total_count >= 1)
-        assert(res.items(0).Repo.id >= 1 )
-        assert(res.items(0).Repo.full_name == "jquery/jquery")
-      }
+      val res = Await.result(api.searchCode(input), TIMEOUT)
+      assert(res.total_count >= 1)
+      assert(res.items(0).Repo.id >= 1 )
+      assert(res.items(0).Repo.full_name == "jquery/jquery")
     }
     //Following test results in error:
     //  "message" : "Validation Failed",
@@ -88,13 +85,11 @@ class SearchOpSpec extends FunSpec
       var q = "tom repos:>42 followers:>1000"
       q = q.trim.replaceAll(" ","+")
       val q1 = q.replaceAll(">","%3E")
-      println("QUERY: searchUser" + q1)
       val input = SearchInput(q1,sort=None,order=SortDirection.desc)
-      Await.result(api.searchUser(input), TIMEOUT).map { res =>
-        assert(res.total_count >= 1)
-        assert(res.items(0).login.length >= 1)
-        assert(res.items(0).id >= 1)
-      }
+      val res = Await.result(api.searchUser(input), TIMEOUT)
+      assert(res.total_count >= 1)
+      assert(res.items(0).login.length >= 1)
+      assert(res.items(0).id >= 1)
     }
   }
 }
