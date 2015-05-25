@@ -1,5 +1,4 @@
 import org.scalatest.path.FunSpec
-import org.scalatest.BeforeAndAfter
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Milestone
 import codecheck.github.models.MilestoneInput
@@ -12,21 +11,10 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTime
 
-class MilestoneOpSpec extends FunSpec with Constants {
-  /*
-  before { }
+class MilestoneOpSpec extends FunSpec
+  with Constants
+{
 
-  after {
-    val input = new MilestoneInput(Some("test milestone"))
-    val input2 = new MilestoneInput(Some("test milestone 2"))
-
-    Await.result(api.createMilestone(user, userRepo, input), TIMEOUT)
-    Await.result(api.createMilestone(user, userRepo, input2), TIMEOUT)
-
-    Await.result(api.createMilestone(organization, repo, input), TIMEOUT)
-    Await.result(api.createMilestone(organization, repo, input2), TIMEOUT)
-  }
-*/
   private def removeAll = {
     val list = Await.result(api.listMilestones(organization, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     list.foreach { m =>

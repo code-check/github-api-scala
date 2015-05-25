@@ -14,13 +14,41 @@ import codecheck.github.models.IssueInput
 import codecheck.github.models.MilestoneSearchOption
 
 import codecheck.github.models.MilestoneInput
+import codecheck.github.models.MilestoneListOption
+import codecheck.github.models.MilestoneState
+import codecheck.github.models.Milestone
 
-class IssueOpSpec extends FunSpec with Constants {
+class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
   val number = 1
   var nUser: Long = 0
   var nOrg: Long = 0
   var nTime: DateTime = DateTime.now()
+
+  private def removeAll = {
+    val userMilestones = Await.result(api.listMilestones(user, userRepo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
+    userMilestones.foreach { m =>
+      Await.result(api.removeMilestone(user, userRepo, m.number), TIMEOUT)
+    }
+
+    val orgMilestones = Await.result(api.listMilestones(organization, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
+    orgMilestones.foreach { m =>
+      Await.result(api.removeMilestone(organization, repo, m.number), TIMEOUT)
+    }
+  }
+
+  before {
+    removeAll
+
+    val nInput = new MilestoneInput(Some("test milestone"))
+    val nInput2 = new MilestoneInput(Some("test milestone 2"))
+
+    Await.result(api.createMilestone(user, userRepo, nInput), TIMEOUT)
+    Await.result(api.createMilestone(organization, repo, nInput), TIMEOUT)
+
+    Await.result(api.createMilestone(user, userRepo, nInput2), TIMEOUT)
+    Await.result(api.createMilestone(organization, repo, nInput2), TIMEOUT)
+  }
 
   describe("createIssue(owner, repo, input)") {
     val input = IssueInput(Some("test issue"), Some("testing"), Some(user), Some(1), Seq("question"))
