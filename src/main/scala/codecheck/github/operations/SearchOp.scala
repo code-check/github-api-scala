@@ -45,7 +45,7 @@ trait SearchOp {
   }
 
   def searchUser(input: SearchInput): Future[Option[SearchUserResult]] = {
-    val path = s"/search/user?q=${input.q}&sort=${input.sort}&order=${input.order}"
+    val path = s"/search/users?q=${input.q}&sort=${input.sort}&order=${input.order}"
     exec("GET", path ).map { res =>
       res.statusCode match {
         case 200 => Some(SearchUserResult(res.body))

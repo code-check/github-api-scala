@@ -104,6 +104,7 @@ case class Issue(value: JValue) extends AbstractJson(value) {
   lazy val assignee = objectOpt("assignee")(v => User(v))
   lazy val milestone = objectOpt("milestone")(v => Milestone(v))
 
+  val state = get("state")
   lazy val user = new User(value \ "user")
   lazy val labels = (value \ "labels") match {
     case JArray(arr) => arr.map(new Label(_))
