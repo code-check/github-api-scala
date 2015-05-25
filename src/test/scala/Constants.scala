@@ -1,4 +1,3 @@
-
 import com.ning.http.client.AsyncHttpClient
 import codecheck.github.api.GitHubAPI
 import scala.concurrent.duration._
