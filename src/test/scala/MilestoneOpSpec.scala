@@ -11,8 +11,8 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTime
 
-class MilestoneOpSpec extends FunSpec 
-  with Constants 
+class MilestoneOpSpec extends FunSpec
+  with Constants
 {
 
   private def removeAll = {
@@ -67,7 +67,7 @@ class MilestoneOpSpec extends FunSpec
       val input = MilestoneInput(gName, gDescription, d1)
       val ex = Await.result(api.createMilestone(organization, repoInvalid, input).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }
@@ -168,7 +168,7 @@ class MilestoneOpSpec extends FunSpec
     it("with wrong reponame should fail") {
       val ex = Await.result(api.listMilestones(organization, repoInvalid).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }
@@ -189,7 +189,7 @@ class MilestoneOpSpec extends FunSpec
 
       val ex = Await.result(api.removeMilestone(organization, repo, m1.number).failed, TIMEOUT)
       ex match {
-        case e: NotFoundException => 
+        case e: NotFoundException =>
         case _ => fail
       }
     }

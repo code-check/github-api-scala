@@ -14,13 +14,11 @@ import codecheck.github.models.Issue
 import codecheck.github.models.IssueListOption
 import codecheck.github.models.IssueListOption4Repository
 
-import codecheck.github.utils.ToDo
-
 trait IssueOp {
   self: GitHubAPI =>
 
   private def doList(path: String): Future[List[Issue]] = {
-    exec("GET", path).map( 
+    exec("GET", path).map(
       _.body match {
         case JArray(arr) => arr.map(v => Issue(v))
         case _ => throw new IllegalStateException()
@@ -28,19 +26,21 @@ trait IssueOp {
     )
   }
 
-  def listAllIssues(option: IssueListOption = IssueListOption()): Future[List[Issue]] = 
+  //Only listAll/User/OrgIssues return Repository object
+  def listAllIssues(option: IssueListOption = IssueListOption()): Future[List[Issue]] =
     doList("/issues" + option.q)
 
-  def listUserIssues(option: IssueListOption = IssueListOption()): Future[List[Issue]] = 
+  def listUserIssues(option: IssueListOption = IssueListOption()): Future[List[Issue]] =
     doList("/user/issues" + option.q)
 
   def listOrgIssues(org: String, option: IssueListOption = IssueListOption()): Future[List[Issue]] =
     doList(s"/orgs/$org/issues" + option.q)
 
-  def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repository): Future[List[Issue]] = ToDo[Future[List[Issue]]]
+  def listRepositoryIssues(owner: String, repo: String, option: IssueListOption4Repository = IssueListOption4Repository()): Future[List[Issue]] =
+    doList(s"/repos/$owner/$repo/issues" + option.q)
 
-  def getIssue(owner: String, repo: String, number: Long): Future[Option[Issue]] = 
-    exec("GET", s"/repos/$owner/$repo/issues/$number", fail404=false).map(res => 
+  def getIssue(owner: String, repo: String, number: Long): Future[Option[Issue]] =
+    exec("GET", s"/repos/$owner/$repo/issues/$number", fail404=false).map(res =>
       res.statusCode match {
         case 404 => None
         case 200 => Some(Issue(res.body))
