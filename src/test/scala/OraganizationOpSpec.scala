@@ -80,7 +80,7 @@ class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
         assert(org.blog == "")
         assert(org.location == "Tokyo")
         assert(org.email == "")
-        assert(org.public_repos == 1)
+        assert(org.public_repos == 2)
         assert(org.public_gists == 0)
         assert(org.followers == 0)
         assert(org.following == 0)
