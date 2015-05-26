@@ -8,6 +8,7 @@ import org.json4s.JInt
 import org.json4s.JArray
 import org.json4s.JsonDSL._
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 import codecheck.github.utils.ToDo
 
@@ -77,7 +78,7 @@ case class IssueListOption(
 ) {
   def q = s"?filter=$filter&state=$state&sort=$sort&direction=$direction" +
     (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
-    (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
+    (if (!since.isEmpty) (since map ("&since=" + _.toDateTime(DateTimeZone.UTC).toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
 }
 
 case class IssueListOption4Repository(
@@ -99,7 +100,7 @@ case class IssueListOption4Repository(
       (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
       s"&sort=$sort" +
       s"&direction=$direction" +
-      (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
+      (if (!since.isEmpty) (since map ("&since=" + _.toDateTime(DateTimeZone.UTC).toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
  }
 
 case class IssueInput(

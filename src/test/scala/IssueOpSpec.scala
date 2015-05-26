@@ -22,7 +22,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
   val number = 1
   var nUser: Long = 0
   var nOrg: Long = 0
-  var nTime: DateTime = DateTime.now().toDateTime(DateTimeZone.UTC)
+  var nTime: DateTime = DateTime.now
   val tRepo = repo + "2"
 
   override def beforeAll() {
@@ -139,6 +139,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
 
     it("shold return only two issues when using options.") {
       val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
+println(option.q)
       val result = Await.result(api.listAllIssues(option), TIMEOUT)
       assert(result.length == 2)
       assert(result.head.title == "test issue")
