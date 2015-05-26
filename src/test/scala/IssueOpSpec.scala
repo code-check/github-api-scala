@@ -1,6 +1,5 @@
-
 import org.scalatest.FunSpec
-import org.scalatest.BeforeAndAfter
+import org.scalatest.BeforeAndAfterAll
 import scala.concurrent.Await
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -18,36 +17,33 @@ import codecheck.github.models.MilestoneListOption
 import codecheck.github.models.MilestoneState
 import codecheck.github.models.Milestone
 
-class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
+class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
 
   val number = 1
   var nUser: Long = 0
   var nOrg: Long = 0
   var nTime: DateTime = DateTime.now()
+  val tRepo = repo + "2"
 
-  private def removeAll = {
+  override def beforeAll() {
     val userMilestones = Await.result(api.listMilestones(user, userRepo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     userMilestones.foreach { m =>
       Await.result(api.removeMilestone(user, userRepo, m.number), TIMEOUT)
     }
 
-    val orgMilestones = Await.result(api.listMilestones(organization, repo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
+    val orgMilestones = Await.result(api.listMilestones(organization, tRepo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
     orgMilestones.foreach { m =>
-      Await.result(api.removeMilestone(organization, repo, m.number), TIMEOUT)
+      Await.result(api.removeMilestone(organization, tRepo, m.number), TIMEOUT)
     }
-  }
-
-  before {
-    removeAll
 
     val nInput = new MilestoneInput(Some("test milestone"))
     val nInput2 = new MilestoneInput(Some("test milestone 2"))
 
     Await.result(api.createMilestone(user, userRepo, nInput), TIMEOUT)
-    Await.result(api.createMilestone(organization, repo, nInput), TIMEOUT)
-
     Await.result(api.createMilestone(user, userRepo, nInput2), TIMEOUT)
-    Await.result(api.createMilestone(organization, repo, nInput2), TIMEOUT)
+
+    Await.result(api.createMilestone(organization, tRepo, nInput), TIMEOUT)
+    Await.result(api.createMilestone(organization, tRepo, nInput2), TIMEOUT)
   }
 
   describe("createIssue(owner, repo, input)") {
@@ -77,13 +73,13 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should create issue for organization's repo.") {
-      val result = Await.result(api.createIssue(organization, repo, input), TIMEOUT)
+      val result = Await.result(api.createIssue(organization, tRepo, input), TIMEOUT)
       nOrg = result.number
-      assert(result.url == "https://api.github.com/repos/" + organization + "/" + repo + "/issues/" + nOrg)
-      assert(result.labels_url == "https://api.github.com/repos/" + organization + "/" + repo + "/issues/" + nOrg + "/labels{/name}")
-      assert(result.comments_url == "https://api.github.com/repos/" + organization + "/" + repo + "/issues/" + nOrg + "/comments")
-      assert(result.events_url == "https://api.github.com/repos/" + organization + "/" + repo + "/issues/" + nOrg + "/events")
-      assert(result.html_url == "https://github.com/" + organization + "/" + repo + "/issues/" + nOrg)
+      assert(result.url == "https://api.github.com/repos/" + organization + "/" + tRepo + "/issues/" + nOrg)
+      assert(result.labels_url == "https://api.github.com/repos/" + organization + "/" + tRepo + "/issues/" + nOrg + "/labels{/name}")
+      assert(result.comments_url == "https://api.github.com/repos/" + organization + "/" + tRepo+ "/issues/" + nOrg + "/comments")
+      assert(result.events_url == "https://api.github.com/repos/" + organization + "/" + tRepo + "/issues/" + nOrg + "/events")
+      assert(result.html_url == "https://github.com/" + organization + "/" + tRepo + "/issues/" + nOrg)
       assert(result.title == "test issue")
       assert(result.user.login == user)
       assert(result.labels.head.name == "question")
@@ -106,7 +102,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should return issue from organization's repo.") {
-      val result = Await.result(api.getIssue(organization, repo, nOrg), TIMEOUT)
+      val result = Await.result(api.getIssue(organization, tRepo, nOrg), TIMEOUT)
       assert(result.get.title == "test issue")
     }
   }
@@ -118,7 +114,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should succeed with valid inputs on issues in organization's repo.") {
-      val result = Await.result(api.unassign(organization, repo, nOrg), TIMEOUT)
+      val result = Await.result(api.unassign(organization, tRepo, nOrg), TIMEOUT)
       assert(result.opt("assignee").isEmpty)
     }
   }
@@ -130,7 +126,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should succeed with valid inputs on issues in organization's repo.") {
-      val result = Await.result(api.assign(organization, repo, nOrg, user), TIMEOUT)
+      val result = Await.result(api.assign(organization, tRepo, nOrg, user), TIMEOUT)
       assert(result.get("assignee.login") == user)
     }
   }
@@ -139,7 +135,6 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     it("shold return at least one issue.") {
       val result = Await.result(api.listAllIssues(), TIMEOUT)
       assert(result.length > 0)
-      assert(result.head.repository.name == "test-repo")
     }
 
     it("shold return only two issues when using options.") {
@@ -154,7 +149,6 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     it("shold return at least one issue.") {
       val result = Await.result(api.listUserIssues(), TIMEOUT)
       assert(result.length > 0)
-      assert(result.head.repository.name == "test-repo")
     }
 
     it("shold return only one issues when using options.") {
@@ -186,21 +180,21 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should return at least one issue from organization's repo.") {
-      val result = Await.result(api.listRepositoryIssues(organization, repo), TIMEOUT)
+      val result = Await.result(api.listRepositoryIssues(organization, tRepo), TIMEOUT)
       assert(result.length > 0)
     }
 
     it("should return only one issue from user's own repo when using options.") {
       val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
       val result = Await.result(api.listRepositoryIssues(user, userRepo, option), TIMEOUT)
-      showResponse(option.q)
+      //showResponse(option.q)
       assert(result.length == 1)
       assert(result.head.title == "test issue")
     }
 
     it("should return only one issue from organization's repo when using options.") {
       val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
-      val result = Await.result(api.listRepositoryIssues(organization, repo, option), TIMEOUT)
+      val result = Await.result(api.listRepositoryIssues(organization, tRepo, option), TIMEOUT)
       assert(result.length == 1)
       assert(result.head.title == "test issue")
     }
@@ -220,7 +214,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfter {
     }
 
     it("should edit the issue in organization's repo.") {
-      val result = Await.result(api.editIssue(organization, repo, nOrg, input), TIMEOUT)
+      val result = Await.result(api.editIssue(organization, tRepo, nOrg, input), TIMEOUT)
       assert(result.title == "test issue edited")
       assert(result.body.get == "testing again")
       assert(result.milestone.get.number == 2)
