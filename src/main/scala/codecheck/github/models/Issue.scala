@@ -139,6 +139,7 @@ case class Issue(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def title = get("title")
 
+  val state = get("state")
   lazy val user = new User(value \ "user")
   lazy val labels = (value \ "labels") match {
     case JArray(arr) => arr.map(new Label(_))
