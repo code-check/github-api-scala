@@ -139,7 +139,6 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
 
     it("shold return only two issues when using options.") {
       val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
-println(option.q)
       val result = Await.result(api.listAllIssues(option), TIMEOUT)
       assert(result.length == 2)
       assert(result.head.title == "test issue")
