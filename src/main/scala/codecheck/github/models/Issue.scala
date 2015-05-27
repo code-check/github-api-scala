@@ -8,6 +8,7 @@ import org.json4s.JInt
 import org.json4s.JArray
 import org.json4s.JsonDSL._
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 import codecheck.github.utils.ToDo
 
@@ -77,7 +78,7 @@ case class IssueListOption(
 ) {
   def q = s"?filter=$filter&state=$state&sort=$sort&direction=$direction" +
     (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
-    (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
+    since.map("&since=" + _.toDateTime(DateTimeZone.UTC).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")).getOrElse("")
 }
 
 case class IssueListOption4Repository(
@@ -91,15 +92,13 @@ case class IssueListOption4Repository(
   direction: SortDirection = SortDirection.desc,
   since: Option[DateTime] = None
 ) {
-    def q = "?" + (if (!milestone.isEmpty) (milestone map (t => s"milestone=$t&")).get else "") +
-      s"state=$state" +
-      (if (!assignee.isEmpty) (assignee map (t => s"&assignee=$t")).get else "") +
-      (if (!creator.isEmpty) (creator map (t => s"&creator=$t")).get else "") +
-      (if (!mentioned.isEmpty) (mentioned map (t => s"&mentioned=$t")).get else "") +
+    def q = s"?state=$state&sort=$sort&direction=$direction" +
+      milestone.map(t => s"milestone=$t&").getOrElse("") +
+      assignee.map(t => s"&assignee=$t").getOrElse("") +
+      creator.map(t => s"&creator=$t").getOrElse("") +
+      mentioned.map(t => s"&mentioned=$t").getOrElse("") +
       (if (!labels.isEmpty) "&labels=" + labels.mkString(",") else "") +
-      s"&sort=$sort" +
-      s"&direction=$direction" +
-      (if (!since.isEmpty) (since map ("&since=" + _.toString("yyyy-MM-dd'T'HH:mm:ss'Z'"))).get else "")
+      since.map("&since=" + _.toDateTime(DateTimeZone.UTC).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")).getOrElse("")
  }
 
 case class IssueInput(
