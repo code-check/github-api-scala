@@ -4,7 +4,7 @@ import com.ning.http.client.AsyncHttpClient
 import com.ning.http.client.AsyncCompletionHandler
 import com.ning.http.client.Response
 import com.ning.http.client.RequestBuilder
-import com.ning.http.util.UTF8UrlEncoder
+import java.net.URLEncoder
 import scala.concurrent.Promise
 import scala.concurrent.Future
 import org.json4s.jackson.JsonMethods
@@ -27,7 +27,7 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
       "response_type" -> "token",
       "state" -> UUID.randomUUID.toString
     )
-    val query: String = params.map { case (k, v) => k +"="+ UTF8UrlEncoder.encode(v) }.mkString("&")
+    val query: String = params.map { case (k, v) => k +"="+ URLEncoder.encode(v, "utf-8") }.mkString("&")
     accessRequestUri +"?"+ query
   }
 
@@ -43,7 +43,7 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
       .setHeader("Accept", "application/json")
       .setFollowRedirects(true)
       .setUrl(tokenRequestUri)
-    params.foreach { case (k, v) => builder.addParameter(k, v) }
+    params.foreach { case (k, v) => builder.addFormParam(k, v) }
 
     val deferred = Promise[AccessToken]()
     client.prepareRequest(builder.build).execute(new AsyncCompletionHandler[Response]() {
