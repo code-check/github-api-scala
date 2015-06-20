@@ -27,6 +27,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
   with MilestoneOp
   with WebhookOp
   with CollaboratorOp
+  with BranchOp
 {
 
   private val endpoint = "https://api.github.com"
