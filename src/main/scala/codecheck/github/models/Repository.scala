@@ -1,5 +1,6 @@
 package codecheck.github.models
 
+import java.net.URL
 import org.json4s.JValue
 import codecheck.github.utils.ToDo
 
@@ -46,7 +47,19 @@ case class RepositoryListOption(
   direction: SortDirection = SortDirection.asc
 )
 
-/*case*/ class RepositoryInput extends ToDo
+case class RepositoryInput(
+  name: String,
+  description: Option[String] = None,
+  homepage: Option[URL] = None,
+  `private`: Boolean = false,
+  has_issues: Boolean = true,
+  has_wiki: Boolean = true,
+  has_downloads: Boolean = true,
+  team_id: Option[Int] = None,
+  auto_init: Boolean = false,
+  gitignore_template: Option[String] = None,
+  license_template: Option[String] = None
+) extends AbstractInput
 
 case class Repository(value: JValue) extends AbstractJson(value) {
   def id = get("id").toLong
