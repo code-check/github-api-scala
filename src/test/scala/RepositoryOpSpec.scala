@@ -63,6 +63,7 @@ class RepositoryOpSpec extends FunSpec with Constants
     }
   }
 
+/*
   describe("createUserRepository") {
     val createRepoName = "create-repo-name"
     it("should succeed") {
@@ -84,4 +85,5 @@ class RepositoryOpSpec extends FunSpec with Constants
       }
     }
   }
+*/
 }
