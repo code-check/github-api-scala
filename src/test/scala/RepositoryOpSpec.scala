@@ -1,12 +1,13 @@
 import org.scalatest.path.FunSpec
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.models.Repository
+import codecheck.github.models.RepositoryInput
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RepositoryOpSpec extends FunSpec with Constants 
+class RepositoryOpSpec extends FunSpec with Constants
 {
 
   describe("listOwnRepositories") {
@@ -45,7 +46,7 @@ class RepositoryOpSpec extends FunSpec with Constants
       assert(list.size > 0)
     }
 
-    
+
   }
   describe("getRepository") {
     it("should succeed") {
@@ -61,4 +62,28 @@ class RepositoryOpSpec extends FunSpec with Constants
       assert(Await.result(api.getRepository(organization, repoInvalid), TIMEOUT).isEmpty)
     }
   }
+
+/*
+  describe("createUserRepository") {
+    val createRepoName = "create-repo-name"
+    it("should succeed") {
+      val input = RepositoryInput(name = createRepoName)
+      val repo = Await.result(api.createUserRepository(input), TIMEOUT)
+      assert(repo.owner.login == user)
+      assert(repo.name == "create-repo-test")
+    }
+    it("should fail with existing repository name") {
+      val input = RepositoryInput(name = createRepoName)
+      try {
+        val repo = Await.result(api.createUserRepository(input), TIMEOUT)
+        fail
+      } catch {
+        case e: GitHubAPIException =>
+          assert(e.error.errors.head.field == "name")
+        case e: Throwable =>
+          fail
+      }
+    }
+  }
+*/
 }

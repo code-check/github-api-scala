@@ -22,10 +22,10 @@ trait RepositoryOp {
       }
     }
   }
-  def listOwnRepositories(option: RepositoryListOption = RepositoryListOption()): Future[List[Repository]] = 
+  def listOwnRepositories(option: RepositoryListOption = RepositoryListOption()): Future[List[Repository]] =
     doList("/user/repos", option)
 
-  def listUserRepositories(user: String, option: RepositoryListOption = RepositoryListOption()): Future[List[Repository]] = 
+  def listUserRepositories(user: String, option: RepositoryListOption = RepositoryListOption()): Future[List[Repository]] =
     doList(s"/users/$user/repos", option)
 
   def listOrgRepositories(org: String, option: RepositoryListOption = RepositoryListOption()): Future[List[Repository]] =
@@ -51,7 +51,11 @@ trait RepositoryOp {
     }
   }
 
-  def createRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
+  def createUserRepository(input: RepositoryInput): Future[Repository] = {
+    exec("POST", s"/user/repos", input.value).map { res =>
+      new Repository(res.body)
+    }
+  }
   def updateRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
 
 /*
