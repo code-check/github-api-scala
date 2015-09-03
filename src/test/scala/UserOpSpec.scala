@@ -8,8 +8,8 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import codecheck.github.models.UserInput
 
-class UserOpSpec extends FunSpec 
-  with Constants 
+class UserOpSpec extends FunSpec
+  with Constants
   with BeforeAndAfterAll
 {
   val origin = Await.result(api.getAuthenticatedUser, TIMEOUT)
@@ -17,7 +17,7 @@ class UserOpSpec extends FunSpec
   override def afterAll() {
     val input = UserInput(
       Some(origin.name),
-      Some(origin.email),
+      origin.email,
       Some(origin.blog),
       Some(origin.company),
       Some(origin.location),
