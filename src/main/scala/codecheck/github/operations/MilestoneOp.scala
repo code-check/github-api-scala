@@ -16,12 +16,12 @@ trait MilestoneOp {
   self: GitHubAPI =>
 
   def listMilestones(
-    owner: String, 
-    repo: String, 
+    owner: String,
+    repo: String,
     option: MilestoneListOption = MilestoneListOption()
   ): Future[List[Milestone]] = {
     val path = s"/repos/$owner/$repo/milestones?state=${option.state}&sort=${option.sort}&direction=${option.direction}"
-    exec("GET", path).map( 
+    exec("GET", path).map(
       _.body match {
         case JArray(arr) => arr.map(v => Milestone(v))
         case _ => throw new IllegalStateException()

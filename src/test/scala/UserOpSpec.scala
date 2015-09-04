@@ -16,16 +16,15 @@ class UserOpSpec extends FunSpec
 
   override def afterAll() {
     val input = UserInput(
-      Some(origin.name),
-      origin.email,
-      Some(origin.blog),
-      Some(origin.company),
-      Some(origin.location),
+      origin.name.orElse(Some("")),
+      origin.email.orElse(Some("")),
+      origin.blog.orElse(Some("")),
+      origin.company.orElse(Some("")),
+      origin.location.orElse(Some("")),
       Some(origin.hireable),
-      origin.bio
+      origin.bio.orElse(Some(""))
     )
     val user = Await.result(api.updateAuthenticatedUser(input), TIMEOUT)
-    println("AFTER: " + user)
   }
   describe("getUser") {
     it("with valid username should succeed") {
@@ -52,12 +51,11 @@ class UserOpSpec extends FunSpec
         Some("bio")
       )
       val res = Await.result(api.updateAuthenticatedUser(input), TIMEOUT)
-      println("TEST: " + res)
-      assert(res.name == input.name.get)
-      assert(res.email == input.email.get)
-      assert(res.blog == input.blog.get)
-      assert(res.company == input.company.get)
-      assert(res.location == input.location.get)
+      assert(res.name.get == input.name.get)
+      assert(res.email.getOrElse("") == input.email.get)
+      assert(res.blog.get == input.blog.get)
+      assert(res.company.get == input.company.get)
+      assert(res.location.get == input.location.get)
       assert(res.bio.get == input.bio.get)
     }
   }
