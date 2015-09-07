@@ -7,12 +7,12 @@ import org.json4s.JsonDSL._
 case class User(value: JValue) extends AbstractJson(value) {
   def login: String = get("login")
   def id: Long = get("id").toLong
-  def email: String = get("email")
-  def name: String = get("name")
-  def blog: String = get("blog")
-  def company: String = get("company")
-  def location: String = get("location")
-  def hireable: Boolean = boolean("hireable")
+  def email: Option[String] = opt("email")
+  def name: Option[String] = opt("name")
+  def blog: Option[String] = opt("blog")
+  def company: Option[String] = opt("company")
+  def location: Option[String] = opt("location")
+  def hireable: Boolean = booleanOpt("hireable").getOrElse(false)
   def bio: Option[String] = opt("bio")
 }
 
