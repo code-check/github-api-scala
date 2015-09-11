@@ -36,10 +36,10 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
       assert(res.active == true)
       assert(res.config.url == targetURL)
       assert(res.config.content_type == "json")
-      assert(res.config.secret == "")
-      assert(res.config.insecure_ssl == "0")
+      assert(res.config.secret == None)
+      assert(res.config.insecure_ssl == false)
     }
-  } 
+  }
 
   describe("getWebhook(owner, repo, id)") {
     it("should succeed with valid organization, repo and id.") {
@@ -48,7 +48,7 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
       }
     }
   }
-  
+
   describe("updateWebhook(owner, repo, id, input)") {
     it("should succeed updating by rewriting events.") {
       val input = new WebhookUpdateInput(events=Some(Seq("create", "pull_request")))
@@ -76,26 +76,26 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.config.url == targetURL)
     }
-  } 
+  }
 
   describe("testWebhook(owner, repo, id)") {
     it("should succeed with valid inputs.") {
       val result = Await.result(api.testWebhook(organization, repo, nID), TIMEOUT)
       assert(result == true)
     }
-  } 
+  }
 
   describe("pingWebhook(owner, repo, id)") {
     it("should succeed with valid inputs.") {
       val result = Await.result(api.pingWebhook(organization, repo, nID), TIMEOUT)
       assert(result == true)
     }
-  } 
+  }
 
   describe("removeWebhook(owner, repo, id)") {
     it("should succeed with valid inputs.") {
       val result = Await.result(api.removeWebhook(organization, repo, nID), TIMEOUT)
       assert(result == true)
     }
-  } 
+  }
 }
