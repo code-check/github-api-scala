@@ -10,7 +10,7 @@ class Webhook(value: JValue) extends AbstractJson(value) {
   def name = get("name")
   def events = seq("events")
   def active = boolean("active")
-  def config = new WebhookConfig(get("config.url"), get("config.content_type"), get("config.secret"), get("config.insecure_ssl"));
+  def config = new WebhookConfig(get("config.url"), get("config.content_type"), opt("config.secret"), opt("config.insecure_ssl").contains("1"));
   def last_response = new WebhookResponse(value \ "last_response")
   def updated_at = getDate("updated_at")
   def created_at = getDate("created_at")
@@ -19,9 +19,9 @@ class Webhook(value: JValue) extends AbstractJson(value) {
 case class WebhookConfig(
   url: String,
   content_type: String = "json",
-  secret: String = "",
-  insecure_ssl: String = "0"
-  ) extends AbstractInput 
+  secret: Option[String] = None,
+  insecure_ssl: Boolean = false
+  ) extends AbstractInput
 
 case class WebhookCreateInput(
   name: String,
