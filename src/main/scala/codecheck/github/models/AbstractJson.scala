@@ -68,6 +68,7 @@ class AbstractJson(value: JValue) {
       case JNothing => Nil
       case JNull => Nil
       case v: JArray => v.values.map(_.asInstanceOf[T])
+      case v: JValue => List(v.asInstanceOf[T])
     }
   }
 
