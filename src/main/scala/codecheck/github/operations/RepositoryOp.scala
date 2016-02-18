@@ -2,7 +2,7 @@ package codecheck.github.operations
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.json4s.JArray
+import org.json4s.{JArray, JString}
 
 import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.NotFoundException
@@ -43,10 +43,31 @@ trait RepositoryOp {
 
 
   def getRepository(owner: String, repo: String): Future[Option[Repository]] = {
-    exec("GET", s"/repos/$owner/$repo", fail404=false).map { res =>
+    def handleRedirect(url: String): Future[Option[Repository]] = {
+      val regex = "https://api.github.com/repositories/(\\d+)".r
+      url match {
+        case regex(id) => getRepositoryById(id.toLong)
+        case _ => Future.successful(None)
+      }
+    }
+    exec("GET", s"/repos/$owner/$repo", fail404=false).flatMap { res =>
       res.statusCode match {
-        case 404 => None
+        case 200 => Future.successful(Some(Repository(res.body)))
+        case 301 =>
+          res.body \ "url" match {
+            case JString(url) => handleRedirect(url)
+            case _ => Future.successful(None)
+          }
+        case 404 => Future.successful(None)
+      }
+    }
+  }
+
+  def getRepositoryById(id: Long): Future[Option[Repository]] = {
+    exec("GET", s"/repositories/$id", fail404=false).map { res =>
+      res.statusCode match {
         case 200 => Some(Repository(res.body))
+        case 404 => None
       }
     }
   }
