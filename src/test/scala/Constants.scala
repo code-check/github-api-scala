@@ -1,5 +1,6 @@
 import com.ning.http.client.AsyncHttpClient
 import codecheck.github.api.GitHubAPI
+import codecheck.github.api.PrintlnHandler
 import scala.concurrent.duration._
 import scala.util.Random._
 import org.scalatest.time.Span._
@@ -29,7 +30,7 @@ trait Constants {
   protected val userRepo = sys.env("GITHUB_REPO")
 
   protected val otherUser = "shunjikonishi"
-  protected val collaboratorUser = "givery-dev"
+  protected val collaboratorUser = "code-project"
   protected val otherUserInvalid = "loremipsom123"
   protected val organizationInvalid = "loremipsom123"
   protected val repoInvalid = "loremipsom123"
@@ -45,5 +46,5 @@ object Constants {
   private val token = sys.env("GITHUB_TOKEN")
   implicit val client = new AsyncHttpClient()
 
-  val API = GitHubAPI(token)
+  val API = GitHubAPI(token).withDebugHandler(new PrintlnHandler())
 }

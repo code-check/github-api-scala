@@ -20,7 +20,7 @@ import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
 import codecheck.github.models.User
 
-class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token") extends UserOp
+class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token", debugHandler: DebugHandler = NoneHandler) extends UserOp
   with OrganizationOp
   with RepositoryOp
   with LabelOp
@@ -40,6 +40,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
   protected def encode(s: String) = URLEncoder.encode(s, "utf-8").replaceAll("\\+", "%20")
 
   def exec(method: String, path: String, body: JValue = JNothing, fail404: Boolean = true): Future[APIResult] = {
+    debugHandler.onRequest(method, path, body)
     val deferred = Promise[APIResult]()
     val url = endpoint + path
     val request = method match {
@@ -61,6 +62,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
     }
     request.execute(new AsyncCompletionHandler[Response]() {
       def onCompleted(res: Response) = {
+        debugHandler.onResponse(res.getStatusCode, Option(res.getResponseBody))
         val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
         res.getStatusCode match {
           case 401 =>
@@ -90,6 +92,8 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
   def repositoryAPI(owner: String, repo: String) = RepositoryAPI(this, owner, repo)
 
   def close = client.close
+
+  def withDebugHandler(dh: DebugHandler): GitHubAPI = new GitHubAPI(token, client, tokenType, dh)
 }
 
 object GitHubAPI {
