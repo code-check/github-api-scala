@@ -58,6 +58,13 @@ trait RepositoryOp {
   }
   def updateRepository(input: RepositoryInput): Future[Repository] = ToDo[Future[Repository]]
 
+  def removeRepository(owner: String, repo: String): Future[Boolean] = {
+    val path = s"/repos/$owner/$repo"
+    exec("DELETE", path).map { v =>
+      v.statusCode == 204
+    }
+  }
+
 /*
 List contributors
 List languages
