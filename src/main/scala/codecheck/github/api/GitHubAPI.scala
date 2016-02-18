@@ -13,6 +13,7 @@ import org.json4s.JValue
 import org.json4s.JNothing
 import org.json4s.jackson.JsonMethods
 
+import codecheck.github.exceptions.PermissionDeniedException
 import codecheck.github.exceptions.NotFoundException
 import codecheck.github.exceptions.UnauthorizedException
 import codecheck.github.exceptions.GitHubAPIException
@@ -64,6 +65,8 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
         res.getStatusCode match {
           case 401 =>
             deferred.failure(new UnauthorizedException(json))
+          case 403 =>
+            deferred.failure(new PermissionDeniedException(json))
           case 422 =>
             deferred.failure(new GitHubAPIException(json))
           case 404 if fail404 =>
