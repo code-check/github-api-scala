@@ -23,8 +23,8 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
   describe("createWebhook(owner, repo, input)") {
     it("should succeed with valid organization, repo, and inputs.") {
-      val config = new WebhookConfig(targetURL)
-      val input = new WebhookCreateInput("web", config, events=Seq("*"))
+      val config = WebhookConfig(targetURL)
+      val input = WebhookCreateInput("web", config, events=Seq("*"))
       val res = Await.result(api.createWebhook(organization, repo, input), TIMEOUT)
       showResponse(res)
       nID = res.id
@@ -34,10 +34,10 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
       assert(res.name == "web")
       assert(res.events == Seq("*"))
       assert(res.active == true)
-      assert(res.config.url == targetURL)
-      assert(res.config.content_type == "json")
+      assert(res.config.url == Some(targetURL))
+      assert(res.config.content_type == Some("json"))
       assert(res.config.secret == None)
-      assert(res.config.insecure_ssl == false)
+      assert(res.config.insecure_ssl == Some(false))
     }
   }
 
@@ -51,30 +51,30 @@ class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
 
   describe("updateWebhook(owner, repo, id, input)") {
     it("should succeed updating by rewriting events.") {
-      val input = new WebhookUpdateInput(events=Some(Seq("create", "pull_request")))
+      val input = WebhookUpdateInput(events=Some(Seq("create", "pull_request")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
       assert(res.events == Seq("create", "pull_request"))
     }
 
     it("should succeed updating by using add_events.") {
-      val input = new WebhookUpdateInput(add_events=Some(Seq("push")))
+      val input = WebhookUpdateInput(add_events=Some(Seq("push")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
-      assert(res.config.url == targetURL)
+      assert(res.config.url == Some(targetURL))
       assert(res.events == Seq("create", "pull_request", "push"))
     }
 
     it("should succeed updating by using remove_events.") {
-      val input = new WebhookUpdateInput(remove_events=Some(Seq("pull_request")))
+      val input = WebhookUpdateInput(remove_events=Some(Seq("pull_request")))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
-      assert(res.config.url == targetURL)
+      assert(res.config.url == Some(targetURL))
       assert(res.events == Seq("create", "push"))
     }
 
     it("should succeed updating by rewriting config.") {
-      val config = new WebhookConfig(targetURL)
-      val input = new WebhookUpdateInput(Some(config))
+      val config = WebhookConfig(targetURL)
+      val input = WebhookUpdateInput(Some(config))
       val res = Await.result(api.updateWebhook(organization, repo, nID, input), TIMEOUT)
-      assert(res.config.url == targetURL)
+      assert(res.config.url == Some(targetURL))
     }
   }
 

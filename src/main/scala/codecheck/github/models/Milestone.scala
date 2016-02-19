@@ -2,7 +2,7 @@ package codecheck.github.models
 
 import org.json4s.JValue
 import org.json4s.JsonDSL._
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, DateTimeZone}
 
 sealed abstract class MilestoneState(val name: String) {
   override def toString = name
@@ -32,7 +32,7 @@ object MilestoneSort {
 }
 
 case class MilestoneListOption(
-  state: MilestoneState = MilestoneState.open, 
+  state: MilestoneState = MilestoneState.open,
   sort: MilestoneSort = MilestoneSort.due_date,
   direction: SortDirection = SortDirection.asc
 )
@@ -47,7 +47,7 @@ case class MilestoneInput(
     ("title" -> title) ~
     ("state" -> state.map(_.name)) ~
     ("description" -> description) ~
-    ("due_on" -> due_on.map(_.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+    ("due_on" -> due_on.map(_.toDateTime(DateTimeZone.UTC).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")))
   }
 }
 
