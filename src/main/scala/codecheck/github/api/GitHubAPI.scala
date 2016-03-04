@@ -25,6 +25,7 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
   with RepositoryOp
   with LabelOp
   with IssueOp
+  with PullRequestOp
   with MilestoneOp
   with WebhookOp
   with CollaboratorOp

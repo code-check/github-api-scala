@@ -2,6 +2,13 @@ package codecheck.github.models
 
 import org.json4s.JValue
 
+case class PullRequestInput(
+  title: String,
+  head: String,
+  base: String,
+  body: Option[String]
+) extends AbstractInput
+
 sealed abstract class PullRequestAction(val name: String) {
   override def toString = name
 }
@@ -33,5 +40,7 @@ object PullRequestAction {
 case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
+  def state = get("state")
+  def title = get("title")
 }
 
