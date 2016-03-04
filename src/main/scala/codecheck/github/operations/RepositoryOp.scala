@@ -10,6 +10,7 @@ import codecheck.github.utils.ToDo
 import codecheck.github.models.Repository
 import codecheck.github.models.RepositoryInput
 import codecheck.github.models.RepositoryListOption
+import codecheck.github.models.LanguageList
 
 trait RepositoryOp {
   self: GitHubAPI =>
@@ -83,6 +84,13 @@ trait RepositoryOp {
     val path = s"/repos/$owner/$repo"
     exec("DELETE", path).map { v =>
       v.statusCode == 204
+    }
+  }
+
+  def listLanguages(owner: String, repo: String): Future[LanguageList] = {
+    val path = s"/repos/$owner/$repo/languages"
+    exec("GET", path).map { res =>
+      LanguageList(res.body)
     }
   }
 

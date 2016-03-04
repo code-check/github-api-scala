@@ -63,6 +63,17 @@ class RepositoryOpSpec extends FunSpec with Constants
     }
   }
 
+  describe("listLanguages") {
+    it("should succeed") {
+      val username = "shunjikonishi"
+      val reponame = "programming-game"
+      val list = Await.result(api.listLanguages(username, reponame), TIMEOUT)
+      assert(list.items.size > 0)
+      val sumRate = list.items.map(_.rate).sum
+      assert(sumRate > 0.99 && sumRate <= 1.0)
+    }
+  }
+
 /*
   describe("createUserRepository") {
     val createRepoName = "create-repo-name"
