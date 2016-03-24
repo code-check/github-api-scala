@@ -25,7 +25,7 @@ trait BranchOp {
   }
 
   def getBranch(owner: String, repo: String, branch: String): Future[Option[Branch]] = {
-    exec("GET", s"/repos/$owner/$repo/branches/$branch", fail404=false).map{ res =>
+    exec("GET", s"/repos/$owner/$repo/branches/${encode(branch)}", fail404=false).map{ res =>
       res.statusCode match {
         case 404 => None
         case 200 => Some(Branch(res.body))
