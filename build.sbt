@@ -8,7 +8,8 @@ scalaVersion := "2.11.7"
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
-  "com.ning" % "async-http-client" % "1.9.21",
+  "com.ning" % "async-http-client" % "1.9.21" % "provided",
+  "org.asynchttpclient" % "async-http-client" % "2.0.15" % "provided",
   "org.json4s" %% "json4s-jackson" % "3.3.0",
   "org.json4s" %% "json4s-ext" % "3.3.0",
   "joda-time" % "joda-time" % "2.8.1",
