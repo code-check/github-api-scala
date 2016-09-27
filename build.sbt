@@ -2,7 +2,7 @@ organization := "io.code-check"
 
 name := """github-api"""
 
-version := "0.1.2-SNAPSHOT"
+version := "0.2.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
