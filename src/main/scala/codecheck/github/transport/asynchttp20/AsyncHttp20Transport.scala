@@ -27,6 +27,16 @@ class AsyncHttp20Request(request: BoundRequestBuilder) extends Request {
     this
   }
 
+  def setFollowRedirect(b: Boolean): Request = {
+    request.setFollowRedirect(b)
+    this
+  }
+
+  def addFormParam(name: String, value: String): Request = {
+    request.addFormParam(name, value)
+    this
+  }
+
   def execute(handler: CompletionHandler): Unit = {
     request.execute(new AsyncCompletionHandler[AsyncHttpResponse]() {
       def onCompleted(res: AsyncHttpResponse) = {

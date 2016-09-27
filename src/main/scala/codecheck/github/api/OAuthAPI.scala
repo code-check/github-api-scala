@@ -1,9 +1,5 @@
 package codecheck.github.api
 
-import com.ning.http.client.AsyncHttpClient
-import com.ning.http.client.AsyncCompletionHandler
-import com.ning.http.client.Response
-import com.ning.http.client.RequestBuilder
 import java.net.URLEncoder
 import scala.concurrent.Promise
 import scala.concurrent.Future
@@ -12,8 +8,9 @@ import org.json4s.DefaultFormats
 import java.util.UUID
 import codecheck.github.models.AccessToken
 import codecheck.github.exceptions.OAuthAPIException
+import codecheck.github.transport._
 
-class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, client: AsyncHttpClient) {
+class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, client: Transport) {
   private implicit val format = DefaultFormats
 
   private val accessRequestUri = "https://github.com/login/oauth/authorize"
@@ -38,26 +35,24 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
       "code" -> code,
       "redirect_uri" -> redirectUri
     )
-    val builder: RequestBuilder = new RequestBuilder("POST")
+    val request = client.preparePost(tokenRequestUri)
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .setHeader("Accept", "application/json")
-      .setFollowRedirects(true)
-      .setUrl(tokenRequestUri)
-    params.foreach { case (k, v) => builder.addFormParam(k, v) }
+      .setFollowRedirect(true)
+    params.foreach { case (k, v) => request.addFormParam(k, v) }
 
     val deferred = Promise[AccessToken]()
-    client.prepareRequest(builder.build).execute(new AsyncCompletionHandler[Response]() {
+    request.execute(new CompletionHandler() {
       def onCompleted(res: Response) = {
-        val json = JsonMethods.parse(res.getResponseBody("utf-8"))
+        val body = res.getResponseBody.getOrElse("{\"error\": \"No response\"}")
+        val json = JsonMethods.parse(body)
         (json \ "error").toOption match {
           case Some(_) => deferred.failure(new OAuthAPIException(json))
           case None => deferred.success(AccessToken(json))
         }
-        res
       }
-      override def onThrowable(t: Throwable) {
+      def onThrowable(t: Throwable) {
         deferred.failure(t)
-        super.onThrowable(t)
       }
     })
     deferred.future
@@ -65,6 +60,6 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
 }
 
 object OAuthAPI {
-  def apply(clientId: String, clientSecret: String, redirectUri: String)(implicit client: AsyncHttpClient) = new OAuthAPI(clientId, clientSecret, redirectUri, client)
+  def apply(clientId: String, clientSecret: String, redirectUri: String)(implicit client: Transport) = new OAuthAPI(clientId, clientSecret, redirectUri, client)
 
 }
