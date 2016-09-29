@@ -1,8 +1,5 @@
 package codecheck.github.api
 
-import com.ning.http.client.AsyncHttpClient
-import com.ning.http.client.AsyncCompletionHandler
-import com.ning.http.client.Response
 import scala.concurrent.Promise
 import scala.concurrent.Future
 import scala.concurrent.Await
@@ -19,8 +16,9 @@ import codecheck.github.exceptions.UnauthorizedException
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.operations._
 import codecheck.github.models.User
+import codecheck.github.transport._
 
-class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "token", debugHandler: DebugHandler = NoneHandler) extends UserOp
+class GitHubAPI(token: String, client: Transport, tokenType: String = "token", debugHandler: DebugHandler = NoneHandler) extends UserOp
   with OrganizationOp
   with RepositoryOp
   with LabelOp
@@ -61,10 +59,10 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
       request
         .setHeader("Content-Length", "0")
     }
-    request.execute(new AsyncCompletionHandler[Response]() {
+    request.execute(new CompletionHandler() {
       def onCompleted(res: Response) = {
-        debugHandler.onResponse(res.getStatusCode, Option(res.getResponseBody))
-        val json = Option(res.getResponseBody).filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
+        debugHandler.onResponse(res.getStatusCode, res.getResponseBody)
+        val json = res.getResponseBody.filter(_.length > 0).map(parseJson(_)).getOrElse(JNothing)
         res.getStatusCode match {
           case 401 =>
             deferred.failure(new UnauthorizedException(json))
@@ -78,11 +76,9 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
             val result = APIResult(res.getStatusCode, json)
             deferred.success(result)
         }
-        res
       }
-      override def onThrowable(t: Throwable) {
+      def onThrowable(t: Throwable) {
         deferred.failure(t)
-        super.onThrowable(t)
       }
     })
     deferred.future
@@ -99,14 +95,9 @@ class GitHubAPI(token: String, client: AsyncHttpClient, tokenType: String = "tok
 
 object GitHubAPI {
 
-  def fromEnv: GitHubAPI = {
-    implicit val client = new AsyncHttpClient
-    apply(sys.env("GITHUB_TOKEN"))
-  }
+  def apply(token: String)(implicit client: Transport): GitHubAPI = new GitHubAPI(token, client)
 
-  def apply(token: String)(implicit client: AsyncHttpClient): GitHubAPI = new GitHubAPI(token, client)
-
-  def apply(username: String, password: String)(implicit client: AsyncHttpClient): GitHubAPI = {
+  def apply(username: String, password: String)(implicit client: Transport): GitHubAPI = {
     val token = Base64.getEncoder.encodeToString((username + ":" + password).getBytes("utf-8"))
     new GitHubAPI(token, client, "Basic")
   }

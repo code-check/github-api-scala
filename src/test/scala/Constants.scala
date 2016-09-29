@@ -1,6 +1,7 @@
-import com.ning.http.client.AsyncHttpClient
+import org.asynchttpclient.DefaultAsyncHttpClient
 import codecheck.github.api.GitHubAPI
 import codecheck.github.api.PrintlnHandler
+import codecheck.github.transport.asynchttp20.AsyncHttp20Transport
 import scala.concurrent.duration._
 import scala.util.Random._
 import org.scalatest.time.Span._
@@ -44,7 +45,7 @@ trait Constants {
 
 object Constants {
   private val token = sys.env("GITHUB_TOKEN")
-  implicit val client = new AsyncHttpClient()
+  implicit val client = new AsyncHttp20Transport(new DefaultAsyncHttpClient())
 
   val API = GitHubAPI(token).withDebugHandler(new PrintlnHandler())
 }

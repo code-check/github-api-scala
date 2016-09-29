@@ -5,6 +5,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import codecheck.github.api.GitHubAPI
 import codecheck.github.exceptions.UnauthorizedException
+import codecheck.github.transport.asynchttp19.AsyncHttp19Transport
 import com.ning.http.client.AsyncHttpClient
 import scopt.OptionParser
 
@@ -25,10 +26,10 @@ object Main {
   val parser = new OptionParser[Config](appName) {
     head(appName, "0.1.0")
     opt[String]('u', "user") action { (x, c) =>
-      c.copy(user=x) 
+      c.copy(user=x)
     } text("username for GitHub")
     opt[String]('p', "password") action { (x, c) =>
-      c.copy(pass=x) 
+      c.copy(pass=x)
     } text("password")
     note(s"""
       |Shell for GitHub
@@ -47,7 +48,7 @@ object Main {
     config.userToken.orElse {
       sys.env.get("GITHUB_TOKEN").map(s => (s, "token"))
     }.map { case (token, tokenType) =>
-      val client = new AsyncHttpClient()
+      val client = new AsyncHttp19Transport(new AsyncHttpClient())
       val api = new GitHubAPI(token, client, tokenType)
       try {
         api.user
