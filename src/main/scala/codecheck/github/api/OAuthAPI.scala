@@ -28,6 +28,18 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
     accessRequestUri +"?"+ query
   }
 
+  def requestAccessUri(state: String, scope: Seq[String]) = {
+    val params = Map[String, String](
+      "client_id" -> clientId,
+      "redirect_uri" -> redirectUri,
+      "scope" -> scope.mkString(","),
+      "response_type" -> "token",
+      "state" -> state
+    )
+    val query: String = params.map { case (k, v) => k +"="+ URLEncoder.encode(v, "utf-8") }.mkString("&")
+    accessRequestUri +"?"+ query
+  }
+
   def requestToken(code: String): Future[AccessToken] = {
     val params: Map[String, String] = Map(
       "client_id" -> clientId,
