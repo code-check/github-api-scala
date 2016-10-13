@@ -129,6 +129,32 @@ object IssueInput {
     IssueInput(Some(title), body, assignee, milestone, labels, None)
 }
 
+sealed abstract class IssueAction(val name: String) {
+  override def toString = name
+}
+
+object IssueAction {
+  case object assigned    extends IssueAction("assigned")
+  case object unassigned  extends IssueAction("unassigned")
+  case object labeled     extends IssueAction("labeled")
+  case object unlabeled   extends IssueAction("unlabeled")
+  case object opened      extends IssueAction("opened")
+  case object closed      extends IssueAction("closed")
+  case object reopened    extends IssueAction("reopened")
+
+  val values = Array(
+    assigned,
+    unassigned,
+    labeled,
+    unlabeled,
+    opened,
+    closed,
+    reopened
+  )
+
+  def fromString(str: String) = values.filter(_.name == str).head
+}
+
 case class Issue(value: JValue) extends AbstractJson(value) {
   def url = get("url")
   def labels_url = get("labels_url")
