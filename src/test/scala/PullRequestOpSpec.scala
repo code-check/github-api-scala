@@ -6,6 +6,17 @@ import java.util.Date
 
 class PullRequestOpSpec extends FunSpec with Constants {
 
+  describe("listPullRequests") {
+    it("with valid repo should succeed") {
+      val list = Await.result(api.listPullRequests(user, userRepo), TIMEOUT)
+      assert(list.length >= 0)
+      // assert(list.exists(_.state == "open"))
+      // assert(list.exists(_.base.repo.full_name == s"$user/$userRepo"))
+      // assert(list.exists(_.base.user.login == user))
+      // assert(list.exists(_.base.repo.name == userRepo))
+    }
+  }
+
   describe("createPullRequest(owner, repo, input)") {
     val username = "shunjikonishi"
     val reponame = "test-repo"

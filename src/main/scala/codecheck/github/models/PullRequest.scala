@@ -37,6 +37,14 @@ object PullRequestAction {
   def fromString(str: String) = values.filter(_.name == str).head
 }
 
+case class PullRequestListOption(
+  state: IssueState = IssueState.open,
+  head: Option[String] = None,
+  base: Option[String] = None,
+  sort: IssueSort = IssueSort.created,
+  direction: SortDirection = SortDirection.desc
+)
+
 case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
