@@ -19,6 +19,7 @@ object PullRequestAction {
   case object labeled     extends PullRequestAction("labeled")
   case object unlabeled   extends PullRequestAction("unlabeled")
   case object opened      extends PullRequestAction("opened")
+  case object edited      extends PullRequestAction("edited")
   case object closed      extends PullRequestAction("closed")
   case object reopened    extends PullRequestAction("reopened")
   case object synchronize extends PullRequestAction("synchronize")

@@ -139,6 +139,7 @@ object IssueAction {
   case object labeled     extends IssueAction("labeled")
   case object unlabeled   extends IssueAction("unlabeled")
   case object opened      extends IssueAction("opened")
+  case object edited      extends IssueAction("edited")
   case object closed      extends IssueAction("closed")
   case object reopened    extends IssueAction("reopened")
 
