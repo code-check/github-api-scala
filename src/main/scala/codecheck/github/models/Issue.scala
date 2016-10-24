@@ -172,7 +172,7 @@ case class Issue(value: JValue) extends AbstractJson(value) {
     case _ => Nil
   }
 
-  def state = get("state")
+  def state = IssueState.fromString(get("state"))
   def locked = boolean("locked")
 
   lazy val assignee = objectOpt("assignee")(v => User(v))
