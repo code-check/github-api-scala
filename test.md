@@ -11,9 +11,16 @@ export GITHUB_USER=[Your User Name]
 export GITHUB_REPO=[Your Repo name that exists]
 ```
 
+The repo specified in GITHUB_REPO will be updated by test.  
+I strongly recommend to create new repo for this.
+
 ## Optional settings
-- showResponse
--- Set this to true if you would like to see the response JSON data. Otherwise it is omitted when running tests.
+
+```
+export DEBUG=true
+```
+
+If DEBUG=true inv env, you can see the response JSON data in console.
 
 The following variables are for futureproofing. Generally won't need to be modified.
 - otherUser
