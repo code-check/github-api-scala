@@ -10,8 +10,8 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   "com.ning" % "async-http-client" % "1.9.21" % "provided",
   "org.asynchttpclient" % "async-http-client" % "2.0.15" % "provided",
-  "org.json4s" %% "json4s-jackson" % "3.3.0",
-  "org.json4s" %% "json4s-ext" % "3.3.0",
+  "org.json4s" %% "json4s-jackson" % "3.4.2",
+  "org.json4s" %% "json4s-ext" % "3.4.2",
   "joda-time" % "joda-time" % "2.8.1",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "com.github.scopt" %% "scopt" % "3.3.0",
