@@ -31,6 +31,7 @@ trait Constants {
   protected val userRepo = sys.env("GITHUB_REPO")
 
   protected val otherUser = "shunjikonishi"
+  protected val otherUserRepo = "test-repo"
   protected val collaboratorUser = "shunjikonishi"
   protected val otherUserInvalid = "loremipsom123"
   protected val organizationInvalid = "loremipsom123"
