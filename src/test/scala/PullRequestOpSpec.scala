@@ -7,8 +7,8 @@ import java.util.Date
 class PullRequestOpSpec extends FunSpec with Constants {
 
   describe("createPullRequest(owner, repo, input)") {
-    val username = "shunjikonishi"
-    val reponame = "test-repo"
+    val username = otherUser
+    val reponame = otherUserRepo
 
     it("should success create and close") {
       val title = "Test Pull Request " + new Date().toString()
