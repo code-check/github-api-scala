@@ -19,6 +19,7 @@ object PullRequestAction {
   case object labeled     extends PullRequestAction("labeled")
   case object unlabeled   extends PullRequestAction("unlabeled")
   case object opened      extends PullRequestAction("opened")
+  case object edited      extends PullRequestAction("edited")
   case object closed      extends PullRequestAction("closed")
   case object reopened    extends PullRequestAction("reopened")
   case object synchronize extends PullRequestAction("synchronize")
@@ -37,10 +38,20 @@ object PullRequestAction {
   def fromString(str: String) = values.filter(_.name == str).head
 }
 
+case class PullRequestRef(value: JValue) extends AbstractJson(value) {
+  def label = get("label")
+  def ref = get("ref")
+  def sha = get("sha")
+  lazy val user = User(value \ "user")
+  lazy val repo = Repository(value \ "repo")
+}
+
 case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
   def state = get("state")
   def title = get("title")
+  lazy val head = PullRequestRef(value \ "head")
+  lazy val base = PullRequestRef(value \ "base")
 }
 
