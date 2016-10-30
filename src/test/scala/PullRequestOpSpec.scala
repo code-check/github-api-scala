@@ -8,12 +8,12 @@ class PullRequestOpSpec extends FunSpec with Constants {
 
   describe("listPullRequests") {
     it("with valid repo should succeed") {
-      val list = Await.result(api.listPullRequests(user, userRepo), TIMEOUT)
+      val list = Await.result(api.listPullRequests(otherUser, otherUserRepo), TIMEOUT)
       assert(list.length >= 0)
-      // assert(list.exists(_.state == "open"))
-      // assert(list.exists(_.base.repo.full_name == s"$user/$userRepo"))
-      // assert(list.exists(_.base.user.login == user))
-      // assert(list.exists(_.base.repo.name == userRepo))
+      assert(list.exists(_.state == "open"))
+      assert(list.exists(_.base.repo.full_name == s"$otherUser/$otherUserRepo"))
+      assert(list.exists(_.base.user.login == otherUser))
+      assert(list.exists(_.base.repo.name == otherUserRepo))
     }
   }
 
