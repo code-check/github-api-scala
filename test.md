@@ -2,7 +2,8 @@
 This readme documents the changes to the tests.
 
 ## Initial Setup
-1. Please export username and repository that exists under your name.
+1. Create new repo for test on your GitHub account
+1. Export username and repository that exists under your name.
 2. If you have no yet exported your Github token, create one [here](https://github.com/settings/tokens) and export it.
 
 ``` bash

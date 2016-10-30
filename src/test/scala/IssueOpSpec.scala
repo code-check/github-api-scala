@@ -25,21 +25,8 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
   var nTime: DateTime = DateTime.now
   val tRepo = "test-repo2"
 
-  override def beforeAll() {
-    val userMilestones = Await.result(api.listMilestones(user, userRepo, MilestoneListOption(state=MilestoneState.all)), TIMEOUT)
-    userMilestones.foreach { m =>
-      Await.result(api.removeMilestone(user, userRepo, m.number), TIMEOUT)
-    }
-
-    val nInput = new MilestoneInput(Some("test milestone"))
-    val nInput2 = new MilestoneInput(Some("test milestone 2"))
-
-    Await.result(api.createMilestone(user, userRepo, nInput), TIMEOUT)
-    Await.result(api.createMilestone(user, userRepo, nInput2), TIMEOUT)
-  }
-
   describe("createIssue(owner, repo, input)") {
-    val input = IssueInput(Some("test issue"), Some("testing"), Some(user), Some(1), Seq("question"))
+    val input = IssueInput(Some("test issue"), Some("testing"), Some(user), None, Seq("question"))
 
     it("should create issue for user's own repo.") {
       val result = Await.result(api.createIssue(user, userRepo, input), TIMEOUT)
@@ -55,7 +42,6 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
       assert(result.state == "open")
       assert(result.locked == false)
       assert(result.assignee.get.login == user)
-      assert(result.milestone.get.number == 1)
       assert(result.comments == 0)
       assert(result.created_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
@@ -179,13 +165,12 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
   }
 
   describe("editIssue(owner, repo, number, input)") {
-    val input = IssueInput(Some("test issue edited"), Some("testing again"), Some(user), Some(2), Seq("question", "bug"), Some(IssueState.closed))
+    val input = IssueInput(Some("test issue edited"), Some("testing again"), Some(user), None, Seq("question", "bug"), Some(IssueState.closed))
 
     it("should edit the issue in user's own repo.") {
       val result = Await.result(api.editIssue(user, userRepo, nUser, input), TIMEOUT)
       assert(result.title == "test issue edited")
       assert(result.body.get == "testing again")
-      assert(result.milestone.get.number == 2)
       assert(result.labels.head.name == "bug")
       assert(result.state == "closed")
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
