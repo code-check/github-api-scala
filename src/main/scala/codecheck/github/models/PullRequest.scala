@@ -57,6 +57,7 @@ case class PullRequestRef(value: JValue) extends AbstractJson(value) {
 case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
+  lazy val user = User(value \ "user")
   def state = IssueState.fromString(get("state"))
   def title = get("title")
   lazy val head = PullRequestRef(value \ "head")
