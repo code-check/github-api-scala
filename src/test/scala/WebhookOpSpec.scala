@@ -1,15 +1,13 @@
+package codecheck.github
+package operations
+
+import models._
 
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfter
 import scala.concurrent.Await
 
-import codecheck.github.models.Webhook
-import codecheck.github.models.WebhookConfig
-import codecheck.github.models.WebhookCreateInput
-import codecheck.github.models.WebhookUpdateInput
-
-
-class WebhookOpSpec extends FunSpec with Constants with BeforeAndAfter {
+class WebhookOpSpec extends FunSpec with api.Constants with BeforeAndAfter {
 
   val targetURL = "http://github-hook.herokuapp.com/hook"
   var nID: Long = 0;

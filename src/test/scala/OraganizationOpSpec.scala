@@ -1,3 +1,6 @@
+package codecheck.github
+package operations
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfter
 import scala.concurrent.Await
@@ -6,7 +9,7 @@ import org.joda.time.DateTimeZone
 
 import codecheck.github.models.OrganizationInput
 
-class OrganizationOpSpec extends FunSpec with Constants with BeforeAndAfter {
+class OrganizationOpSpec extends FunSpec with api.Constants with BeforeAndAfter {
 
   describe("listOwnOrganizations") {
     it("should return result.") {
