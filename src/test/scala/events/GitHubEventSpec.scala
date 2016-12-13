@@ -36,7 +36,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
               assert(issue.title === "Spelling error in the README file")
             }
             it("should have a state") {
-              assert(issue.state === "open")
+              assert(issue.state === models.IssueState.open)
             }
             it("should have a body") {
               val exp = "It looks like you accidently spelled 'commit' with two 't's."
@@ -77,7 +77,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
               assert(pr.title === "Update the README with new information")
             }
             it("should have a state") {
-              assert(pr.state === "open")
+              assert(pr.state === models.IssueState.open)
             }
             it("should have a body") {
               val exp = "This is a pretty simple change that we need to pull into master."
