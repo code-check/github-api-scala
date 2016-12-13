@@ -7,7 +7,7 @@ import org.joda.time.DateTimeZone
 import codecheck.github.models.IssueListOption
 import codecheck.github.models.IssueFilter
 import codecheck.github.models.IssueListOption4Repository
-import codecheck.github.models.IssueState
+import codecheck.github.models.IssueStateFilter
 import codecheck.github.models.Issue
 import codecheck.github.models.IssueInput
 import codecheck.github.models.MilestoneSearchOption
@@ -116,7 +116,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
     }
 
     it("shold return only two issues when using options.") {
-      val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
+      val option = IssueListOption(IssueFilter.created, IssueStateFilter.open, Seq("question"), since=Some(nTime))
       val result = Await.result(api.listAllIssues(option), TIMEOUT)
       assert(result.length > 0)
       assert(result.head.title == "test issue")
@@ -130,7 +130,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
     }
 
     it("shold return only one issues when using options.") {
-      val option = IssueListOption(IssueFilter.created, IssueState.open, Seq("question"), since=Some(nTime))
+      val option = IssueListOption(IssueFilter.created, IssueStateFilter.open, Seq("question"), since=Some(nTime))
       val result = Await.result(api.listUserIssues(option), TIMEOUT)
       assert(result.length > 0)
       assert(result.head.title == "test issue")
@@ -149,7 +149,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
     }
 
     it("should return only one issue from user's own repo when using options.") {
-      val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueState.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
+      val option = new IssueListOption4Repository(Some(MilestoneSearchOption(1)), IssueStateFilter.open, Some(user), Some(user), labels=Seq("question"), since=Some(nTime))
       val result = Await.result(api.listRepositoryIssues(user, userRepo, option), TIMEOUT)
       //showResponse(option.q)
       assert(result.length == 1)
@@ -157,7 +157,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
     }
 
     it("should return only one issue from organization's repo when using options.") {
-      val option = new IssueListOption4Repository(None, IssueState.open, None, Some(user), labels=Nil, since=Some(nTime))
+      val option = new IssueListOption4Repository(None, IssueStateFilter.open, None, Some(user), labels=Nil, since=Some(nTime))
       val result = Await.result(api.listRepositoryIssues(organization, tRepo, option), TIMEOUT)
       assert(result.length == 1)
       assert(result.head.title == "test issue")
@@ -165,7 +165,7 @@ class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
   }
 
   describe("editIssue(owner, repo, number, input)") {
-    val input = IssueInput(Some("test issue edited"), Some("testing again"), Some(user), None, Seq("question", "bug"), Some(IssueState.closed))
+    val input = IssueInput(Some("test issue edited"), Some("testing again"), Some(user), None, Seq("question", "bug"), Some(IssueStateFilter.closed))
 
     it("should edit the issue in user's own repo.") {
       val result = Await.result(api.editIssue(user, userRepo, nUser, input), TIMEOUT)

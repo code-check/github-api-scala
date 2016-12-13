@@ -19,7 +19,20 @@ sealed abstract class IssueState(val name: String) {
 object IssueState {
   case object open extends IssueState("open")
   case object closed extends IssueState("closed")
-  case object all extends IssueState("all")
+
+  val values = Array(open, closed)
+
+  def fromString(str: String) = values.filter(_.name == str).head
+}
+
+sealed abstract class IssueStateFilter(val name: String) {
+  override def toString = name
+}
+
+object IssueStateFilter {
+  case object open extends IssueStateFilter("open")
+  case object closed extends IssueStateFilter("closed")
+  case object all extends IssueStateFilter("all")
 
   val values = Array(open, closed, all)
 
@@ -70,7 +83,7 @@ object MilestoneSearchOption {
 
 case class IssueListOption(
   filter: IssueFilter = IssueFilter.assigned,
-  state: IssueState = IssueState.open,
+  state: IssueStateFilter = IssueStateFilter.open,
   labels: Seq[String] = Nil,
   sort: IssueSort = IssueSort.created,
   direction: SortDirection = SortDirection.desc,
@@ -83,7 +96,7 @@ case class IssueListOption(
 
 case class IssueListOption4Repository(
   milestone: Option[MilestoneSearchOption] = None,
-  state: IssueState = IssueState.open,
+  state: IssueStateFilter = IssueStateFilter.open,
   assignee: Option[String] = None,
   creator: Option[String] = None,
   mentioned: Option[String] = None,
@@ -107,7 +120,7 @@ case class IssueInput(
   assignee: Option[String] = None,
   milestone: Option[Int] = None,
   labels: Seq[String] = Nil,
-  state: Option[IssueState] = None
+  state: Option[IssueStateFilter] = None
 ) extends AbstractInput {
   override val value: JValue = {
     val a = assignee.map { s =>

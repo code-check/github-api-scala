@@ -39,7 +39,7 @@ object PullRequestAction {
 }
 
 case class PullRequestListOption(
-  state: IssueState = IssueState.open,
+  state: IssueStateFilter = IssueStateFilter.open,
   head: Option[String] = None,
   base: Option[String] = None,
   sort: IssueSort = IssueSort.created,

@@ -9,7 +9,7 @@ import codecheck.github.app.CommandSetting
 import codecheck.github.app.Repo
 import codecheck.github.models.IssueListOption
 import codecheck.github.models.IssueFilter
-import codecheck.github.models.IssueState
+import codecheck.github.models.IssueStateFilter
 import codecheck.github.models.IssueSort
 import codecheck.github.models.SortDirection
 import codecheck.github.utils.PrintList
@@ -32,7 +32,7 @@ class IssueCommand(val api: GitHubAPI) extends Command {
 
     def listOption = IssueListOption(
       IssueFilter.fromString(filter),
-      IssueState.fromString(state),
+      IssueStateFilter.fromString(state),
       labels,
       IssueSort.fromString(sort),
       SortDirection.fromString(direction),
