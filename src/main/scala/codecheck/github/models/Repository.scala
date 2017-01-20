@@ -71,6 +71,7 @@ case class Repository(value: JValue) extends AbstractJson(value) {
 
   def description = opt("description")
   def open_issues_count = get("open_issues_count").toLong
+  def `private` = boolean("private")
 
   lazy val permissions = Permissions(value \ "permissions")
   lazy val owner = User(value \ "owner")
