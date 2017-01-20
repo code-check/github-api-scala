@@ -2,8 +2,14 @@ import org.scalatest.path.FunSpec
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import codecheck.github.models.SortDirection
-import codecheck.github.models.SearchInput
-import codecheck.github.models.SearchSort
+import codecheck.github.models.SearchRepositoryInput
+import codecheck.github.models.SearchCodeInput
+import codecheck.github.models.SearchIssueInput
+import codecheck.github.models.SearchUserInput
+import codecheck.github.models.SearchRepositorySort
+import codecheck.github.models.SearchCodeSort
+import codecheck.github.models.SearchIssueSort
+import codecheck.github.models.SearchUserSort
 import codecheck.github.models.SearchRepositoryResult
 import codecheck.github.models.SearchCodeResult
 import codecheck.github.models.searchCodeItems
@@ -17,7 +23,7 @@ class SearchOpSpec extends FunSpec
     it("with valid SearchInput should succeed") {
       var q = "tetris language:assembly"
       val q1 = q.trim.replaceAll(" ","+");
-      val input = SearchInput(q1,sort=Some(SearchSort.stars),order=SortDirection.desc)
+      val input = SearchRepositoryInput(q1,sort=Some(SearchRepositorySort.stars),order=SortDirection.desc)
       val res = Await.result(api.searchRepositories(input), TIMEOUT)
       assert(res.total_count >= 1)
       assert(res.items(0).id >= 1 )
@@ -31,7 +37,7 @@ class SearchOpSpec extends FunSpec
     it("with valid changed query(q) SearchInput should succeed") {
       var q = "jquery in:name,description"
       val q1 = q.trim.replaceAll(" ","+");
-      val input = SearchInput(q1,sort=Some(SearchSort.stars),order=SortDirection.desc)
+      val input = SearchRepositoryInput(q1,sort=Some(SearchRepositorySort.stars),order=SortDirection.desc)
       val res = Await.result(api.searchRepositories(input), TIMEOUT)
       assert(res.total_count >= 1)
       assert(res.items(0).id >= 1 )
@@ -45,7 +51,7 @@ class SearchOpSpec extends FunSpec
     it("with valid SearchInput q,no SortOrder should succeed") {
       var q = "addClass in:file language:js repo:jquery/jquery"
       val q1 = q.trim.replaceAll(" ","+");
-      val input = SearchInput(q1,sort=None,order=SortDirection.desc)
+      val input = SearchCodeInput(q1,sort=None,order=SortDirection.desc)
       val res = Await.result(api.searchCode(input), TIMEOUT)
       assert(res.total_count >= 1)
       assert(res.items(0).Repo.id >= 1 )
@@ -58,7 +64,7 @@ class SearchOpSpec extends FunSpec
     it("with valid SearchInput it should succeed") {
       var q = "function size:10000 language:python"
       val q1 = q.trim.replaceAll(" ","+");
-      val input = SearchInput(q1,sort=Some(SearchSort.indexed),order=SortDirection.desc)
+      val input = SearchCodeInput(q1,sort=Some(SearchCodeSort.indexed),order=SortDirection.desc)
       try {
         val res = Await.result(api.searchCode(input), TIMEOUT)
       } catch {
@@ -72,7 +78,7 @@ class SearchOpSpec extends FunSpec
     it("with valid SearchInput should succeed") {
       var q = "windows label:bug language:python state:open"
       val q1 = q.trim.replaceAll(" ","+");
-      val input = SearchInput(q1,sort=Some(SearchSort.created),order=SortDirection.desc)
+      val input = SearchIssueInput(q1,sort=Some(SearchIssueSort.created),order=SortDirection.desc)
       val res = Await.result(api.searchIssues(input), TIMEOUT)
       assert(res.total_count >= 1)
       assert(res.items(0).labels(0).name == "bug" )
@@ -85,7 +91,7 @@ class SearchOpSpec extends FunSpec
       var q = "tom repos:>42 followers:>1000"
       q = q.trim.replaceAll(" ","+")
       val q1 = q.replaceAll(">","%3E")
-      val input = SearchInput(q1,sort=None,order=SortDirection.desc)
+      val input = SearchUserInput(q1,sort=None,order=SortDirection.desc)
       val res = Await.result(api.searchUser(input), TIMEOUT)
       assert(res.total_count >= 0)
       assert(res.items(0).login.length >= 0)

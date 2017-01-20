@@ -14,28 +14,28 @@ trait SearchOp {
  self: GitHubAPI =>
 
   def searchRepositories(input: SearchInput): Future[SearchRepositoryResult] = {
-    val path = s"/search/repositories?q=${input.q}&sort=${input.sort}&order=${input.order}"
+    val path = s"/search/repositories${input.query}"
     exec("GET", path ).map { res =>
       SearchRepositoryResult(res.body)
    }
   }
 
   def searchCode(input: SearchInput): Future[SearchCodeResult] = {
-    val path = s"/search/code?q=${input.q}&sort=${input.sort}&order=${input.order}"
+    val path = s"/search/code${input.query}"
     exec("GET", path ).map { res =>
       SearchCodeResult(res.body)
     }
   }
 
   def searchIssues(input: SearchInput): Future[SearchIssueResult] = {
-    val path = s"/search/issues?q=${input.q}&sort=${input.sort}&order=${input.order}"
+    val path = s"/search/issues${input.query}"
     exec("GET", path ).map { res =>
       SearchIssueResult(res.body)
     }
   }
 
   def searchUser(input: SearchInput): Future[SearchUserResult] = {
-    val path = s"/search/users?q=${input.q}&sort=${input.sort}&order=${input.order}"
+    val path = s"/search/users${input.query}"
     exec("GET", path ).map { res =>
       SearchUserResult(res.body)
     }
