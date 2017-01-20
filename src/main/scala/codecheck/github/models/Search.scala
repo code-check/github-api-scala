@@ -6,24 +6,44 @@ import org.json4s.JArray
 sealed abstract class SearchSort(val name: String) {
   override def toString = name
 }
-object SearchSort {
-  //for serachRepositories
+
+object SearchRepositorySort {
   case object stars extends SearchSort("stars")
   case object forks extends SearchSort("forks")
   case object updated extends SearchSort("updated")
 
-  //for searchCode
+  val values = Array(stars, forks, updated)
+
+  def fromString(str: String) = values.filter(_.name == str).head
+}
+
+object SearchCodeSort {
   case object indexed extends SearchSort("indexed")
 
-  //for searchIssues
-  case object comments extends SearchSort("comments")
-  case object created extends SearchSort("created")
-  //case object updated extends SearchSort("updated")
+  val values = Array(indexed)
 
-  //for searchUser
+  def fromString(str: String) = values.filter(_.name == str).head
+}
+
+object SearchIssueSort {
+  case object created extends IssueSort("created")
+  case object updated extends IssueSort("updated")
+  case object comments extends IssueSort("comments")
+
+  val values = Array(created, updated, comments)
+
+  def fromString(str: String) = values.filter(_.name == str).head
+}
+
+
+object SearchUserSort {
   case object followers extends SearchSort("followers")
   case object repositories extends SearchSort("repositories")
   case object joined extends SearchSort("joined")
+
+  val values = Array(followers, repositories, joined)
+
+  def fromString(str: String) = values.filter(_.name == str).head
 }
 
 case class SearchInput (
