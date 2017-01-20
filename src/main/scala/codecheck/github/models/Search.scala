@@ -82,16 +82,16 @@ case class SearchCodeInput (
  order: SortDirection = SortDirection.desc
 ) extends SearchInput
 
-case class searchCodeItems (value: JValue) extends AbstractJson(value){
+case class SearchCodeItems (value: JValue) extends AbstractJson(value){
   def name: String = get("name")
-  lazy val Repo = new Repository(value \ "repository")
+  lazy val repository = Repository(value \ "repository")
 }
 
 case class SearchCodeResult(value: JValue) extends AbstractJson(value) {
  def total_count: Long = get("total_count").toLong
  def incomplete_results: Boolean = boolean("incomplete_results")
  lazy val items = (value \ "items") match {
-    case JArray(arr) => arr.map(new searchCodeItems(_))
+    case JArray(arr) => arr.map(SearchCodeItems(_))
     case _ => Nil
   }
 }
@@ -106,7 +106,7 @@ case class SearchIssueResult(value: JValue) extends AbstractJson(value) {
  def total_count: Long = get("total_count").toLong
  def incomplete_results: Boolean = boolean("incomplete_results")
  lazy val items = (value \ "items") match {
-    case JArray(arr) => arr.map(new Issue(_))
+    case JArray(arr) => arr.map(Issue(_))
     case _ => Nil
   }
 }

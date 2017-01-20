@@ -12,7 +12,7 @@ import codecheck.github.models.SearchIssueSort
 import codecheck.github.models.SearchUserSort
 import codecheck.github.models.SearchRepositoryResult
 import codecheck.github.models.SearchCodeResult
-import codecheck.github.models.searchCodeItems
+import codecheck.github.models.SearchCodeItems
 import codecheck.github.exceptions.GitHubAPIException
 
 class SearchOpSpec extends FunSpec
@@ -54,8 +54,8 @@ class SearchOpSpec extends FunSpec
       val input = SearchCodeInput(q1,sort=None,order=SortDirection.desc)
       val res = Await.result(api.searchCode(input), TIMEOUT)
       assert(res.total_count >= 1)
-      assert(res.items(0).Repo.id >= 1 )
-      assert(res.items(0).Repo.full_name == "jquery/jquery")
+      assert(res.items(0).repository.id >= 1 )
+      assert(res.items(0).repository.full_name == "jquery/jquery")
     }
     //Following test results in error:
     //  "message" : "Validation Failed",
