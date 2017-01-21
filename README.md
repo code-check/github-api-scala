@@ -19,6 +19,15 @@ cd github-api
 sbt test
 ```
 
+Currently, Java 8 is required to build this library.  If you have
+multiple versions of Java installed on your system, set it to Java 8
+(also known as version 1.8).  One method for choosing the Java version
+is to override the value of `JAVA_HOME` in the environment sbt runs.
+
+```
+$ env JAVA_HOME="$(/usr/libexec/java_home -v 1.8)" sbt
+```
+
 ## About models
 We don't aim to define all fields of JSON.
 Because these are too much and might be changed by GitHub.
