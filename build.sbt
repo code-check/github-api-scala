@@ -4,7 +4,7 @@ name := """github-api"""
 
 version := "0.2.0-SNAPSHOT"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
