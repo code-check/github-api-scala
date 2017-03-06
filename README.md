@@ -7,9 +7,25 @@ GitHubAPI wrapper for scala
 - json4s
 - async-http-client
 
-## How to develop
+## Getting started
+
 To develop this, you have to get GitHub API Token.  
 You can get it from [here](https://github.com/settings/applications).
+
+Add this library and an HTTP client library to your `build.sbt` file.
+Both versions 1.9 and 2.0 of the Asnyc HTTP Client are supported, so
+you choose.  Ning's HTTP client will request a log binding, so we'll
+provide a basic one.
+
+```
+libraryDependencies ++= Seq(
+  "com.ning" % "async-http-client" % "1.9.21",
+  "org.slf4j" % "slf4j-simple" % "1.7.24",
+  "io.code-check" %% "github-api" % "0.2.0"
+)
+```
+
+## How to develop
 
 ``` bash
 export GITHUB_USER=[Your GitHub username] 
