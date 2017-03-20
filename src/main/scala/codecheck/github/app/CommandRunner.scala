@@ -73,7 +73,7 @@ class CommandRunner(api: GitHubAPI) {
 
   def run = {
     prompt
-    Iterator.continually(scala.io.StdIn.readLine).takeWhile { s =>
+    Iterator.continually(Console.in.readLine).takeWhile { s =>
       val end = s == null || s.trim == "exit"
       if (end) {
         api.close
