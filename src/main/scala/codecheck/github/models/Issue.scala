@@ -11,6 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
 import codecheck.github.utils.ToDo
+import scala.language.implicitConversions
 
 sealed abstract class IssueState(val name: String) {
   override def toString = name
@@ -19,6 +20,13 @@ sealed abstract class IssueState(val name: String) {
 object IssueState {
   case object open extends IssueState("open")
   case object closed extends IssueState("closed")
+
+  def all = IssueStateFilter.all
+
+  implicit def toIssueStateFilter(state: IssueState) = state match {
+    case IssueState.open => IssueStateFilter.open
+    case IssueState.closed => IssueStateFilter.closed
+  }
 
   val values = Array(open, closed)
 
