@@ -4,7 +4,7 @@ name := """github-api"""
 
 version := "0.2.0-SNAPSHOT"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
@@ -13,8 +13,8 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.4.2",
   "org.json4s" %% "json4s-ext" % "3.4.2",
   "joda-time" % "joda-time" % "2.8.1",
-  "com.github.scopt" %% "scopt" % "3.3.0",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+  "com.github.scopt" %% "scopt" % "3.5.0",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
 val localRepo = "../sbt-repo"
