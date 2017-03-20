@@ -14,6 +14,22 @@ licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 homepage := Some(url("http://github.com/code-check/github-api-scala"))
 
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/code-check/github-api-scala"),
+    "scm:git@github.com:code-check/github-api-scala.git"
+  )
+)
+
+developers := List(
+  Developer(
+    id    = "shunjikonishi",
+    name  = "Shunji Konishi",
+    email = "@shunjikonishi",
+    url   = url("http://qiita.com/shunjikonishi")
+  )
+)
+
 publishMavenStyle := true
 
 publishTo := {
@@ -27,27 +43,6 @@ publishTo := {
 publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
-
-pomExtra := (
-  <url>http://github.com/code-check/github-api-scala</url>
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>http://opensource.org/licenses/MIT</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <url>git@github.com:code-check/github-api-scala.git</url>
-    <connection>scm:git@github.com:code-check/github-api-scala.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>shunjikonishi</id>
-      <name>Shunji Konishi</name>
-      <url>http://qiita.com/shunjikonishi</url>
-      </developer>
-  </developers>)
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
