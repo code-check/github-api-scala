@@ -1,11 +1,13 @@
+package codecheck.github
+package operations
+
+import exceptions._
+import models._
+
 import org.scalatest.FunSpec
 import scala.concurrent.Await
-import codecheck.github.models.Label
-import codecheck.github.models.LabelInput
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 
-class LabelOpSpec extends FunSpec with Constants {
+class LabelOpSpec extends FunSpec with api.Constants {
 
   val number = 1
   val gName = generateRandomWord

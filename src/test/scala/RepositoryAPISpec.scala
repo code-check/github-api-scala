@@ -1,6 +1,9 @@
+package codecheck.github
+package api
+
 import org.scalatest.FunSpec
 
-class RepositoryAPISpec extends FunSpec with Constants {
+class RepositoryAPISpec extends FunSpec with api.Constants {
 	
   val gDummy = generateRandomString
   val gRepo = generateRandomString

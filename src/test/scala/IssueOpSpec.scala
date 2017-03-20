@@ -1,24 +1,15 @@
+package codecheck.github
+package operations
+
+import models._
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterAll
 import scala.concurrent.Await
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
-import codecheck.github.models.IssueListOption
-import codecheck.github.models.IssueFilter
-import codecheck.github.models.IssueListOption4Repository
-import codecheck.github.models.IssueState
-import codecheck.github.models.IssueStateFilter
-import codecheck.github.models.Issue
-import codecheck.github.models.IssueInput
-import codecheck.github.models.MilestoneSearchOption
-
-import codecheck.github.models.MilestoneInput
-import codecheck.github.models.MilestoneListOption
-import codecheck.github.models.MilestoneState
-import codecheck.github.models.Milestone
-
-class IssueOpSpec extends FunSpec with Constants with BeforeAndAfterAll {
+class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
 
   val number = 1
   var nUser: Long = 0

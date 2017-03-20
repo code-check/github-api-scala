@@ -1,11 +1,13 @@
+package codecheck.github
+package operations
+
+import models._
+
 import org.scalatest.FunSpec
 import scala.concurrent.Await
-
-import codecheck.github.models.IssueState
-import codecheck.github.models.PullRequestInput
 import java.util.Date
 
-class PullRequestOpSpec extends FunSpec with Constants {
+class PullRequestOpSpec extends FunSpec with api.Constants {
 
   describe("listPullRequests") {
     it("with valid repo should succeed") {

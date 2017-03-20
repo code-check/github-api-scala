@@ -1,18 +1,16 @@
+package codecheck.github
+package operations
+
+import exceptions._
+import models._
+
 import org.scalatest.path.FunSpec
-import codecheck.github.exceptions.NotFoundException
-import codecheck.github.models.Milestone
-import codecheck.github.models.MilestoneInput
-import codecheck.github.models.MilestoneListOption
-import codecheck.github.models.MilestoneState
-import codecheck.github.models.SortDirection
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTime
 
 class MilestoneOpSpec extends FunSpec
-  with Constants
+  with api.Constants
 {
 
   private def removeAll = {

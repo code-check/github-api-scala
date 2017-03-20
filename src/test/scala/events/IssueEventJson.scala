@@ -1,4 +1,5 @@
-package codecheck.github.events
+package codecheck.github
+package events
 
 import org.json4s.jackson.JsonMethods
 

@@ -1,13 +1,11 @@
+package codecheck.github
+package operations
+
 import org.scalatest.path.FunSpec
-import codecheck.github.exceptions.NotFoundException
-import codecheck.github.models.Repository
-import codecheck.github.models.RepositoryInput
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RepositoryOpSpec extends FunSpec with Constants
+class RepositoryOpSpec extends FunSpec with api.Constants
 {
 
   describe("listOwnRepositories") {
@@ -89,7 +87,7 @@ class RepositoryOpSpec extends FunSpec with Constants
         val repo = Await.result(api.createUserRepository(input), TIMEOUT)
         fail
       } catch {
-        case e: GitHubAPIException =>
+        case e: ApiException =>
           assert(e.error.errors.head.field == "name")
         case e: Throwable =>
           fail

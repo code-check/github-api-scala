@@ -1,15 +1,13 @@
+package codecheck.github
+package operations
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterAll
-import codecheck.github.exceptions.NotFoundException
-import codecheck.github.models._
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import codecheck.github.models.UserInput
 
 class BranchOpSpec extends FunSpec
-  with Constants
+  with api.Constants
   with BeforeAndAfterAll
 {
   describe("getBranch") {

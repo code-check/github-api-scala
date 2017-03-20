@@ -1,15 +1,16 @@
+package codecheck.github
+package operations
+
+import exceptions._
+import models._
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterAll
-import codecheck.github.exceptions.NotFoundException
-import codecheck.github.models.Repository
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import codecheck.github.models.UserInput
 
 class UserOpSpec extends FunSpec
-  with Constants
+  with api.Constants
   with BeforeAndAfterAll
 {
   val origin = Await.result(api.getAuthenticatedUser, TIMEOUT)
