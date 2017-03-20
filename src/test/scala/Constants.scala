@@ -1,7 +1,9 @@
+package codecheck.github
+package api
+
+import transport.asynchttp20.AsyncHttp20Transport
+
 import org.asynchttpclient.DefaultAsyncHttpClient
-import codecheck.github.api.GitHubAPI
-import codecheck.github.api.PrintlnHandler
-import codecheck.github.transport.asynchttp20.AsyncHttp20Transport
 import scala.concurrent.duration._
 import scala.util.Random._
 import org.scalatest.time.Span._

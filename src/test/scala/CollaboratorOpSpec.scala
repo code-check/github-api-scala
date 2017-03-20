@@ -1,10 +1,13 @@
+package codecheck.github
+package operations
+
+import exceptions._
+
 import org.scalatest.path.FunSpec
 import scala.concurrent.Await
-import codecheck.github.models.Collaborator
-import codecheck.github.exceptions.GitHubAPIException
-import codecheck.github.exceptions.NotFoundException
 
-class CollaboratorOpSpec extends FunSpec with Constants {
+class CollaboratorOpSpec extends FunSpec with api.Constants
+{
 
   describe("addCollaborator"){
     it("should add Collaborator User to user Repo"){
