@@ -31,7 +31,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.title == "test issue")
       assert(result.user.login == user)
       assert(result.labels.head.name == "question")
-      assert(result.state == "open")
+      assert(result.state == IssueState.open)
       assert(result.locked == false)
       assert(result.assignee.get.login == user)
       assert(result.comments == 0)
@@ -53,7 +53,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.title == "test issue")
       assert(result.user.login == user)
       assert(result.labels.isEmpty) //Label is not set if user is not the organization member.
-      assert(result.state == "open")
+      assert(result.state == IssueState.open)
       assert(result.locked == false)
       assert(result.assignee.isEmpty) //Assignee is not set if user is not the organization member.
       assert(result.milestone.isEmpty) //Assignee is not set if user is not the organization member.
@@ -164,7 +164,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.title == "test issue edited")
       assert(result.body.get == "testing again")
       assert(result.labels.head.name == "bug")
-      assert(result.state == "closed")
+      assert(result.state == IssueState.closed)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
     }
 
@@ -174,7 +174,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.body.get == "testing again")
       assert(result.milestone.isEmpty)
       assert(result.labels.isEmpty)
-      assert(result.state == "closed")
+      assert(result.state == IssueState.closed)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
     }
   }

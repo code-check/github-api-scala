@@ -39,7 +39,7 @@ object PullRequestAction {
 }
 
 case class PullRequestListOption(
-  state: IssueState = IssueState.open,
+  state: IssueStateFilter = IssueStateFilter.open,
   head: Option[String] = None,
   base: Option[String] = None,
   sort: IssueSort = IssueSort.created,
@@ -57,7 +57,7 @@ case class PullRequestRef(value: JValue) extends AbstractJson(value) {
 case class PullRequest(value: JValue) extends AbstractJson(value) {
   def number = get("number").toLong
   def body = get("body")
-  def state = get("state")
+  def state = IssueState.fromString(get("state"))
   def title = get("title")
   lazy val head = PullRequestRef(value \ "head")
   lazy val base = PullRequestRef(value \ "base")
