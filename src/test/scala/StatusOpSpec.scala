@@ -1,13 +1,13 @@
-// package codecheck.github
-// package operations
+package codecheck.github
+package operations
 
-// import models._
+import models._
 
 import codecheck.github.models.Status
 import codecheck.github.models.StatusInput
 import codecheck.github.models.StatusState
 
-// import exceptions._
+import exceptions._
 
 import codecheck.github.exceptions.GitHubAPIException
 import codecheck.github.exceptions.NotFoundException
@@ -15,7 +15,7 @@ import codecheck.github.exceptions.NotFoundException
 import org.scalatest.FunSpec
 import scala.concurrent.Await
 
-class StatusOpSpec extends FunSpec with /*api.*/Constants {
+class StatusOpSpec extends FunSpec with api.Constants {
 
   describe("listStatus(owner, repo, sha)") {
 
