@@ -56,8 +56,4 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
-val localRepo = "../sbt-repo"
-
-publishTo := Some(Resolver.file("givery repo",file(localRepo))(Patterns(true, Resolver.mavenStyleBasePattern)))
-
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
