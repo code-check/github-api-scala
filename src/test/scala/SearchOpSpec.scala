@@ -1,21 +1,15 @@
+package codecheck.github
+package operations
+
+import models._
+
 import org.scalatest.path.FunSpec
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import codecheck.github.models.SortDirection
-import codecheck.github.models.SearchRepositoryInput
-import codecheck.github.models.SearchCodeInput
-import codecheck.github.models.SearchIssueInput
-import codecheck.github.models.SearchUserInput
-import codecheck.github.models.SearchRepositorySort
-import codecheck.github.models.SearchCodeSort
-import codecheck.github.models.SearchIssueSort
-import codecheck.github.models.SearchUserSort
-import codecheck.github.models.SearchRepositoryResult
-import codecheck.github.models.SearchCodeResult
 import codecheck.github.exceptions.GitHubAPIException
 
 class SearchOpSpec extends FunSpec
-  with Constants
+  with api.Constants
 {
 
   describe("searchRepositories") {
@@ -74,7 +68,7 @@ class SearchOpSpec extends FunSpec
       val res = Await.result(api.searchIssues(input), TIMEOUT)
       assert(res.total_count >= 1)
       assert(res.items(0).labels(0).name == "bug" )
-      assert(res.items(0).state == "open")
+      assert(res.items(0).state == IssueState.open)
       assert(((res.items(0).created_at).compareTo(res.items(1).created_at)) > 0)
     }
   }
