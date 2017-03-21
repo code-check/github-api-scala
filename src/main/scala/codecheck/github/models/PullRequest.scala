@@ -61,5 +61,15 @@ case class PullRequest(value: JValue) extends AbstractJson(value) {
   def title = get("title")
   lazy val head = PullRequestRef(value \ "head")
   lazy val base = PullRequestRef(value \ "base")
+  def mergeable = booleanOpt("mergeable")
+  def merged = booleanOpt("merged")
+  def merge_commit_sha = get("merge_commit_sha")
+  def merged_by = objectOpt("merged_by")(v => User(v))
+  def comments = opt("comments").map(_.toLong)
+  def commits = opt("commits").map(_.toLong)
+  def additions = opt("additions").map(_.toLong)
+  def deletions = opt("deletions").map(_.toLong)
+  def changed_files = opt("changed_files").map(_.toLong)
+  def maintainer_can_modify = booleanOpt("maintainer_can_modify")
 }
 
