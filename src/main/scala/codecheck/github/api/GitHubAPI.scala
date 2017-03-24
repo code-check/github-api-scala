@@ -24,6 +24,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
   with LabelOp
   with IssueOp
   with PullRequestOp
+  with PullRequestReviewOp
   with MilestoneOp
   with StatusOp
   with WebhookOp
@@ -57,6 +58,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
     request
       .setHeader("Authorization", s"$tokenType $token")
       .setHeader("Content-Type", "application/json")
+      .setHeader("Accept", "application/vnd.github.black-cat-preview+json")
     if (method == "PUT" && body == JNothing){
       request
         .setHeader("Content-Length", "0")
