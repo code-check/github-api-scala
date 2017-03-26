@@ -25,6 +25,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
   with IssueOp
   with PullRequestOp
   with MilestoneOp
+  with StatusOp
   with WebhookOp
   with CollaboratorOp
   with BranchOp
