@@ -14,6 +14,7 @@ trait Constants {
 
   protected val TIMEOUT = 5 seconds
   protected val api = Constants.API
+  protected val shaSize = 40
 
   //Request membership of dummy organization "celestialbeing" if you are not member. Do not edit.
   protected val organization = "celestialbeings"

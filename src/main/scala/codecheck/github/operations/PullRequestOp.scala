@@ -33,6 +33,15 @@ trait PullRequestOp {
     )
   }
 
+  def getPullRequest(owner: String, repo: String, number: Long): Future[Option[PullRequest]] = {
+    exec("GET", s"/repos/$owner/$repo/pulls/$number", fail404=false).map( res =>
+      res.statusCode match {
+        case 404 => None
+        case 200 => Some(PullRequest(res.body))
+      }
+    )
+  }
+
   def createPullRequest(owner: String, repo: String, input: PullRequestInput): Future[PullRequest] = {
     val path = s"/repos/$owner/$repo/pulls"
     exec("POST", path, input.value).map { result =>
