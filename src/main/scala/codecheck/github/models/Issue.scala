@@ -203,7 +203,7 @@ case class Issue(value: JValue) extends AbstractJson(value) {
   def created_at = getDate("created_at")
   def updated_at = getDate("updated_at")
   def closed_at = dateOpt("closed_at")
-  def body = opt("body")
+  def body = get("body")
 
   lazy val closed_by = objectOpt("closed_by")(v => User(v))
 

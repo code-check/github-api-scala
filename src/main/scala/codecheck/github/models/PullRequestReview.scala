@@ -43,7 +43,7 @@ object PullRequestReviewState {
 
 case class PullRequestReview(value: JValue) extends AbstractJson(value) {
   def id = get("id").toLong
-  def body = opt("body")
+  def body = get("body")
   def commit_id = get("commit_id")
   lazy val user = User(value \ "user")
   def state = PullRequestReviewState.fromString(get("state"))
