@@ -21,6 +21,7 @@ object GitHubEvent {
     case "issue" => IssueEvent(name, value)
     case "issue_comment" => IssueCommentEvent(name, value)
     case "pull_request" => PullRequestEvent(name, value)
+    case "push" => PushEvent(name, value)
     case _ => DefaultEvent(name, value)
   }
 }
