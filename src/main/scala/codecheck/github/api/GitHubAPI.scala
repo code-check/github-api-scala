@@ -58,7 +58,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
     request
       .setHeader("Authorization", s"$tokenType $token")
       .setHeader("Content-Type", "application/json")
-      .setHeader("Accept", "application/vnd.github.black-cat-preview+json")
+      .setHeader("Accept", "application/vnd.github.v3+json")
     if (method == "PUT" && body == JNothing){
       request
         .setHeader("Content-Length", "0")
