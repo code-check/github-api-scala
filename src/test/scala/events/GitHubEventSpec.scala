@@ -12,7 +12,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
     with PushEventJson {
 
   describe("GitHubEvent(issue, JValue)") {
-    val event = GitHubEvent("issue", issueEventJson)
+    val event = GitHubEvent("issues", issueEventJson)
 
     it("should yield IssueEvent") {
       event shouldBe a [IssueEvent]
@@ -21,7 +21,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
       inside(event) {
         case e @ IssueEvent(name, _) =>
           it("should have a name") {
-            assert(name === "issue")
+            assert(name === "issues")
           }
           it("should have an action") {
             assert(e.action === models.IssueAction.opened)
@@ -41,8 +41,8 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
               assert(issue.state === models.IssueState.open)
             }
             it("should have a body") {
-              val exp = "It looks like you accidently spelled 'commit' with two 't's."
-              assert(issue.body === Some(exp))
+              val exp = ""
+              assert(issue.body === exp)
             }
           }
       }
@@ -215,7 +215,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
             }
             it("should have a body") {
               val exp = "Looks great!"
-              assert(review.body === Some(exp))
+              assert(review.body === exp)
             }
           }
           it("should have a pull request") {

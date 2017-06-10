@@ -38,7 +38,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.created_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.closed_at.isEmpty)
-      assert(result.body.get == "testing")
+      assert(result.body == "testing")
       assert(result.closed_by.isEmpty)
     }
 
@@ -60,7 +60,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
       assert(result.comments == 0)
       assert(result.created_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
-      assert(result.body.get == "testing")
+      assert(result.body == "testing")
       assert(result.closed_by.isEmpty)
     }
   }
@@ -162,7 +162,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
     it("should edit the issue in user's own repo.") {
       val result = Await.result(api.editIssue(user, userRepo, nUser, input), TIMEOUT)
       assert(result.title == "test issue edited")
-      assert(result.body.get == "testing again")
+      assert(result.body == "testing again")
       assert(result.labels.head.name == "bug")
       assert(result.state == IssueState.closed)
       assert(result.updated_at.toDateTime(DateTimeZone.UTC).getMillis() - DateTime.now(DateTimeZone.UTC).getMillis() <= 5000)
@@ -171,7 +171,7 @@ class IssueOpSpec extends FunSpec with api.Constants with BeforeAndAfterAll {
     it("should edit the issue in organization's repo.") {
       val result = Await.result(api.editIssue(organization, tRepo, nOrg, input), TIMEOUT)
       assert(result.title == "test issue edited")
-      assert(result.body.get == "testing again")
+      assert(result.body == "testing again")
       assert(result.milestone.isEmpty)
       assert(result.labels.isEmpty)
       assert(result.state == IssueState.closed)
