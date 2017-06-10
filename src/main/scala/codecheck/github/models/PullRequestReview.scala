@@ -1,7 +1,27 @@
 package codecheck.github
 package models
 
+import org.json4s.JsonDSL._
+import org.json4s.JNull
 import org.json4s.JValue
+
+case class PullRequestReviewInput(
+  body: Option[String] = None,
+  event: Option[PullRequestReviewStateInput] = None,
+  comments: Seq[PullRequestReviewCommentInput] = Seq.empty[PullRequestReviewCommentInput]
+) extends AbstractInput {
+  override val value: JValue = {
+    ("body" -> body) ~
+    ("event" -> event.map(_.name)) ~
+    ("comments" -> comments.map(_.value))
+  }
+}
+
+case class PullRequestReviewCommentInput(
+  path: String,
+  position: Long,
+  body: String
+) extends AbstractInput
 
 sealed abstract class PullRequestReviewAction(val name: String) {
   override def toString = name
@@ -39,6 +59,24 @@ object PullRequestReviewState {
   )
 
   def fromString(str: String) = values.filter(_.name == str.toLowerCase).head
+}
+
+sealed abstract class PullRequestReviewStateInput(val name: String)
+
+object PullRequestReviewStateInput {
+  case object APPROVE         extends PullRequestReviewStateInput("APPROVE")
+  case object COMMENT         extends PullRequestReviewStateInput("COMMENT")
+  case object PENDING         extends PullRequestReviewStateInput("PENDING")
+  case object REQUEST_CHANGES extends PullRequestReviewStateInput("REQUEST_CHANGES")
+
+  val values = Array(
+    APPROVE,
+    COMMENT,
+    PENDING,
+    REQUEST_CHANGES
+  )
+
+  def fromString(str: String) = values.filter(_.name == str).head
 }
 
 case class PullRequestReview(value: JValue) extends AbstractJson(value) {
