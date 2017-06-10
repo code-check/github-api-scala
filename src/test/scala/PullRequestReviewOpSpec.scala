@@ -49,7 +49,7 @@ class PullRequestReviewOpSpec extends FunSpec with api.Constants {
 
       // NOTE: You can only add reviews to PRs that aren't your own
       val result = Await.result(api.createPullRequestReview(username, reponame, 47, input), TIMEOUT)
-      assert(result.body == Some(body))
+      assert(result.body == body)
       assert(result.state == PullRequestReviewState.changes_requested)
 
       // NOTE: You can only dismiss reviews on repos you have rights
