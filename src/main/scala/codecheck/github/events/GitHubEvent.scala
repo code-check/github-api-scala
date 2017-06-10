@@ -18,9 +18,11 @@ trait GitHubEvent {
 
 object GitHubEvent {
   def apply(name: String, value: JValue): GitHubEvent = name match {
-    case "issue" => IssueEvent(name, value)
+    case "issues" => IssueEvent(name, value)
     case "issue_comment" => IssueCommentEvent(name, value)
     case "pull_request" => PullRequestEvent(name, value)
+    case "pull_request_review" => PullRequestReviewEvent(name, value)
+    case "push" => PushEvent(name, value)
     case _ => DefaultEvent(name, value)
   }
 }

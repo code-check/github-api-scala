@@ -51,6 +51,7 @@ class PullRequestOpSpec extends FunSpec with api.Constants {
     val username = otherUser
     val reponame = otherUserRepo
 
+    // NOTE: Can only create pull requests for submitting user
     it("should success create and close") {
       val title = "Test Pull Request " + new Date().toString()
       val input = PullRequestInput(title, "githubapi-test-pr", "master", Some("PullRequest body"))
