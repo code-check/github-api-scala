@@ -29,9 +29,12 @@ object PullRequestAction {
   val values = Array(
     assigned,
     unassigned,
+    review_requested,
+    review_request_removed,
     labeled,
     unlabeled,
     opened,
+    edited,
     closed,
     reopened,
     synchronize
