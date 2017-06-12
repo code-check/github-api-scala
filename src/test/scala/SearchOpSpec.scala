@@ -67,7 +67,7 @@ class SearchOpSpec extends FunSpec
       val input = SearchIssueInput(q,sort=Some(SearchIssueSort.created),order=SortDirection.desc)
       val res = Await.result(api.searchIssues(input), TIMEOUT)
       assert(res.total_count >= 1)
-      assert(res.items(0).labels(0).name == "bug" )
+      assert(res.items(0).labels(0).name.toLowerCase == "bug" )
       assert(res.items(0).state == IssueState.open)
       assert(((res.items(0).created_at).compareTo(res.items(1).created_at)) > 0)
     }
