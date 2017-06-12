@@ -10,6 +10,7 @@ import codecheck.github.api.GitHubAPI
 import codecheck.github.models.PullRequestInput
 import codecheck.github.models.PullRequestListOption
 import codecheck.github.models.PullRequest
+import codecheck.github.models.ReviewRequest
 
 trait PullRequestOp {
   self: GitHubAPI =>
@@ -58,4 +59,21 @@ trait PullRequestOp {
     }
   }
 
+  def addReviewRequest(owner: String, repo: String, number: Long, reviewers: String*): Future[ReviewRequest] = {
+    val path = s"/repos/$owner/$repo/pulls/$number/requested_reviewers"
+    exec("POST", path, JObject(List(
+      "reviewers" -> JArray(reviewers.map(JString).toList)
+    ))).map { result =>
+      ReviewRequest(result.body)
+    }
+  }
+
+  def removeReviewRequest(owner: String, repo: String, number: Long, reviewers: String*): Future[Boolean] = {
+    val path = s"/repos/$owner/$repo/pulls/$number/requested_reviewers"
+    exec("DELETE", path, JObject(List(
+      "reviewers" -> JArray(reviewers.map(JString).toList)
+    ))).map { result =>
+      result.statusCode >= 200 && result.statusCode < 300
+    }
+  }
 }
