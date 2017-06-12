@@ -8,6 +8,10 @@ import codecheck.github.models.IssueInput
 import codecheck.github.models.Milestone
 import codecheck.github.models.MilestoneInput
 import codecheck.github.models.MilestoneListOption
+import codecheck.github.models.PullRequest
+import codecheck.github.models.PullRequestInput
+import codecheck.github.models.PullRequestListOption
+import codecheck.github.models.ReviewRequest
 
 case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
   //IssueOp
@@ -69,5 +73,24 @@ case class RepositoryAPI(api: GitHubAPI, owner: String, repo: String) {
 
   def removeMilestone(number: Int): Future[Boolean] =
     api.removeMilestone(owner, repo, number)
+
+  // PullRequestOp
+  def listPullRequests(option: PullRequestListOption = PullRequestListOption()): Future[List[PullRequest]] =
+    api.listPullRequests(owner, repo, option)
+
+  def getPullRequest(number: Long): Future[Option[PullRequest]] =
+    api.getPullRequest(owner, repo, number)
+
+  def createPullRequest(input: PullRequestInput): Future[PullRequest] =
+    api.createPullRequest(owner, repo, input)
+
+  def closePullRequest(number: Long): Future[PullRequest] =
+    api.closePullRequest(owner, repo, number)
+
+  def addReviewRequest(number: Long, reviewers: String*): Future[ReviewRequest] =
+    api.addReviewRequest(owner, repo, number, reviewers:_*)
+
+  def removeReviewRequest(number: Long, reviewers: String*): Future[Boolean] =
+    api.removeReviewRequest(owner, repo, number, reviewers:_*)
 
 }
