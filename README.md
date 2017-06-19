@@ -1,5 +1,7 @@
 # GitHubAPI for scala
 [![Build Status](https://travis-ci.org/code-check/github-api-scala.svg?branch=master)](https://travis-ci.org/code-check/github-api-scala)
+[![Latest version](https://index.scala-lang.org/code-check/github-api-scala/github-api/latest.svg?color=orange)](https://index.scala-lang.org/code-check/github-api-scala)
+
 GitHubAPI wrapper for scala
 
 ## Dependencies
