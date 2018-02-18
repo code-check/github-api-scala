@@ -24,9 +24,9 @@ class PullRequestOpSpec extends FunSpec with api.Constants {
       assert(list.exists(_.deletions == None))
       assert(list.exists(_.changed_files == None))
       assert(list.exists(_.maintainer_can_modify == None))
-      assert(list.exists(_.base.repo.full_name == s"$otherUser/$otherUserRepo"))
+      assert(list.exists(_.base.repo.exists(_.full_name == s"$otherUser/$otherUserRepo")))
       assert(list.exists(_.base.user.login == otherUser))
-      assert(list.exists(_.base.repo.name == otherUserRepo))
+      assert(list.exists(_.base.repo.exists(_.name == otherUserRepo)))
     }
   }
 
