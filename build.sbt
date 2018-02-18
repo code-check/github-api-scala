@@ -4,9 +4,9 @@ name := """github-api"""
 
 version := "0.2.1-SNAPSHOT"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq("2.10.6", scalaVersion.value, "2.12.1")
+crossScalaVersions := Seq("2.10.7", scalaVersion.value, "2.12.4")
 
 description := "The GitHub API from Scala with Async HTTP Client (Netty)"
 
