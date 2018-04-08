@@ -2,7 +2,7 @@ organization := "io.code-check"
 
 name := """github-api"""
 
-version := "0.2.1-SNAPSHOT"
+version := "0.3.0-SNAPSHOT"
 
 scalaVersion := "2.11.11"
 
@@ -46,14 +46,14 @@ pomIncludeRepository := { _ => false }
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
-  "com.ning" % "async-http-client" % "1.9.21" % "provided",
-  "org.asynchttpclient" % "async-http-client" % "2.0.15" % "provided",
-  "org.json4s" %% "json4s-jackson" % "3.4.2",
-  "org.json4s" %% "json4s-ext" % "3.4.2",
-  "joda-time" % "joda-time" % "2.8.1",
-  "com.github.scopt" %% "scopt" % "3.5.0",
-  "org.slf4j" % "slf4j-nop" % "1.7.22" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "com.ning" % "async-http-client" % "1.9.40" % "provided",
+  "org.asynchttpclient" % "async-http-client" % "2.0.38" % "provided",
+  "org.json4s" %% "json4s-jackson" % "3.5.3",
+  "org.json4s" %% "json4s-ext" % "3.5.3",
+  "joda-time" % "joda-time" % "2.8.2",
+  "com.github.scopt" %% "scopt" % "3.7.0",
+  "org.slf4j" % "slf4j-nop" % "1.7.25" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
