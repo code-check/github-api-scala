@@ -43,7 +43,7 @@ class AsyncHttp19Request(request: AsyncHttpClient#BoundRequestBuilder) extends R
         handler.onCompleted(new AsyncHttp19Response(res))
         res
       }
-      override def onThrowable(t: Throwable) {
+      override def onThrowable(t: Throwable): Unit = {
         handler.onThrowable(t)
         super.onThrowable(t)
       }

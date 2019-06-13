@@ -81,7 +81,7 @@ class GitHubAPI(token: String, client: Transport, tokenType: String = "token", d
             deferred.success(result)
         }
       }
-      def onThrowable(t: Throwable) {
+      def onThrowable(t: Throwable): Unit = {
         deferred.failure(t)
       }
     })

@@ -33,7 +33,7 @@ class PullRequestOpSpec extends FunSpec with api.Constants {
   describe("getPullRequest") {
     it("with open PR should succeed") {
       val pr = Await.result(api.getPullRequest(otherUser, otherUserRepo, 21L), TIMEOUT)
-      assert(pr.size >= 0)
+      assert(pr.nonEmpty)
       assert(pr.exists(_.state == IssueState.closed))
       assert(pr.exists(_.mergeable == Some(false)))
       assert(pr.exists(_.merge_commit_sha.size == shaSize))

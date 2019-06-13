@@ -22,7 +22,7 @@ class PullRequestReviewOpSpec extends FunSpec with api.Constants {
   describe("getPullRequestReview") {
     it("with valid repo should succeed") {
       val review = Await.result(api.getPullRequestReview(otherUser, otherUserRepo, 47, 32477105), TIMEOUT)
-      assert(review.size >= 0)
+      assert(review.nonEmpty)
       assert(review.exists(_.id >= 0))
       assert(review.exists(_.state == PullRequestReviewState.approved))
       assert(review.exists(_.commit_id.size == shaSize))
