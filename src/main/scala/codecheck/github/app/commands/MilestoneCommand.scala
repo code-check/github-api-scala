@@ -182,7 +182,7 @@ class MilestoneCommand(val api: GitHubAPI) extends Command {
           List(
             m.number,
             m.title,
-            m.open_issues + "/" + (m.open_issues + m.closed_issues),
+            s"${m.open_issues}/${m.open_issues + m.closed_issues}",
             m.due_on.map(_.toString("yyyy-MM-dd")).getOrElse("")
           )
         }

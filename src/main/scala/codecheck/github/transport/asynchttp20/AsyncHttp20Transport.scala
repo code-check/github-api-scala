@@ -43,7 +43,7 @@ class AsyncHttp20Request(request: BoundRequestBuilder) extends Request {
         handler.onCompleted(new AsyncHttp20Response(res))
         res
       }
-      override def onThrowable(t: Throwable) {
+      override def onThrowable(t: Throwable): Unit = {
         handler.onThrowable(t)
         super.onThrowable(t)
       }

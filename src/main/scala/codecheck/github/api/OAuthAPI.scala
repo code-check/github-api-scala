@@ -63,7 +63,7 @@ class OAuthAPI(clientId: String, clientSecret: String, redirectUri: String, clie
           case None => deferred.success(AccessToken(json))
         }
       }
-      def onThrowable(t: Throwable) {
+      def onThrowable(t: Throwable): Unit = {
         deferred.failure(t)
       }
     })

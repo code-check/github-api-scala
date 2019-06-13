@@ -15,7 +15,7 @@ class UserOpSpec extends FunSpec
 {
   val origin = Await.result(api.getAuthenticatedUser, TIMEOUT)
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     val input = UserInput(
       origin.name.orElse(Some("")),
       origin.email.orElse(Some("")),

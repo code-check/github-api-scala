@@ -32,7 +32,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("Issue") {
             val issue = e.issue
             it("should have a number") {
-              assert(issue.number === 2l)
+              assert(issue.number === 2L)
             }
             it("should have a title") {
               assert(issue.title === "Spelling error in the README file")
@@ -135,7 +135,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
             assert(name === "pull_request")
           }
           it("should have a number") {
-            assert(e.number === 1l)
+            assert(e.number === 1L)
           }
           it("should have an action") {
             assert(e.action === models.PullRequestAction.opened)
@@ -146,7 +146,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("PullRequest") {
             val pr = e.pull_request
             it("should have a number") {
-              assert(pr.number === 1l)
+              assert(pr.number === 1L)
             }
             it("should have a title") {
               assert(pr.title === "Update the README with new information")
@@ -208,7 +208,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("PullRequestReview") {
             val review = e.review
             it("should have an id") {
-              assert(review.id === 2626884l)
+              assert(review.id === 2626884L)
             }
             it("should have a state") {
               assert(review.state === models.PullRequestReviewState.approved)
@@ -224,7 +224,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("PullRequest") {
             val pr = e.pull_request
             it("should have a number") {
-              assert(pr.number === 8l)
+              assert(pr.number === 8L)
             }
             it("should have a title") {
               assert(pr.title === "Add a README description")
@@ -267,7 +267,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("Repository") {
             val repo = e.repository
             it("should have an id") {
-              assert(repo.id === 35129377l)
+              assert(repo.id === 35129377L)
             }
             it("should have a name") {
               assert(repo.name === "public-repo")
@@ -285,7 +285,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
           describe("User") {
             val user = e.sender
             it("should have an id") {
-              assert(user.id === 6752317l)
+              assert(user.id === 6752317L)
             }
             it("should have a login") {
               assert(user.login === "baxterthehacker")
