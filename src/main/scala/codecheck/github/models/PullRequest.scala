@@ -56,7 +56,7 @@ case class PullRequestRef(value: JValue) extends AbstractJson(value) {
   def ref = get("ref")
   def sha = get("sha")
   lazy val user = User(value \ "user")
-  lazy val repo = Repository(value \ "repo")
+  lazy val repo = objectOpt("repo")(Repository(_))
 }
 
 case class PullRequest(value: JValue) extends AbstractJson(value) {
