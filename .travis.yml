@@ -12,6 +12,7 @@ sudo: false
 
 jdk:
   - openjdk8
+  - openjdk11
 
 before_cache:
   - find $HOME/.sbt -name "*.lock" | xargs rm
