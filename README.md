@@ -21,9 +21,9 @@ provide a basic one.
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.ning" % "async-http-client" % "1.9.21",
-  "org.slf4j" % "slf4j-simple" % "1.7.24",
-  "io.code-check" %% "github-api" % "0.2.0"
+  "com.ning" % "async-http-client" % "1.9.40",
+  "org.slf4j" % "slf4j-simple" % "1.7.26",
+  "io.code-check" %% "github-api" % "0.3.0"
 )
 ```
 
