@@ -176,7 +176,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
                 head.user shouldBe a [models.User]
               }
               it("should have a repo") {
-                head.repo shouldBe a [models.Repository]
+                head.repo.get shouldBe a [models.Repository]
               }
             }
             it("should have a base") {
@@ -254,7 +254,7 @@ class GitHubEventSpec extends FunSpec with Matchers with Inside
                 head.user shouldBe a [models.User]
               }
               it("should have a repo") {
-                head.repo shouldBe a [models.Repository]
+                head.repo.get shouldBe a [models.Repository]
               }
             }
             it("should have a base") {
