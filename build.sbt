@@ -50,7 +50,7 @@ libraryDependencies ++= Seq(
   "org.asynchttpclient" % "async-http-client" % "2.0.39" % "provided",
   "org.json4s" %% "json4s-jackson" % "3.6.6",
   "org.json4s" %% "json4s-ext" % "3.6.6",
-  "joda-time" % "joda-time" % "2.8.2",
+  "joda-time" % "joda-time" % "2.10.1",
   "com.github.scopt" %% "scopt" % "3.7.1",
   "org.slf4j" % "slf4j-nop" % "1.7.26" % "test",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test"
