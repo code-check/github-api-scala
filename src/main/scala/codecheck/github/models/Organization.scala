@@ -65,4 +65,4 @@ case class OrganizationInput(
   location: Option[String] = None,
   email: Option[String] = None,
   billing_email: Option[String] = None
-) extends AbstractInput 
+) extends AbstractInput
