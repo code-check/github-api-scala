@@ -10,11 +10,11 @@ class CollaboratorOpSpec extends FunSpec with api.Constants
 {
 
   describe("addCollaborator"){
-    it("should add Collaborator User to user Repo"){
+    ignore("should add Collaborator User to user Repo"){
       val res = Await.result(api.addCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
       assert(res)
     }
-    it("should fail for non existent User Repo"){
+    ignore("should fail for non existent User Repo"){
       val res = Await.result(api.addCollaborator(user, repoInvalid, collaboratorUser).failed,TIMEOUT)
       res match {
         case e: NotFoundException  =>
@@ -23,17 +23,17 @@ class CollaboratorOpSpec extends FunSpec with api.Constants
     }
   }
   describe("isCollaborator"){
-    it("if it is Collaborator"){
+    ignore("if it is Collaborator"){
       val res = Await.result(api.isCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
       assert(res)
     }
-    it("if it is not a valid Collaborator"){
+    ignore("if it is not a valid Collaborator"){
       val res1 = Await.result(api.isCollaborator(user, userRepo, otherUserInvalid),TIMEOUT)
       assert(res1 == false)
     }
   }
   describe("listCollaborators"){
-    it("should return at least one Collaborator"){
+    ignore("should return at least one Collaborator"){
       val res = Await.result(api.listCollaborators(user, userRepo),TIMEOUT)
       val c = res.find(_.login == collaboratorUser)
       assert(c.isDefined)
@@ -44,12 +44,12 @@ class CollaboratorOpSpec extends FunSpec with api.Constants
     }
   }
  describe("removeCollaborator"){
-    it("should remove the Collaborator"){
+    ignore("should remove the Collaborator"){
       var res = Await.result(api.removeCollaborator(user, userRepo, collaboratorUser),TIMEOUT)
       assert(res == true)
     }
   }
-  it("should fail for non existent User Repo"){
+  ignore("should fail for non existent User Repo"){
     var res = Await.result(api.removeCollaborator(user, repoInvalid, collaboratorUser).failed,TIMEOUT)
     res match {
       case e: NotFoundException  =>
